@@ -1,0 +1,16 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+
+    
+
+    <div>Your total payoff so far: {{ player.participant.payoff }} </div>
+
+    {% next_button %}
+
+{% endblock %}

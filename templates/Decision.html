@@ -1,0 +1,28 @@
+{% extends "otree_redwood/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Your Choice
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'queuing_experiment/highcharts.js' %}"></script>
+
+    <script type="module" src="{% static 'queuing_experiment/queue/queue.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% with config=subsession.config %}
+        <queue
+            initial-position='{{ player.initial_position }}'
+            period-length='{{ config.duration }}'
+            num-players='{{ player.num_players }}'
+            swap-method='{{ config.swap_method }}'
+            endowment='{{ config.endowment }}'
+            {% if config.messaging %}
+            messaging
+            {% endif %}
+        ></queue>
+    {% endwith %}
+
+{% endblock %}
