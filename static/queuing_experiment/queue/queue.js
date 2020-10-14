@@ -20,6 +20,11 @@ export class Queue extends PolymerElement {
                 .borders{
                     border-style: solid;
                 }
+
+                .circle{
+                    border-radius:50%;
+                    text-align: center;
+                }
             </style>
             <otree-constants id="constants"></otree-constants>
             <redwood-period
