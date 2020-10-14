@@ -1,4 +1,5 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
+import '/static/otree-redwood/node_modules/@polymer/polymer/lib/elements/dom-repeat.js';
 import '../polymer-elements/iron-flex-layout-classes.js';
 import '../polymer-elements/paper-progress.js';
 import '../polymer-elements/paper-radio-button.js';
@@ -9,22 +10,17 @@ import '/static/otree-redwood/src/redwood-period/redwood-period.js';
 import '/static/otree-redwood/src/redwood-decision-bot/redwood-decision-bot.js';
 import '/static/otree-redwood/src/otree-constants/otree-constants.js';
 
-import '../bimatrix-heatmap/bimatrix-heatmap.js';
-import '../heatmap-thermometer/heatmap-thermometer.js';
-import '../payoff-graph/payoff-graph.js';
-import '../subperiod-payoff-graph/subperiod-payoff-graph.js';
-import '../strategy-graph/strategy-graph.js';
-import '../subperiod-strategy-graph/subperiod-strategy-graph.js';
-import '../styled-range/styled-range.js';
-import '../discrete-mean-matching-heatmap/discrete-mean-matching-heatmap.js';
-
 import '../color.js';
 
 export class Queue extends PolymerElement {
     static get template() {
         return html `
             <style include="iron-flex iron-flex-alignment"></style>
-
+            <style>
+                .borders{
+                    border-style: solid;
+                }
+            </style>
             <otree-constants id="constants"></otree-constants>
             <redwood-period
                 running="{{ _isPeriodRunning }}"
@@ -36,27 +32,28 @@ export class Queue extends PolymerElement {
             </redwood-decision>
 
             <div class="layout vertical center">
-                <div class="layout align-right">
-                    <template is="dom-repeat" index-as="index" items="{{queueList}}" as="queue">
+                <div class="layout horizontal borders" style="width: 25%;">
+                    <template is="dom-repeat" index-as="index" items="{{queueList}}" as="queueList">
+                        <div class="circle">[[ _array(queueList, index) ]]</div>
                     </template>
                 </div>
 
-                <div class="layout horizontal">
-                    <div class="layout vertical">
+                <div class="layout horizontal" style="width: 75%;">
+                    <div class="layout vertical borders" style="width: 33%;">
                         <template is="dom-repeat" index-as="index" items="{{requests}}" as="requests">
                         </template>
                     </div>
 
-                    <div class="layout vertical">
-                        <div class="layout vertical">
+                    <div class="layout vertical" style="width: 66%;">
+                        <div class="layout vertical borders" style="width: 40%;">
                             <p>Your Decision</p>
                             <p>Player you want to exchange position:</p>
                             <p>Your offer</p>
                             <button type="button"> Send your request</button>
                         </div>
 
-                        <div class="layout horizontal">
-                            <div class="layout vertical">
+                        <div class="layout horizontal" style="width: 60%;">
+                            <div class="layout vertical borders" style="width: 50%;">
                                 <p>1st in the line:</p>
                                 <p>2nd in the line:</p>
                                 <p>3rd in the line:</p>
@@ -66,11 +63,11 @@ export class Queue extends PolymerElement {
                             </div>
                         
 
-                            <div class="layout vertical">
-                                <p>Your current payoff:</p>
+                            <div class="layout vertical borders " style="width: 50%;">
+                                <p>Your current payoff: [[ payoff ]]</p>
                                 <p>Round parameter:</p>
-                                <p>Exchange rule:</p>
-                                <p>Messaging:</p>
+                                <p>Exchange rule:[[swapMethod]]</p>
+                                <p>Messaging:[[messaging]]</p>
                             </div>
 
                         </div>
@@ -85,11 +82,37 @@ export class Queue extends PolymerElement {
 
     static get properties() {
         return {
+            groupDecisions: {
+                type: Object,
+            },
+            myDecision: {
+                type: Number,
+            },
+            messaging:{
+                type: Boolean,
+            },
+            payoff: {
+                type: Number,
+            },
+            queueList: {
+                type: Array,
+            },
+            swapMethod: {
+                type: String
+            },
+            requests: {
+                type: Array,
+            },
         }
+    }
+
+    _array(a, i) {
+        return a[i];
     }
 
     ready() {
         super.ready()
+        
     }
 
     _onPeriodStart() {

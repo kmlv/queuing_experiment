@@ -68,13 +68,10 @@ class Subsession(BaseSubsession):
             silos[player.silo_num].append(player)
         group_matrix = []
         for silo in silos:
-            if config['mean_matching']:
-                silo_matrix = [ silo ]
-            else:
-                silo_matrix = []
-                ppg = self.config['players_per_group']
-                for i in range(0, len(silo), ppg):
-                    silo_matrix.append(silo[i:i+ppg])
+            silo_matrix = []
+            ppg = self.config['players_per_group']
+            for i in range(0, len(silo), ppg):
+                silo_matrix.append(silo[i:i+ppg])
             group_matrix.extend(otree.common._group_randomly(silo_matrix, fixed_id_in_group))
         self.set_group_matrix(group_matrix)
 
@@ -82,7 +79,7 @@ class Subsession(BaseSubsession):
         for g in self.get_groups():
             players = g.get_players()
             positions = [1, 2, 3, 4, 5, 6]
-            random.shuffle(number_list)
+            random.shuffle(positions)
             for i in range(len(positions)):
                 players[i]._initial_position = positions[0]
                 
@@ -119,7 +116,13 @@ class Group(DecisionGroup):
     def discrete(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['discrete']
     
-    
+    # returns a list of the queue where index is position and value is player id
+    def queue_list(self):
+        queue_list = [0, 0, 0, 0, 0, 0]
+        for p in self.get_players():
+            queue_list[p._initial_position - 1] =  p.id_in_group
+        return queue_list
+
     def set_payoffs(self):
         for p in self.get_players():
             p.set_payoff()
@@ -144,9 +147,11 @@ class Group(DecisionGroup):
         # method call
         if swap_event == 'request':
             pass
-        elif swap_event == 'response':
+        elif swap_event == 'accept':
             pass
-        elif swap_event == 'advance':
+        elif swap_event == 'decline':
+            pass
+        elif swap_event == 'cancel':
             pass
 
         # broadcast the updated data out to all subjects
@@ -159,10 +164,14 @@ class Group(DecisionGroup):
 
 
 class Player(BasePlayer):
+    silo_num = models.IntegerField()
     _initial_position = models.IntegerField()
 
     def initial_position(self):
         return self._initial_position
+
+    def num_players(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
 
     def set_payoff(self):
         self.payoff = 0
