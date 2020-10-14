@@ -80,11 +80,11 @@ class Subsession(BaseSubsession):
 
     def set_initial_positions(self):
         for g in self.get_groups():
-        players = g.get_players()
-        positions = [1, 2, 3, 4, 5, 6]
-        random.shuffle(number_list)
-        for i in range(len(positions)):
-            players[i]._initial_position = positions[0]
+            players = g.get_players()
+            positions = [1, 2, 3, 4, 5, 6]
+            random.shuffle(number_list)
+            for i in range(len(positions)):
+                players[i]._initial_position = positions[0]
                 
     @property
     def config(self):

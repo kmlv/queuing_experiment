@@ -16,7 +16,7 @@ class DecisionWaitPage(WaitPage):
 
     body_text = 'Waiting for all players to be ready'
     wait_for_all_groups = True
-    after_all_players_arrive = 'set_initial_decisions'
+    after_all_players_arrive = 'set_initial_positions'
 
     def is_displayed(self):
         return self.subsession.config is not None
@@ -31,7 +31,7 @@ class Decision(Page):
 class ResultsWaitPage(WaitPage):
     wait_for_all_groups = True
 
-    after_all_players_arrive = ''
+    after_all_players_arrive = 'set_payoffs'
 
     def is_displayed(self):
         return self.subsession.config is not None
