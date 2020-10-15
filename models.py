@@ -81,7 +81,13 @@ class Subsession(BaseSubsession):
             positions = [1, 2, 3, 4, 5, 6]
             random.shuffle(positions)
             for i in range(len(positions)):
-                players[i]._initial_position = positions[0]
+                players[i]._initial_position = positions[i]
+                players[i]._initial_decision = 0
+            print(positions)
+    
+    def set_initial_decisions(self):
+        for player in self.get_players():
+            player._initial_decision = 0
                 
     @property
     def config(self):
@@ -121,24 +127,12 @@ class Group(DecisionGroup):
         queue_list = [0, 0, 0, 0, 0, 0]
         for p in self.get_players():
             queue_list[p._initial_position - 1] =  p.id_in_group
+        print("queue_list: ", queue_list)
         return queue_list
 
     def set_payoffs(self):
         for p in self.get_players():
             p.set_payoff()
-
-    # takes in the data transferred back and forth by channels,
-    # and generates a list representing the queue, where each element in the list
-    # IMPORTANT: this list represents the the entire queue, including players in the service room,
-    # organized by when they arrived. This means that the 0th element in the returned list is the
-    # first person to have entered the service room, and the last element in the list is the person
-    # in the back of the queue.
-    def queue_state(self, data):
-        queue = {}
-        for p in self.get_players():
-            pp = data[str(p.id_in_group)]
-            queue[pp['pos']] = pp['id']
-        return [queue.get(k) for k in sorted(queue)]
 
     def _on_swap_event(self, event=None, **kwargs):
         duration = self.period_length()
@@ -166,9 +160,13 @@ class Group(DecisionGroup):
 class Player(BasePlayer):
     silo_num = models.IntegerField()
     _initial_position = models.IntegerField()
+    _initial_decision = models.IntegerField()
 
     def initial_position(self):
         return self._initial_position
+    
+    def initial_decision(self):
+        return self._initial_decision
 
     def num_players(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']

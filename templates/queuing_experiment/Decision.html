@@ -13,14 +13,13 @@
     {% with config=subsession.config %}
         <leeps-queue
             initial-position='{{ player.initial_position }}'
+            initial-decision='{{ player.initial_decision }}'
             period-length='{{ config.duration }}'
             num-players='{{ player.num_players }}'
             swap-method='{{ config.swap_method }}'
             endowment='{{ config.endowment }}'
             queue-list='{{player.group.queue_list}}'
-            {% if config.messaging %}
-            messaging
-            {% endif %}
+            messaging='{{ config.messaging}}'
         ></leeps-queue>
     {% endwith %}
 
