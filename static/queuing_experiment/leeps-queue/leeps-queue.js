@@ -12,7 +12,7 @@ import '/static/otree-redwood/src/otree-constants/otree-constants.js';
 
 import '../color.js';
 
-export class Queue extends PolymerElement {
+export class LeepsQueue extends PolymerElement {
     static get template() {
         return html `
             <style include="iron-flex iron-flex-alignment"></style>
@@ -132,4 +132,4 @@ export class Queue extends PolymerElement {
     }
 }
 
-window.customElements.define('queue', Queue);
+window.customElements.define('leeps-queue', LeepsQueue);

@@ -6,14 +6,12 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'queuing_experiment/highcharts.js' %}"></script>
-
-    <script type="module" src="{% static 'queuing_experiment/queue/queue.js' %}"></script>
+    <script type="module" src="{% static 'queuing_experiment/leeps-queue/leeps-queue.js' %}"></script>
 {% endblock %}
 
 {% block content %}
     {% with config=subsession.config %}
-        <queue
+        <leeps-queue
             initial-position='{{ player.initial_position }}'
             period-length='{{ config.duration }}'
             num-players='{{ player.num_players }}'
@@ -23,7 +21,7 @@
             {% if config.messaging %}
             messaging
             {% endif %}
-        ></queue>
+        ></leeps-queue>
     {% endwith %}
 
 {% endblock %}
