@@ -38,6 +38,11 @@ export class LeepsQueue extends PolymerElement {
                     margin-left:10px;
                     margin-right:10px;
                 }
+
+                paper-progress {
+                    margin-bottom: 0.625em;
+                    --paper-progress-height: 1.875em;
+                }
             </style>
             <otree-constants id="constants"></otree-constants>
             <redwood-period
@@ -47,8 +52,9 @@ export class LeepsQueue extends PolymerElement {
             </redwood-period>
 
             <redwood-decision
+                id="channelDecision"
                 initial-decision="[[ initialDecision ]]"
-                my-current-decision="{{ myDecision }}"
+                my-decision="{{ _myDecision }}"
                 group-decisions="{{ groupDecisions }}"
                 on-group-decisions-changed="_onGroupDecisionsChanged"
             >
@@ -78,7 +84,7 @@ export class LeepsQueue extends PolymerElement {
                             <div class="layout horizontal borders" >
                                 <p>Player [[_array(requestsVector, 0)]]</p>
                                 <p>Amount [[_array(requestsVector, 1)]]</p>
-                                <button type="button">Accept</button>
+                                <button type="button" on-click="_handleaccept">Accept</button>
                             </div>
                         </template>
                     </div>
@@ -87,10 +93,15 @@ export class LeepsQueue extends PolymerElement {
                         <div class="layout vertical borders" style="height: 40%;">
                             <p>Your Decision</p>
                             <p>Player you want to exchange position: </p>
-                            <input id="exchangePosition" type="number" min="{{_minSwap()}}" max="{{_maxSwap()}}">
+                            <input id="exchangePlayer" type="number" min="1" max="6">
                             <p>Your offer: </p>
                             <input id="offer" type="number" min="1" max="{{_maxOffer()}}">
-                            <button type="button"> Send your request</button>
+                            <template is="dom-if" if="[[ !requestSent ]]">
+                                <button type="button" on-click="_handlerequest"> Send your request</button>
+                            </template>
+                            <template is="dom-if" if="[[ requestSent ]]">
+                                <button type="button" on-tap="_handlecancel"> Cancel your request</button>
+                            </template>
                         </div>
 
                         <div class="layout horizontal" style="height: 60%;">
@@ -127,10 +138,16 @@ export class LeepsQueue extends PolymerElement {
             groupDecisions: {
                 type: Object,
             },
-            myDecision: {
+            _myDecision: {
                 type: Number,
             },
             initialDecision:{
+                type: Number,
+            },
+            initialPosition:{
+                type: Number,
+            },
+            myPosition:{
                 type: Number,
             },
             messaging:{
@@ -148,10 +165,14 @@ export class LeepsQueue extends PolymerElement {
             requests: {
                 type: Array,
             },
+            requestSent: {
+                type: Boolean,
+                value: false
+            },
             _isPeriodRunning: {
                 type: Boolean,
             },
-            _periodProgress: {
+            _subperiodProgress: {
                 type: Number,
                 value: 0,
             },
@@ -175,12 +196,8 @@ export class LeepsQueue extends PolymerElement {
         super.ready()
         console.log("Game Start");
         this.set('requests', []);
-        if(3 == this.initialPosition){
-            let request = [5, 20];
-            this.push('requests', request);
-        }
-        console.log(this.requests);
-        
+        this.set('myPosition', this.initialPosition);
+        this._myDecision = {type: 'initial'};        
         
     }
 
@@ -191,39 +208,140 @@ export class LeepsQueue extends PolymerElement {
             return '#FFFFFF';
     }
 
-    _minSwap(currentPositon){
-        return currentPositon-1;
-    }
-
-    _maxSwap(currentPositon){
-        return 0;
-    }
-
     _maxOffer(){
         
     }
 
-    _updatePeriodProgress(t) {
+    _updateSubperiodProgress(t) {
         const deltaT = (t - this.lastT);
-        this._periodProgress = 100 * ((deltaT / 1000) / this.periodLength);
+        const secondsPerSubperiod = this.periodLength / this.numSubperiods;
+        this._subperiodProgress = 100 * ((deltaT / 1000) / secondsPerSubperiod);
         this._animID = window.requestAnimationFrame(
-        this._updatePeriodProgress.bind(this));
+        this._updateSubperiodProgress.bind(this));
     }
 
     _onPeriodStart() {
-        this._periodProgress = 0;
+        this._subperiodProgress = 0;
         this.lastT = performance.now();
         this._animID = window.requestAnimationFrame(
-            this._updatePeriodProgress.bind(this));
+            this._updateSubperiodProgress.bind(this));
     }
     _onPeriodEnd() {
         window.cancelAnimationFrame(this._animID);
+        this._subperiodProgress = 0;
     }
     _handleGroupDecisionsEvent(event){
-
+        console.log("Group Decision Event");
+        console.log(event);
     }
     _onGroupDecisionsChanged(){
+        console.log("Group Decisions Changed");
+        let playerDecision, request;
+        for(const player of this.$.constants.group.players){
+            if (player.idInGroup != this.$.constants.idInGroup){
+                playerDecision = this.groupDecisions[player.participantCode];
+                if(playerDecision['type'] == 'request' && playerDecision['receiver'] == this.$.constants.idInGroup){
+                    for(request in this.requests){
+                        if (request[0] == playerDecision['sender']){
+                            return;
+                        }
+                    }
+                    let request = [playerDecision['sender'], playerDecision['offer']];
+                    this.push('requests', request);
+                    console.log(this.requests);
+                }
+                if(playerDecision['type'] == 'cancel' && playerDecision['receiver'] == this.$.constants.idInGroup){
+                    let requestVector = null;
+                    let index = 0;
+                    for(request in this.requests){
+                        if (request[0] == playerDecision['sender']){
+                            requestVector = request;
+                            break;
+                        }
+                        index += 1;
+                    }
+                    if (requestVector != null)
+                        this.splice('requests', index, 1);
+                }
+                if(playerDecision['type'] == 'accept'){
+                    let requestVector = null;
+                    let index = 0;
+                    for(request in this.requests){
+                        if (request[0] == playerDecision['sender']){
+                            requestVector = request;
+                            break;
+                        }
+                        index += 1;
+                    }
+                    if (requestVector != null)
+                        this.splice('requests', index, 1);
+                    let newQueueList = [];
+                    for(let i = 0; i < this.queueList.length; i++){
+                        newQueueList[i] = this.queueList[i];
+                    }
+                    let sIndex = this.queueList.indexOf(playerDecision['sender']);
+                    let rIndex = this.queueList.indexOf(playerDecision['receiver']);
+                    newQueueList[sIndex] = this.queueList[rIndex];
+                    newQueueList[rIndex] = this.queueList[sIndex];
+                    this.set('queueList', newQueueList);
+                    if(playerDecision['receiver'] == this.$.constants.idInGroup){
+                        this.set("requestSent", false);
+                    }
+                }
+            }
+        }
+    }
+    _handlerequest(){
+        console.log("request");
+        
+        console.log(this.$.exchangePlayer.value);
+        console.log(this.$.offer.value);
+        let exchangePlayer = this.$.exchangePlayer.value;
+        let offer = this.$.offer.value;
+        if(this.queueList.indexOf(exchangePlayer) > this.myPosition){
+            alert("This Player is behind you!")
+            return;
+        }
+        if(exchangePlayer == this.$.constants.idInGroup){
+            alert("This Player is you!")
+            return;
+        }
+        this.set("requestSent", true);
+        let newRequest = {
+            'type': 'request',
+            'sender': this.$.constants.idInGroup,
+            'receiver': exchangePlayer,
+            'offer': offer,
+        };
 
+        this.set("_myDecision", newRequest);
+        this._myDecision = newRequest;
+        console.log(this._myDecision);
+        //this.$.channel.send(newRequest)
+    }
+    _handlecancel(){
+        console.log("cancel");
+        this.set("requestSent", false);
+        let newRequest = {
+            'type': 'cancel',
+            'sender': this.$.constants.idInGroup,
+            'receiver': exchangePlayer,
+        };
+        this.set("_myDecision", newRequest);
+        this._myDecision = newRequest;
+    }
+    _handleaccept(e) {
+        console.log("accept");
+        var requestsVector = e.model.requestsVector;
+        console.log(requestsVector);
+
+        let newRequest = {
+            'type': 'accept',
+            'sender': this.$.constants.idInGroup,
+            'receiver': requestsVector[0],
+        };
+        this.set("_myDecision", newRequest);
+        this._myDecision = newRequest;
     }
 }
 

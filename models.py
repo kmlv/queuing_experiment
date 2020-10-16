@@ -78,7 +78,7 @@ class Subsession(BaseSubsession):
     def set_initial_positions(self):
         for g in self.get_groups():
             players = g.get_players()
-            positions = [1, 2, 3, 4, 5, 6]
+            positions = [1, 2, 3, 4, 5, 0]
             random.shuffle(positions)
             for i in range(len(positions)):
                 players[i]._initial_position = positions[i]
@@ -88,6 +88,10 @@ class Subsession(BaseSubsession):
     def set_initial_decisions(self):
         for player in self.get_players():
             player._initial_decision = 0
+    
+    def set_payoffs(self):
+        for p in self.get_players():
+            p.payoff = 1234
                 
     @property
     def config(self):
@@ -126,7 +130,7 @@ class Group(DecisionGroup):
     def queue_list(self):
         queue_list = [0, 0, 0, 0, 0, 0]
         for p in self.get_players():
-            queue_list[p._initial_position - 1] =  p.id_in_group
+            queue_list[p._initial_position] =  p.id_in_group
         print("queue_list: ", queue_list)
         return queue_list
 
