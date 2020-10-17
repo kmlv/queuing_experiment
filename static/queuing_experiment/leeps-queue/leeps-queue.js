@@ -50,7 +50,7 @@ export class LeepsQueue extends PolymerElement {
                 on-period-start="_onPeriodStart"
                 on-period-end="_onPeriodEnd">
             </redwood-period>
-
+            <!--
             <redwood-decision
                 id="channelDecision"
                 initial-decision="[[ initialDecision ]]"
@@ -59,16 +59,25 @@ export class LeepsQueue extends PolymerElement {
                 on-group-decisions-changed="_onGroupDecisionsChanged"
             >
             </redwood-decision>
-
+            
+            
             <redwood-channel
                 id="channel"
                 channel="group_decisions"
                 on-event="_handleGroupDecisionsEvent">
             </redwood-channel>
+            -->
+            <redwood-channel
+                id="channel"
+                channel="swap"
+                on-event="_handleSwapEvent">
+            </redwood-channel>
 
             <paper-progress
                 value="[[ _subperiodProgress ]]">
             </paper-progress>
+
+            
 
             <div class="layout vertical center">
                 <div class="layout horizontal borders" style="height: 25%; width: 100%;">
@@ -150,10 +159,17 @@ export class LeepsQueue extends PolymerElement {
             myPosition:{
                 type: Number,
             },
+            currentRequestPartner:{
+                type: Number,
+                value: 0
+            },
             messaging:{
                 type: Boolean,
             },
             payoff: {
+                type: Number,
+            },
+            endowment:{
                 type: Number,
             },
             queueList: {
@@ -179,6 +195,10 @@ export class LeepsQueue extends PolymerElement {
             periodLength: {
                 type: Number
             },
+            timeRemaining:{
+                type: Number,
+                value: 0,
+            }
         }
     }
 
@@ -197,6 +217,7 @@ export class LeepsQueue extends PolymerElement {
         console.log("Game Start");
         this.set('requests', []);
         this.set('myPosition', this.initialPosition);
+        this.set('payoff', this.endowment);
         this._myDecision = {type: 'initial'};        
         
     }
@@ -226,71 +247,74 @@ export class LeepsQueue extends PolymerElement {
         this._animID = window.requestAnimationFrame(
             this._updateSubperiodProgress.bind(this));
     }
+
     _onPeriodEnd() {
         window.cancelAnimationFrame(this._animID);
         this._subperiodProgress = 0;
     }
-    _handleGroupDecisionsEvent(event){
-        console.log("Group Decision Event");
-        console.log(event);
-    }
-    _onGroupDecisionsChanged(){
-        console.log("Group Decisions Changed");
-        let playerDecision, request;
-        for(const player of this.$.constants.group.players){
-            if (player.idInGroup != this.$.constants.idInGroup){
-                playerDecision = this.groupDecisions[player.participantCode];
-                if(playerDecision['type'] == 'request' && playerDecision['receiver'] == this.$.constants.idInGroup){
-                    for(request in this.requests){
-                        if (request[0] == playerDecision['sender']){
-                            return;
-                        }
-                    }
-                    let request = [playerDecision['sender'], playerDecision['offer']];
-                    this.push('requests', request);
-                    console.log(this.requests);
-                }
-                if(playerDecision['type'] == 'cancel' && playerDecision['receiver'] == this.$.constants.idInGroup){
-                    let requestVector = null;
-                    let index = 0;
-                    for(request in this.requests){
-                        if (request[0] == playerDecision['sender']){
-                            requestVector = request;
-                            break;
-                        }
-                        index += 1;
-                    }
-                    if (requestVector != null)
-                        this.splice('requests', index, 1);
-                }
-                if(playerDecision['type'] == 'accept'){
-                    let requestVector = null;
-                    let index = 0;
-                    for(request in this.requests){
-                        if (request[0] == playerDecision['sender']){
-                            requestVector = request;
-                            break;
-                        }
-                        index += 1;
-                    }
-                    if (requestVector != null)
-                        this.splice('requests', index, 1);
-                    let newQueueList = [];
-                    for(let i = 0; i < this.queueList.length; i++){
-                        newQueueList[i] = this.queueList[i];
-                    }
-                    let sIndex = this.queueList.indexOf(playerDecision['sender']);
-                    let rIndex = this.queueList.indexOf(playerDecision['receiver']);
-                    newQueueList[sIndex] = this.queueList[rIndex];
-                    newQueueList[rIndex] = this.queueList[sIndex];
-                    this.set('queueList', newQueueList);
-                    if(playerDecision['receiver'] == this.$.constants.idInGroup){
-                        this.set("requestSent", false);
-                    }
-                }
-            }
+
+    _timeRemainingPeriod() {
+        if((this.periodLength - this.now ) > 0) {
+            return this.periodLength - (this.now );
+        }
+        else {
+            return 0;
         }
     }
+
+    _handleSwapEvent(event){
+        console.log("Swap Event");
+        console.log(event.detail.payload);
+        let playerDecision = event.detail.payload;
+        if(playerDecision['type'] == 'request' && playerDecision['receiver'] == this.$.constants.idInGroup){
+            let request = [playerDecision['sender'], playerDecision['offer']];
+            this.push('requests', request);
+            console.log(this.requests);
+        }
+        if(playerDecision['type'] == 'cancel' && playerDecision['receiver'] == this.$.constants.idInGroup){
+            let newRequests = [];
+            for(let request in this.requests){
+                if (request[0] != playerDecision['sender']){
+                    newRequests.push(request);
+                }
+
+            }
+            this.set('requests', newRequests);
+        }
+        if(playerDecision['type'] == 'accept'){
+            let newRequests = [];
+            for(let request in this.requests){
+                console.log(request)
+                if (request[0] != playerDecision['sender'] || request[0] != playerDecision['receiver']){
+                    newRequests.push(request);
+                }
+
+            }
+            this.set('requests', newRequests);
+            let newQueueList = [];
+            for(let i = 0; i < this.queueList.length; i++){
+                newQueueList[i] = this.queueList[i];
+            }
+            let sIndex = this.queueList.indexOf(playerDecision['sender']);
+            let rIndex = this.queueList.indexOf(playerDecision['receiver']);
+            newQueueList[sIndex] = this.queueList[rIndex];
+            newQueueList[rIndex] = this.queueList[sIndex];
+            this.set('queueList', newQueueList);
+            if(playerDecision['sender'] == this.$.constants.idInGroup || this.currentRequestPartner == playerDecision['sender']){
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+            }
+            if( playerDecision['receiver'] == this.$.constants.idInGroup ){
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+                let newPayoff = this.payoff - playerDecision['offer'];
+                this.set("payoff", newPayoff);
+            }
+            
+            alert("A swap has occured");
+        }
+    }
+    
     _handlerequest(){
         console.log("request");
         
@@ -307,6 +331,7 @@ export class LeepsQueue extends PolymerElement {
             return;
         }
         this.set("requestSent", true);
+        this.set('currentRequestPartner', exchangePlayer);
         let newRequest = {
             'type': 'request',
             'sender': this.$.constants.idInGroup,
@@ -317,7 +342,7 @@ export class LeepsQueue extends PolymerElement {
         this.set("_myDecision", newRequest);
         this._myDecision = newRequest;
         console.log(this._myDecision);
-        //this.$.channel.send(newRequest)
+        this.$.channel.send(newRequest);
     }
     _handlecancel(){
         console.log("cancel");
@@ -329,19 +354,24 @@ export class LeepsQueue extends PolymerElement {
         };
         this.set("_myDecision", newRequest);
         this._myDecision = newRequest;
+        this.$.channel.send(newRequest);
     }
     _handleaccept(e) {
         console.log("accept");
         var requestsVector = e.model.requestsVector;
-        console.log(requestsVector);
-
+        let offer = requestsVector[1];
         let newRequest = {
             'type': 'accept',
             'sender': this.$.constants.idInGroup,
             'receiver': requestsVector[0],
+            'offer': offer,
         };
         this.set("_myDecision", newRequest);
+        console.log(offer);
+        let newPayoff = this.payoff + offer;
+        this.set("payoff", newPayoff);
         this._myDecision = newRequest;
+        this.$.channel.send(newRequest);
     }
 }
 

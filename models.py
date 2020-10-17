@@ -100,7 +100,7 @@ class Subsession(BaseSubsession):
         except IndexError:
             return None
 
-class Group(DecisionGroup):
+class Group(RedwoodGroup):
 
     def num_subperiods(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['num_period']
@@ -139,17 +139,15 @@ class Group(DecisionGroup):
             p.set_payoff()
 
     def _on_swap_event(self, event=None, **kwargs):
-        duration = self.period_length()
-        swap_event = event.value['swap_event']
+        print(event.value)
+        type = event.value['type']
         # updates states of all players involved in the most recent event that triggered this
         # method call
-        if swap_event == 'request':
+        if type == 'request':
             pass
-        elif swap_event == 'accept':
+        elif type == 'accept':
             pass
-        elif swap_event == 'decline':
-            pass
-        elif swap_event == 'cancel':
+        elif type == 'cancel':
             pass
 
         # broadcast the updated data out to all subjects
