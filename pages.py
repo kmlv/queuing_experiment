@@ -65,7 +65,7 @@ class Payment(Page):
     
     def vars_for_template(self):
         return {
-            'payoff': self.participant.payoff.to_real_world_currency(self.session),
+            'payoff': self.participant.payoff #.to_real_world_currency(self.session),
         }
 
 page_sequence = [

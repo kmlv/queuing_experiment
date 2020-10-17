@@ -39,7 +39,7 @@ def parse_config(config_file):
             'pay_method': str(row['pay_method']),
             'discrete': True if row['discrete'] == 'TRUE' else False,
             'messaging': True if row['messaging'] == 'TRUE' else False,
-            'pay_rate': int(row['pay_rate']),
+            'value': int(row['value']),
             'endowment': int(row['endowment']),
             'service_time': int(row['service_time']),
         })
@@ -83,15 +83,14 @@ class Subsession(BaseSubsession):
             for i in range(len(positions)):
                 players[i]._initial_position = positions[i]
                 players[i]._initial_decision = 0
-            print(positions)
     
     def set_initial_decisions(self):
         for player in self.get_players():
             player._initial_decision = 0
     
     def set_payoffs(self):
-        for p in self.get_players():
-            p.payoff = 1234
+        for g in self.get_groups():
+            g.set_payoffs()
                 
     @property
     def config(self):
@@ -113,6 +112,9 @@ class Group(RedwoodGroup):
     
     def pay_method(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['pay_method']
+    
+    def value(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['value']
 
     def endowment(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['endowment']
@@ -135,25 +137,31 @@ class Group(RedwoodGroup):
         return queue_list
 
     def set_payoffs(self):
+        #swap_events = self.get_swap_events()
+        #print(swap_events)
         for p in self.get_players():
             p.set_payoff()
 
     def _on_swap_event(self, event=None, **kwargs):
-        print(event.value)
         type = event.value['type']
         # updates states of all players involved in the most recent event that triggered this
         # method call
         if type == 'request':
             pass
         elif type == 'accept':
-            pass
+            sender = self.get_player_by_id(event.value['sender'])
+            receiver = self.get_player_by_id(event.value['receiver'])
+            offer = event.value['offer']
+            sender.payoff += offer
+            receiver.payoff -= offer
+            sender._initial_position, receiver._initial_position = receiver._initial_position, sender._initial_position
         elif type == 'cancel':
             pass
 
         # broadcast the updated data out to all subjects
         self.send('swap', event.value)
         # cache state of queue so that client pages will not reset on reload
-        self.cache = event.value
+        #self.cache = event.value
         # manually save all updated fields to db. otree redwood thing
         self.save()
 
@@ -174,4 +182,8 @@ class Player(BasePlayer):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
 
     def set_payoff(self):
-        self.payoff = 0
+        queue_list = self.group.queue_list()
+        payoffCalc = self.group.endowment()
+        final_position = self._initial_position
+        payoffCalc += ((6 + 1 - (final_position + 1)) * self.group.value())
+        self.payoff += payoffCalc
