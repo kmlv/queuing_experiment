@@ -320,13 +320,19 @@ export class LeepsQueue extends PolymerElement {
             for(let i = 0; i < this.queueList.length; i++){
                 newQueueList[i] = this.queueList[i];
             }
-            console.log(newQueueList);
-            console.log(typeof playerDecision['sender']);
+
             let sIndex = this.queueList.indexOf(playerDecision['sender']);
             let rIndex = this.queueList.indexOf(playerDecision['receiver']);
             newQueueList[sIndex] = playerDecision['receiver'];
             newQueueList[rIndex] = playerDecision['sender'];
+            if(playerDecision['sender'] == parseInt(this.$.constants.idInGroup)){
+                this.set('myPosition', rIndex);
+            }
+            if(playerDecision['receiver'] == parseInt(this.$.constants.idInGroup)){
+                this.set('myPosition', ssIndex);
+            }
             this.set('queueList', newQueueList);
+
             if(playerDecision['sender'] == parseInt(this.$.constants.idInGroup) || this.currentRequestPartner == playerDecision['sender']){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
