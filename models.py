@@ -151,9 +151,11 @@ class Group(RedwoodGroup):
         elif type == 'accept':
             sender = self.get_player_by_id(event.value['sender'])
             receiver = self.get_player_by_id(event.value['receiver'])
-            offer = event.value['offer']
-            sender.payoff += offer
-            receiver.payoff -= offer
+            print(self.swap_method())
+            if self.swap_method() != 'swap':
+                offer = event.value['offer']
+                sender.payoff += offer
+                receiver.payoff -= offer
             sender._initial_position, receiver._initial_position = receiver._initial_position, sender._initial_position
         elif type == 'cancel':
             pass
@@ -182,8 +184,8 @@ class Player(BasePlayer):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
 
     def set_payoff(self):
-        queue_list = self.group.queue_list()
         payoffCalc = self.group.endowment()
         final_position = self._initial_position
         payoffCalc += ((6 + 1 - (final_position + 1)) * self.group.value())
         self.payoff += payoffCalc
+        print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((6 + 1 - (final_position + 1)) * self.group.value()))

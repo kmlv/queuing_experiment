@@ -20,7 +20,9 @@
             endowment='{{ config.endowment }}'
             queue-list='{{player.group.queue_list}}'
             value='{{config.value}}'
-            messaging='{{ config.messaging}}'
+            {% if config.messaging %}
+            messaging
+            {% endif %}
         ></leeps-queue>
     {% endwith %}
 

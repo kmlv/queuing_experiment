@@ -92,7 +92,9 @@ export class LeepsQueue extends PolymerElement {
                         <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
                             <div class="layout horizontal borders" >
                                 <p>Player [[_array(requestsVector, 0)]]</p>
-                                <p>Amount [[_array(requestsVector, 1)]]</p>
+                                <template is="dom-if" if="[[ _showOffer() ]]">
+                                    <p>Amount [[_array(requestsVector, 1)]]</p>
+                                </template>
                                 <button type="button" on-click="_handleaccept">Accept</button>
                             </div>
                         </template>
@@ -105,10 +107,14 @@ export class LeepsQueue extends PolymerElement {
                                     <span id='exchangeText'></span>
                             </p>
                             <input id="exchangePlayer" type="number" min="1" max="6">
-                            <p>Your offer: 
+                            <template is="dom-if" if="[[ _showOffer() ]]">
+                                <p>Your offer: 
                                     <span id='offerText'> </span>
-                            </p>
-                            <input id="offer" type="number" min="1" max="[[payoff]]">
+                                </p>
+                                <input id="offer" type="number" min="1" max="[[payoff]]">
+                                
+                            </template>
+                            
                             <template is="dom-if" if="[[ !requestSent ]]">
                                 <button type="button" on-click="_handlerequest"> Send your request</button>
                             </template>
@@ -169,6 +175,7 @@ export class LeepsQueue extends PolymerElement {
             },
             messaging:{
                 type: Boolean,
+                value: false,
             },
             payoff: {
                 type: Number,
@@ -225,7 +232,7 @@ export class LeepsQueue extends PolymerElement {
         this.set('requests', []);
         this.set('myPosition', this.initialPosition);
         this.set('payoff', this.endowment);
-        this._myDecision = {type: 'initial'};        
+        console.log( this.messaging);     
         
     }
 
@@ -272,7 +279,9 @@ export class LeepsQueue extends PolymerElement {
             return 0;
         }
     }
-
+    _showOffer(){
+        return this.swapMethod == 'TL';
+    }
     _handleSwapEvent(event){
         console.log("Swap Event");
         console.log(event.detail.payload);
@@ -314,20 +323,15 @@ export class LeepsQueue extends PolymerElement {
             console.log(newQueueList);
             console.log(typeof playerDecision['sender']);
             let sIndex = this.queueList.indexOf(playerDecision['sender']);
-            console.log(sIndex);
             let rIndex = this.queueList.indexOf(playerDecision['receiver']);
-            console.log(rIndex);
             newQueueList[sIndex] = playerDecision['receiver'];
             newQueueList[rIndex] = playerDecision['sender'];
-            console.log(newQueueList[sIndex]);
-            console.log(newQueueList[rIndex]);
-            console.log(newQueueList);
             this.set('queueList', newQueueList);
             if(playerDecision['sender'] == parseInt(this.$.constants.idInGroup) || this.currentRequestPartner == playerDecision['sender']){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 this.$.exchangeText.textContent = ' ';
-                this.$.offerText.textContent = ' ';
+                this.shadowRoot.querySelector('#offerText').textContent = ' ';
             }
             if( playerDecision['receiver'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
@@ -342,11 +346,8 @@ export class LeepsQueue extends PolymerElement {
     
     _handlerequest(){
         console.log("request");
-        
-        console.log(this.$.exchangePlayer.value);
-        console.log(this.$.offer.value);
         let exchangePlayer = parseInt(this.$.exchangePlayer.value);
-        let offer = parseInt(this.$.offer.value);
+        
         if(this.queueList.indexOf(exchangePlayer) > this.myPosition){
             alert("This Player is behind you!")
             return;
@@ -356,55 +357,61 @@ export class LeepsQueue extends PolymerElement {
             return;
         }
         this.$.exchangeText.textContent = this.$.exchangePlayer.value;
-        this.$.offerText.textContent = this.$.offer.value;
+        
         this.set("requestSent", true);
         this.set('currentRequestPartner', exchangePlayer);
         let newRequest = {
             'type': 'request',
             'sender': parseInt(this.$.constants.idInGroup),
             'receiver': exchangePlayer,
-            'offer': offer,
         };
-
-        this.set("_myDecision", newRequest);
-        this._myDecision = newRequest;
-        console.log(this._myDecision);
+        if(this._showOffer()){
+            let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
+            this.shadowRoot.querySelector('#offerText').textContent = this.shadowRoot.querySelector('#offer').value;
+            newRequest['offer'] = offer;
+        }
         this.$.channel.send(newRequest);
     }
     _handlecancel(){
         console.log("cancel");
         this.set("requestSent", false);
+
         this.$.exchangeText.textContent = ' ';
-        this.$.offerText.textContent = ' ';
+        if(this._showOffer()){
+            //this.$.offerText.textContent = ' ';
+            this.shadowRoot.querySelector('#offerText').textContent = ' ';
+        }
+
         let exchangePlayer = parseInt(this.$.exchangePlayer.value);
         let newRequest = {
             'type': 'cancel',
             'sender': parseInt(this.$.constants.idInGroup),
             'receiver': exchangePlayer,
         };
-        this.set("_myDecision", newRequest);
-        this._myDecision = newRequest;
+        
         this.$.channel.send(newRequest);
     }
     _handleaccept(e) {
         console.log("accept");
         var requestsVector = e.model.requestsVector;
-        let offer = parseInt(requestsVector[1]);
+        
         let newRequest = {
             'type': 'accept',
             'sender': parseInt(this.$.constants.idInGroup),
             'receiver': parseInt(requestsVector[0]),
-            'offer': offer,
         };
         this.set("requestSent", false);
         this.$.exchangeText.textContent = ' ';
-        this.$.offerText.textContent = ' ';
-        this.set("_myDecision", newRequest);
-        console.log(offer);
-        let newPayoff = this.payoff + offer;
-        this.set("payoff", newPayoff);
-        this._myDecision = newRequest;
-        console.log(this.requests);
+
+        
+        if(this._showOffer()){
+            let offer = parseInt(requestsVector[1]);
+            newRequest['offer'] = offer;
+            this.shadowRoot.querySelector('#offerText').textContent = ' ';
+            let newPayoff = this.payoff + offer;
+            this.set("payoff", newPayoff);
+        }
+        console.log(newRequest);
         this.$.channel.send(newRequest);
     }
 }
