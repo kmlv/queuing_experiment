@@ -329,7 +329,7 @@ export class LeepsQueue extends PolymerElement {
                 this.set('myPosition', rIndex);
             }
             if(playerDecision['receiver'] == parseInt(this.$.constants.idInGroup)){
-                this.set('myPosition', ssIndex);
+                this.set('myPosition', sIndex);
             }
             this.set('queueList', newQueueList);
 
