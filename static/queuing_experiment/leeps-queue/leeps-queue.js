@@ -19,22 +19,22 @@ export class LeepsQueue extends PolymerElement {
             <style>
                 .borders{
                     border-style: solid;
-                    padding-top:10px;
-                    padding-right:10px;
-                    padding-bottom:10px;
-                    padding-left:10px;
-                    margin-top:10px;
-                    margin-right:10px;
-                    margin-bottom:10px;
-                    margin-left:10px;
+                    padding-top:0px;
+                    padding-right:0px;
+                    padding-bottom:0px;
+                    padding-left:0px;
+                    margin-top:0px;
+                    margin-right:0px;
+                    margin-bottom:0px;
+                    margin-left:0px;
                 }
 
                 .circle{
                     border-style: solid;
                     border-radius:50%;
                     text-align: center;
-                    height: auto;
-                    width: 13%;
+                    height: 130px;
+                    width: 130px;
                     margin-left:10px;
                     margin-right:10px;
                 }
@@ -73,22 +73,74 @@ export class LeepsQueue extends PolymerElement {
                 on-event="_handleSwapEvent">
             </redwood-channel>
 
-            <paper-progress
-                value="[[ _subperiodProgress ]]">
-            </paper-progress>
+            <div class="layout horizontal center" style="width: 100%;">
+                <div class="borders" style="width: 20%;">
+                    Round: 
+                </div>
+                <div class="borders" style="width: 30%;">
+                    Exchange Rule: [[swapMethod]]
+                </div>
+                <div class="borders" style="width: 30%;">
+                    Messaging: [[messaging]]
+                </div>
+                <div class="borders" style="width: 30%;">
+                    Time Remaining: {{}}
+                </div>
+            </div>
 
             
 
             <div class="layout vertical center">
-                <div class="layout horizontal borders" style="height: 25%; width: 100%;">
+                <div class="layout horizontal borders" style="height: 180px; width: 100%;">
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
-            <div class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">[[queueListItems]]</div>
+                        <div class="layout vertical center">
+                            <div class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
+                                <p style="height: 50%;text-align: center;">[[queueListItems]]</p>
+                            </div>
+                            <div>
+                                [[_computeValue(index)]]
+                            </div>
+                        </div>
+                        
                     </template>
                 </div>
 
+                <div class="layout horizontal borders" style="height: 25%; width: 100%;">
+                    <div style="height: 25%; width: 10%;"> Your Decision</div>
+                    <div class="layout vertical borders" style="width: 45%;">
+                        <div class="layout horizontal">
+                            <p>Player you want to exchange position: 
+                                    <span id='exchangeText'></span>
+                            </p>
+                            <input id="exchangePlayer" name="exchangePlayer" type="number" min="1" max="6" style="width: 10%;" required>
+                        </div>
+                        <div class="layout horizontal">
+                            <template is="dom-if" if="[[ _showOffer() ]]">
+                                <p>Your offer: 
+                                    <span id='offerText'> </span>
+                                </p>
+                                <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 10%;" required>
+                                
+                            </template>
+                        </div>
+                        <template is="dom-if" if="[[ !requestSent ]]">
+                            <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Send your request</button>
+                        </template>
+                        <template is="dom-if" if="[[ requestSent ]]">
+                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancel your request</button>
+                        </template>
+                    </div>
+                    </div class="layout  borders" style="width: 45%;">
+                        <p>Message</p>
+                        <input id="offer" type="text" required>
+                    </div>
+                </div>
+
                 <div class="layout horizontal" style="height: 75%; width: 100%;">
-                    <div class="layout vertical borders" style="width: 33%;">
-                        <p>Exchange Requests:</p>
+                    <div class="layout vertical borders" style="width: 50%;">
+                        <div>
+                            <p>Exchange Requests:</p>
+                        </div>
                         <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
                             <div class="layout horizontal borders" >
                                 <p>Player [[_array(requestsVector, 0)]]</p>
@@ -100,50 +152,27 @@ export class LeepsQueue extends PolymerElement {
                         </template>
                     </div>
 
-                    <div class="layout vertical" style="width: 66%;">
-                        <div class="layout vertical borders" style="height: 40%;">
-                            <p>Your Decision</p>
-                            <p>Player you want to exchange position: 
-                                    <span id='exchangeText'></span>
-                            </p>
-                            <input id="exchangePlayer" type="number" min="1" max="6">
-                            <template is="dom-if" if="[[ _showOffer() ]]">
-                                <p>Your offer: 
-                                    <span id='offerText'> </span>
-                                </p>
-                                <input id="offer" type="number" min="1" max="[[payoff]]">
-                                
-                            </template>
-                            
-                            <template is="dom-if" if="[[ !requestSent ]]">
-                                <button type="button" on-click="_handlerequest"> Send your request</button>
-                            </template>
-                            <template is="dom-if" if="[[ requestSent ]]">
-                                <button type="button" on-click="_handlecancel"> Cancel your request</button>
-                            </template>
-                        </div>
-
-                        <div class="layout horizontal" style="height: 60%;">
-                            <div class="layout vertical borders" style="width: 50%;">
-                                <p>Your service value:</p>
-                                <p>1st in the line: [[_computeValue(6)]]</p>
-                                <p>2nd in the line: [[_computeValue(5)]]</p>
-                                <p>3rd in the line: [[_computeValue(4)]]</p>
-                                <p>4th in the line: [[_computeValue(3)]]</p>
-                                <p>5th in the line: [[_computeValue(2)]]</p>
-                                <p>6th in the line: [[_computeValue(1)]]</p>
+                    <div class="layout vertical" style="width: 50%;">
+                        <div class="layout vertical borders">
+                            <div class="borders">Your current payoff: [[payoff]]</div>
+                            <div class="borders">Exchange History</div>
+                            <div class="borders">
+                                <table>
+                                    <tr> 
+                                        <th>Original Position </th>
+                                        <th>New Position </th>
+                                        <th>Transfer </th>
+                                    </tr>
+                                    <template is="dom-repeat" index-as="index" items="{{history}}" as="historyVector">
+                                        <tr> 
+                                            <td>[[_array(historyVector, 0)]] </td>
+                                            <td>[[_array(historyVector, 1)]] </td>
+                                            <td>[[_array(historyVector, 2)]] </td>
+                                        </tr>
+                                    </template>
+                                </table>
                             </div>
-                        
-
-                            <div class="layout vertical borders " style="width: 50%;">
-                                <p>Your current payoff: [[ payoff ]]</p>
-                                <p>Round parameter: </p>
-                                <p>Exchange rule: [[swapMethod]]</p>
-                                <p>Messaging: [[messaging]]</p>
-                            </div>
-
                         </div>
-
                     </div>
                 </div>
 
@@ -195,6 +224,9 @@ export class LeepsQueue extends PolymerElement {
             requests: {
                 type: Array,
             },
+            history: {
+                type: Array,
+            },
             requestSent: {
                 type: Boolean,
                 value: false
@@ -238,9 +270,11 @@ export class LeepsQueue extends PolymerElement {
 
     _shadeCircle(id){
         if(id == this.$.constants.idInGroup)
+            return '#FF0000';
+        else if (this.queueList.indexOf(id) < this.queueList.indexOf(this.$.constants.idInGroup))
             return '#D3D3D3';
         else
-            return '#FFFFFF';
+            return '#0000FF';
     }
 
     _maxOffer(){
@@ -248,7 +282,8 @@ export class LeepsQueue extends PolymerElement {
     }
 
     _computeValue(spot){
-        return spot * this.value;
+        spot = 5 - spot;
+        return (6 - spot) * this.value;
     }
 
     _updateSubperiodProgress(t) {
@@ -346,7 +381,6 @@ export class LeepsQueue extends PolymerElement {
                 this.set("payoff", newPayoff);
             }
             
-            alert("A swap has occured");
         }
     }
     
@@ -355,11 +389,15 @@ export class LeepsQueue extends PolymerElement {
         let exchangePlayer = parseInt(this.$.exchangePlayer.value);
         
         if(this.queueList.indexOf(exchangePlayer) > this.myPosition){
-            alert("This Player is behind you!")
+            alert("This Player is behind you!");
             return;
         }
         if(exchangePlayer == parseInt(this.$.constants.idInGroup)){
-            alert("This Player is you!")
+            alert("This Player is you!");
+            return;
+        }
+        if(this._showOffer()) if(this.shadowRoot.querySelector('#offer').value == ""){
+            alert("Input an offer");
             return;
         }
         this.$.exchangeText.textContent = this.$.exchangePlayer.value;
@@ -375,6 +413,8 @@ export class LeepsQueue extends PolymerElement {
             let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
             this.shadowRoot.querySelector('#offerText').textContent = this.shadowRoot.querySelector('#offer').value;
             newRequest['offer'] = offer;
+        } else{
+            newRequest['offer'] = 0;
         }
         this.$.channel.send(newRequest);
     }
@@ -393,6 +433,7 @@ export class LeepsQueue extends PolymerElement {
             'type': 'cancel',
             'sender': parseInt(this.$.constants.idInGroup),
             'receiver': exchangePlayer,
+            'offer': 0,
         };
         
         this.$.channel.send(newRequest);
@@ -416,6 +457,8 @@ export class LeepsQueue extends PolymerElement {
             this.shadowRoot.querySelector('#offerText').textContent = ' ';
             let newPayoff = this.payoff + offer;
             this.set("payoff", newPayoff);
+        } else{
+            newRequest['offer'] = 0;
         }
         console.log(newRequest);
         this.$.channel.send(newRequest);
