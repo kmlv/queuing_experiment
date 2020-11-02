@@ -101,6 +101,9 @@ class Subsession(BaseSubsession):
 
 class Group(RedwoodGroup):
 
+    def round_number(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['round_number']
+
     def num_subperiods(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['num_period']
 
