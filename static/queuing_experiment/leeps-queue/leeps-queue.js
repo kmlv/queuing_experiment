@@ -33,8 +33,9 @@ export class LeepsQueue extends PolymerElement {
                     border-style: solid;
                     border-radius:50%;
                     text-align: center;
-                    height: 130px;
-                    width: 130px;
+                    vertical-align:middle;
+                    height: 110px;
+                    width: 110px;
                     margin-left:10px;
                     margin-right:10px;
                 }
@@ -42,6 +43,21 @@ export class LeepsQueue extends PolymerElement {
                 paper-progress {
                     margin-bottom: 0.625em;
                     --paper-progress-height: 1.875em;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #dddddd;
                 }
             </style>
             <otree-constants id="constants"></otree-constants>
@@ -75,7 +91,7 @@ export class LeepsQueue extends PolymerElement {
 
             <div class="layout horizontal center" style="width: 100%;">
                 <div class="borders" style="width: 20%;">
-                    Round: 
+                    Round: [[roundNumber]]
                 </div>
                 <div class="borders" style="width: 30%;">
                     Exchange Rule: [[swapMethod]]
@@ -91,11 +107,18 @@ export class LeepsQueue extends PolymerElement {
             
 
             <div class="layout vertical center">
-                <div class="layout horizontal borders" style="height: 180px; width: 100%;">
+                <div class="layout horizontal borders" style="height: 160px; width: 100%;">
+                    <div>
+                        <div class="layout vertical center">
+                            <p style="height: 65px;
+                                        width: 110px;">Position</p>
+                            <p style="width: 110px;">Value</p>
+                        </div>
+                    </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
                         <div class="layout vertical center">
                             <div class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
-                                <p style="height: 50%;text-align: center;">[[queueListItems]]</p>
+                                <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">[[queueListItems]]</p>
                             </div>
                             <div>
                                 [[_computeValue(index)]]
@@ -129,34 +152,49 @@ export class LeepsQueue extends PolymerElement {
                         <template is="dom-if" if="[[ requestSent ]]">
                             <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancel your request</button>
                         </template>
-                    </div>
-                    </div class="layout  borders" style="width: 45%;">
-                        <p>Message</p>
+                        </div class="layout vertical  borders" style="width: 45%;">
+                            <p>Message</p>
                         <input id="offer" type="text" required>
                     </div>
+                    </div>
+                    
                 </div>
 
-                <div class="layout horizontal" style="height: 75%; width: 100%;">
+                <div class="layout horizontal" style="height: 450px; width: 100%;">
                     <div class="layout vertical borders" style="width: 50%;">
-                        <div>
+                        <div class="borders" style="width: 100%;">
                             <p>Exchange Requests:</p>
                         </div>
-                        <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
-                            <div class="layout horizontal borders" >
-                                <p>Player [[_array(requestsVector, 0)]]</p>
-                                <template is="dom-if" if="[[ _showOffer() ]]">
-                                    <p>Amount [[_array(requestsVector, 1)]]</p>
-                                </template>
-                                <button type="button" on-click="_handleaccept">Accept</button>
-                            </div>
-                        </template>
+                        <div style="overflow: scroll;">
+                            <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
+                                <div class="layout horizontal" >
+                                    <div class="layout vertical">
+                                        <div class="layout horizontal" style="
+                                                                            padding-top:0px;">
+                                            <p>Position: [[_array(requestsVector, 0)]]  </p>
+                                            <template is="dom-if" if="[[ _showOffer() ]]">
+                                                <p>Amount: [[_array(requestsVector, 1)]]</p>
+                                            </template>
+                                        </div>
+                                        <div style="overflow: scroll;">
+                                            Message: 
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:9px;
+                                                margin-left:auto;">
+                                        <button type="button" on-click="_handleaccept" style="background-color:#ADD8E6;">Accept</button>
+                                        <button type="button" on-click="_handlereject" style="background-color:#FF6961;">Reject</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
                     <div class="layout vertical" style="width: 50%;">
                         <div class="layout vertical borders">
                             <div class="borders">Your current payoff: [[payoff]]</div>
                             <div class="borders">Exchange History</div>
-                            <div class="borders">
+                            <div class="borders" style="height:380px;overflow: scroll;">
                                 <table>
                                     <tr> 
                                         <th>Original Position </th>
@@ -221,6 +259,9 @@ export class LeepsQueue extends PolymerElement {
             value:{
                 type: Number
             },
+            roundNumber:{
+                type: Number
+            },
             requests: {
                 type: Array,
             },
@@ -260,21 +301,27 @@ export class LeepsQueue extends PolymerElement {
 
     ready() {
         super.ready()
-        console.log("Game Start");
+        console.log(this.queueList);
         this.set('requests', []);
         this.set('myPosition', this.initialPosition);
         this.set('payoff', this.endowment);
-        console.log( this.messaging);     
+        this.push('requests', [2, 12]);
+        this.push('requests', [2, 17]);
         
     }
 
     _shadeCircle(id){
         if(id == this.$.constants.idInGroup)
             return '#FF0000';
-        else if (this.queueList.indexOf(id) < this.queueList.indexOf(this.$.constants.idInGroup))
-            return '#D3D3D3';
-        else
-            return '#0000FF';
+        else if (this.queueList.indexOf(id) > this.queueList.indexOf(parseInt(this.$.constants.idInGroup))){
+            console.log(this.queueList.indexOf(id) + " and " + this.queueList.indexOf(parseInt(this.$.constants.idInGroup)));
+            return '#E7E7E7';
+        }
+        else{
+            console.log(this.queueList.indexOf(id) + " and " + this.queueList.indexOf(parseInt(this.$.constants.idInGroup)));
+            return '#C56BFF';
+        }
+            
     }
 
     _maxOffer(){
@@ -460,6 +507,11 @@ export class LeepsQueue extends PolymerElement {
         } else{
             newRequest['offer'] = 0;
         }
+        console.log(newRequest);
+        this.$.channel.send(newRequest);
+    }
+    _handlereject(e) {
+        console.log("reject");
         console.log(newRequest);
         this.$.channel.send(newRequest);
     }
