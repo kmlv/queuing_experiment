@@ -30,7 +30,6 @@ export class LeepsQueue extends PolymerElement {
                 }
 
                 .circle{
-                    border-style: solid;
                     border-radius:50%;
                     text-align: center;
                     vertical-align:middle;
@@ -100,7 +99,7 @@ export class LeepsQueue extends PolymerElement {
                     Messaging: [[messaging]]
                 </div>
                 <div class="borders" style="width: 30%;">
-                    Time Remaining: {{}}
+                    Time Remaining: [[ _subperiodProgress ]]
                 </div>
             </div>
 
@@ -117,9 +116,17 @@ export class LeepsQueue extends PolymerElement {
                     </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
                         <div class="layout vertical center">
-                            <div class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
-                                <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">[[queueListItems]]</p>
-                            </div>
+                            <template is="dom-if" if="{{!_button(index)}}">
+                                <div class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
+                                    <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">[[queueListItems]]</p>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_button(index)}}">
+                                <button type="button" on-click="_pick" class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
+                                    <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">[[queueListItems]]</p>
+                                </button>
+                            </template>
+                            
                             <div>
                                 [[_computeValue(index)]]
                             </div>
@@ -133,9 +140,8 @@ export class LeepsQueue extends PolymerElement {
                     <div class="layout vertical borders" style="width: 45%;">
                         <div class="layout horizontal">
                             <p>Player you want to exchange position: 
-                                    <span id='exchangeText'></span>
+                                    <span id='exchangeText'>[[exchangeText]]</span>
                             </p>
-                            <input id="exchangePlayer" name="exchangePlayer" type="number" min="1" max="6" style="width: 10%;" required>
                         </div>
                         <div class="layout horizontal">
                             <template is="dom-if" if="[[ _showOffer() ]]">
@@ -305,6 +311,7 @@ export class LeepsQueue extends PolymerElement {
         this.set('requests', []);
         this.set('myPosition', this.initialPosition);
         this.set('payoff', this.endowment);
+        this.set('exchangeText', "None");
         this.push('requests', [2, 12]);
         this.push('requests', [2, 17]);
         
@@ -314,14 +321,29 @@ export class LeepsQueue extends PolymerElement {
         if(id == this.$.constants.idInGroup)
             return '#FF0000';
         else if (this.queueList.indexOf(id) > this.queueList.indexOf(parseInt(this.$.constants.idInGroup))){
-            console.log(this.queueList.indexOf(id) + " and " + this.queueList.indexOf(parseInt(this.$.constants.idInGroup)));
             return '#E7E7E7';
         }
         else{
-            console.log(this.queueList.indexOf(id) + " and " + this.queueList.indexOf(parseInt(this.$.constants.idInGroup)));
             return '#C56BFF';
         }
             
+    }
+
+    _button(index){
+        index = 5 - parseInt(index) ;
+        if (index < this.queueList.indexOf(parseInt(this.$.constants.idInGroup))){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    _pick(e){
+        var index = e.model.index;
+        index = 6 - parseInt(index);
+        this.set("exchangeText", index.toString() );
     }
 
     _maxOffer(){
@@ -333,24 +355,22 @@ export class LeepsQueue extends PolymerElement {
         return (6 - spot) * this.value;
     }
 
-    _updateSubperiodProgress(t) {
-        const deltaT = (t - this.lastT);
-        const secondsPerSubperiod = this.periodLength / this.numSubperiods;
-        this._subperiodProgress = 100 * ((deltaT / 1000) / secondsPerSubperiod);
-        this._animID = window.requestAnimationFrame(
-        this._updateSubperiodProgress.bind(this));
-    }
-
     _onPeriodStart() {
         this._subperiodProgress = 0;
         this.lastT = performance.now();
         this._animID = window.requestAnimationFrame(
             this._updateSubperiodProgress.bind(this));
     }
-
     _onPeriodEnd() {
         window.cancelAnimationFrame(this._animID);
         this._subperiodProgress = 0;
+    }
+    _updateSubperiodProgress(t) {
+        const deltaT = (t - this.lastT);
+        const secondsPerSubperiod = this.periodLength / 1;
+        this._subperiodProgress = this.periodLength - Math.round(100 * ((deltaT / 1000) / secondsPerSubperiod));
+        this._animID = window.requestAnimationFrame(
+            this._updateSubperiodProgress.bind(this));
     }
 
     _timeRemainingPeriod() {
@@ -433,7 +453,8 @@ export class LeepsQueue extends PolymerElement {
     
     _handlerequest(){
         console.log("request");
-        let exchangePlayer = parseInt(this.$.exchangePlayer.value);
+        let exchangePlayerIndex = parseInt(this.$.exchangeText.textContent) - 6;
+        let exchangePlayer = this.queueList[exchangePlayerIndex];
         
         if(this.queueList.indexOf(exchangePlayer) > this.myPosition){
             alert("This Player is behind you!");
@@ -447,14 +468,16 @@ export class LeepsQueue extends PolymerElement {
             alert("Input an offer");
             return;
         }
-        this.$.exchangeText.textContent = this.$.exchangePlayer.value;
+        //this.$.exchangeText.textContent = this.$.exchangePlayer.value;
         
         this.set("requestSent", true);
         this.set('currentRequestPartner', exchangePlayer);
         let newRequest = {
             'type': 'request',
-            'sender': parseInt(this.$.constants.idInGroup),
-            'receiver': exchangePlayer,
+            'senderID': parseInt(this.$.constants.idInGroup),
+            'senderPosition': this.myPosition,
+            'receiverID': exchangePlayer,
+            'receiverPosition': this.queueList.indexOf(parseInt(exchangePlayer)),
         };
         if(this._showOffer()){
             let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
