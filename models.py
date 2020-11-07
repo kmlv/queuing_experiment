@@ -148,6 +148,7 @@ class Group(RedwoodGroup):
         type = event.value['type']
         # updates states of all players involved in the most recent event that triggered this
         # method call
+        print(event.value)
         if type == 'request':
             pass
         elif type == 'accept':

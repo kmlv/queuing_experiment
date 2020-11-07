@@ -118,12 +118,12 @@ export class LeepsQueue extends PolymerElement {
                         <div class="layout vertical center">
                             <template is="dom-if" if="{{!_button(index)}}">
                                 <div class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
-                                    <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">[[queueListItems]]</p>
+                                    <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">{{_reverseIndex(index)}}</p>
                                 </div>
                             </template>
                             <template is="dom-if" if="{{_button(index)}}">
                                 <button type="button" on-click="_pick" class="circle" style="background-color:{{_shadeCircle(queueListItems)}};">
-                                    <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">[[queueListItems]]</p>
+                                    <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">{{_reverseIndex(index)}}</p>
                                 </button>
                             </template>
                             
@@ -305,6 +305,10 @@ export class LeepsQueue extends PolymerElement {
         return list.slice().reverse();
     }
 
+    _reverseIndex(index){
+        return 6 - parseInt(index);
+    }
+
     ready() {
         super.ready()
         console.log(this.queueList);
@@ -312,8 +316,6 @@ export class LeepsQueue extends PolymerElement {
         this.set('myPosition', this.initialPosition);
         this.set('payoff', this.endowment);
         this.set('exchangeText', "None");
-        this.push('requests', [2, 12]);
-        this.push('requests', [2, 17]);
         
     }
 
@@ -388,16 +390,17 @@ export class LeepsQueue extends PolymerElement {
         console.log("Swap Event");
         console.log(event.detail.payload);
         let playerDecision = event.detail.payload;
-        if(playerDecision['type'] == 'request' && playerDecision['receiver'] == parseInt(this.$.constants.idInGroup)){
-            let request = [playerDecision['sender'], playerDecision['offer']];
+        if(playerDecision['type'] == 'request' && playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup)){
+            console.log("request");
+            let request = [playerDecision['senderPosition'] + 1, playerDecision['offer']];
             this.push('requests', request);
             console.log(this.requests);
         }
-        if(playerDecision['type'] == 'cancel' && playerDecision['receiver'] == parseInt(this.$.constants.idInGroup)){
+        if(playerDecision['type'] == 'cancel' && playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup)){
             let newRequests = [];
             for(let i = 0; i < this.requests.length; i++){
                 console.log(this.requests[i])
-                if (this.requests[i][0] != playerDecision['sender']){
+                if (this.requests[i][0] - 1 != playerDecision['senderPosition']){
                     newRequests.push(this.requests[i]);
                 }
 
@@ -407,10 +410,10 @@ export class LeepsQueue extends PolymerElement {
         if(playerDecision['type'] == 'accept'){
             console.log(this.requests);
             let newRequests = [];
-            if(playerDecision['sender'] != parseInt(this.$.constants.idInGroup) && playerDecision['receiver'] != parseInt(this.$.constants.idInGroup)){
+            if(playerDecision['senderID'] != parseInt(this.$.constants.idInGroup) && playerDecision['receiverID'] != parseInt(this.$.constants.idInGroup)){
                 for(let i = 0; i < this.requests.length; i++){
                     console.log(this.requests[i])
-                    if (this.requests[i][0] != playerDecision['sender']){
+                    if (this.requests[i][0] - 1 != playerDecision['senderPosition']){
                         newRequests.push(this.requests[i]);
                     }
 
@@ -423,25 +426,26 @@ export class LeepsQueue extends PolymerElement {
                 newQueueList[i] = this.queueList[i];
             }
 
-            let sIndex = this.queueList.indexOf(playerDecision['sender']);
-            let rIndex = this.queueList.indexOf(playerDecision['receiver']);
-            newQueueList[sIndex] = playerDecision['receiver'];
-            newQueueList[rIndex] = playerDecision['sender'];
-            if(playerDecision['sender'] == parseInt(this.$.constants.idInGroup)){
+            let sIndex = this.queueList.indexOf(playerDecision['senderID']);
+            let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
+            newQueueList[sIndex] = playerDecision['receiverID'];
+            newQueueList[rIndex] = playerDecision['senderID'];
+            if(playerDecision['senderID'] == parseInt(this.$.constants.idInGroup)){
                 this.set('myPosition', rIndex);
             }
-            if(playerDecision['receiver'] == parseInt(this.$.constants.idInGroup)){
+            if(playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup)){
                 this.set('myPosition', sIndex);
             }
+            
             this.set('queueList', newQueueList);
-
-            if(playerDecision['sender'] == parseInt(this.$.constants.idInGroup) || this.currentRequestPartner == playerDecision['sender']){
+            console.log(this.queueList);
+            if(playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) || this.currentRequestPartner == playerDecision['senderID']){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 this.$.exchangeText.textContent = ' ';
                 this.shadowRoot.querySelector('#offerText').textContent = ' ';
             }
-            if( playerDecision['receiver'] == parseInt(this.$.constants.idInGroup) ){
+            if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 let newPayoff = this.payoff - playerDecision['offer'];
@@ -449,14 +453,20 @@ export class LeepsQueue extends PolymerElement {
             }
             
         }
+        if(playerDecision['type'] == 'reject'){
+            if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+            }
+        }
     }
     
     _handlerequest(){
         console.log("request");
-        let exchangePlayerIndex = parseInt(this.$.exchangeText.textContent) - 6;
+        let exchangePlayerIndex = parseInt(this.$.exchangeText.textContent) - 1;
         let exchangePlayer = this.queueList[exchangePlayerIndex];
         
-        if(this.queueList.indexOf(exchangePlayer) > this.myPosition){
+        if(exchangePlayerIndex > this.myPosition){
             alert("This Player is behind you!");
             return;
         }
@@ -468,7 +478,6 @@ export class LeepsQueue extends PolymerElement {
             alert("Input an offer");
             return;
         }
-        //this.$.exchangeText.textContent = this.$.exchangePlayer.value;
         
         this.set("requestSent", true);
         this.set('currentRequestPartner', exchangePlayer);
@@ -477,7 +486,7 @@ export class LeepsQueue extends PolymerElement {
             'senderID': parseInt(this.$.constants.idInGroup),
             'senderPosition': this.myPosition,
             'receiverID': exchangePlayer,
-            'receiverPosition': this.queueList.indexOf(parseInt(exchangePlayer)),
+            'receiverPosition': exchangePlayerIndex,
         };
         if(this._showOffer()){
             let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
@@ -492,17 +501,19 @@ export class LeepsQueue extends PolymerElement {
         console.log("cancel");
         this.set("requestSent", false);
 
-        this.$.exchangeText.textContent = ' ';
         if(this._showOffer()){
             //this.$.offerText.textContent = ' ';
             this.shadowRoot.querySelector('#offerText').textContent = ' ';
         }
 
-        let exchangePlayer = parseInt(this.$.exchangePlayer.value);
+        let exchangePlayer = this.queueList[6 - parseInt(this.$.exchangeText.textContent)];
+        this.$.exchangeText.textContent = ' ';
         let newRequest = {
             'type': 'cancel',
-            'sender': parseInt(this.$.constants.idInGroup),
-            'receiver': exchangePlayer,
+            'senderID': parseInt(this.$.constants.idInGroup),
+            'senderPosition': 5 - this.queueList.indexOf(parseInt(this.$.constants.idInGroup)),
+            'receiverID': exchangePlayer,
+            'receiverPosition': parseInt(this.$.exchangePlayer.value) - 1,
             'offer': 0,
         };
         
@@ -514,8 +525,10 @@ export class LeepsQueue extends PolymerElement {
         
         let newRequest = {
             'type': 'accept',
-            'sender': parseInt(this.$.constants.idInGroup),
-            'receiver': parseInt(requestsVector[0]),
+            'senderID': parseInt(this.$.constants.idInGroup),
+            'senderPosition': this.myPosition,
+            'receiverID': this.queueList[6 - parseInt(requestsVector[0])],
+            'receiverPosition': parseInt(requestsVector[0])- 1,
         };
         this.set("requestSent", false);
         this.$.exchangeText.textContent = ' ';
@@ -535,6 +548,25 @@ export class LeepsQueue extends PolymerElement {
     }
     _handlereject(e) {
         console.log("reject");
+        var requestsVector = e.model.requestsVector;
+
+        let newRequests = [];
+        for(let i = 0; i < this.requests.length; i++){
+            console.log(this.requests[i])
+            if (this.requests[i][0]  != requestsVector[0]){
+                newRequests.push(this.requests[i]);
+            }
+        }
+        this.set('requests', newRequests);
+
+        let newRequest = {
+            'type': 'reject',
+            'senderID': parseInt(this.$.constants.idInGroup),
+            'senderPosition': this.myPosition,
+            'receiverID': parseInt(this.queueList[6 - requestsVector[0]]),
+            'receiverPosition': parseInt(requestsVector[0]) - 1,
+            'offer': 0,
+        };
         console.log(newRequest);
         this.$.channel.send(newRequest);
     }
