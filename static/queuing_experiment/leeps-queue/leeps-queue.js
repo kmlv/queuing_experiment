@@ -162,7 +162,12 @@ export class LeepsQueue extends PolymerElement {
                         </template>
                         </div class="layout vertical  borders" style="width: 45%;">
                             <p>Message</p>
-                        <input id="message" type="text" required>
+                            <template is="dom-if" if="[[ messaging ]]">
+                                <input id="message" type="text"  required>
+                            </template>
+                            <template is="dom-if" if="[[ !messaging ]]">
+                                <p style="margin-left:10px;">Disabled</p>
+                            </template>
                     </div>
                     </div>
                     
@@ -184,9 +189,12 @@ export class LeepsQueue extends PolymerElement {
                                                 <p>Amount: [[_list(requestsVector, "offer")]]</p>
                                             </template>
                                         </div>
-                                        <div style="overflow: scroll;">
-                                            Message: [[_list(requestsVector, "message")]]
-                                        </div>
+                                        <template is="dom-if" if="[[ messaging ]]">
+                                            <div style="overflow: scroll;">
+                                                Message: [[_list(requestsVector, "message")]]
+                                            </div>
+                                        </template>
+                                        
                                     </div>
                                     <div style="margin-top:9px;
                                                 margin-left:auto;">
@@ -513,8 +521,13 @@ export class LeepsQueue extends PolymerElement {
             'senderPosition': this.myPosition,
             'receiverID': exchangePlayer,
             'receiverPosition': exchangePlayerIndex,
-            'message': this.shadowRoot.querySelector('#message').value,
+            
         };
+        if(this.messaging){
+            newRequest['message'] = this.shadowRoot.querySelector('#message').value;
+        }else{
+            newRequest['message'] = "No Message";
+        }
         if(this._showOffer()){
             let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
             //this.shadowRoot.querySelector('#offerText').textContent = this.shadowRoot.querySelector('#offer').value;
