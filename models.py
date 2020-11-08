@@ -139,29 +139,16 @@ class Group(RedwoodGroup):
         return queue_list
 
     def set_payoffs(self):
-        #swap_events = self.get_swap_events()
-        #print(swap_events)
         for p in self.get_players():
-            p.set_payoff()
+            events = list(self.events.filter(channel='swap'))
+            p.set_payoff(events)
 
     def _on_swap_event(self, event=None, **kwargs):
         type = event.value['type']
         # updates states of all players involved in the most recent event that triggered this
         # method call
         print(event.value)
-        if type == 'request':
-            pass
-        elif type == 'accept':
-            sender = self.get_player_by_id(event.value['sender'])
-            receiver = self.get_player_by_id(event.value['receiver'])
-            print(self.swap_method())
-            if self.swap_method() != 'swap':
-                offer = event.value['offer']
-                sender.payoff += offer
-                receiver.payoff -= offer
-            sender._initial_position, receiver._initial_position = receiver._initial_position, sender._initial_position
-        elif type == 'cancel':
-            pass
+        event.value['channel'] = 'outgoing'
 
         # broadcast the updated data out to all subjects
         self.send('swap', event.value)
@@ -186,9 +173,27 @@ class Player(BasePlayer):
     def num_players(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
 
-    def set_payoff(self):
-        payoffCalc = self.group.endowment()
+
+    def set_payoff(self,events):
         final_position = self._initial_position
-        payoffCalc += ((6 + 1 - (final_position + 1)) * self.group.value())
-        self.payoff += payoffCalc
+        payoff = self.group.endowment()
+        
+        for event in events:
+            
+            if event.value['type'] == 'accept' and event.value['channel'] == 'incoming':
+                print(event.value)
+                if self.id_in_group == event.value['senderID']:
+                    final_position = event.value['receiverPosition']
+                    if self.group.swap_method() != 'swap':
+                        print(self.id_in_group,"gain " , event.value['offer'])
+                        payoff += event.value['offer']
+                elif self.id_in_group == event.value['receiverID']:
+                    final_position = event.value['senderPosition']
+                    if self.group.swap_method() != 'swap':
+                        print(self.id_in_group,"lose " , event.value['offer'])
+                        payoff -= event.value['offer']
+        
+        payoff += ((7 - (final_position + 1)) * self.group.value())
+        self._initial_position = final_position
+        self.payoff += payoff
         print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((6 + 1 - (final_position + 1)) * self.group.value()))

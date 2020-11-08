@@ -55,7 +55,7 @@ class Results(Page):
 
 
         return {
-            'final_position': self.player.initial_position(),
+            'final_position': self.player.initial_position() + 1,
         }
 
 class Payment(Page):
