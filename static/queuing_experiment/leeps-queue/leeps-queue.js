@@ -108,7 +108,7 @@ export class LeepsQueue extends PolymerElement {
             <div class="layout vertical center">
                 <div class="layout horizontal borders" style="height: 160px; width: 100%;">
                     <div>
-                        <div class="layout vertical center">
+                        <div class="layout vertical center" style="text-align: center;">
                             <p style="height: 65px;
                                         width: 110px;">Position</p>
                             <p style="width: 110px;">Value</p>
@@ -136,7 +136,7 @@ export class LeepsQueue extends PolymerElement {
                 </div>
 
                 <div class="layout horizontal borders" style="height: 25%; width: 100%;">
-                    <div style="height: 25%; width: 10%;"> Your Decision</div>
+                    <div style="height: 25%; width: 10%;text-align: center;"> Your Decision</div>
                     <div class="layout vertical borders" style="width: 45%;">
                         <div class="layout horizontal">
                             <p>Player you want to exchange position: 
@@ -161,8 +161,8 @@ export class LeepsQueue extends PolymerElement {
                             <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancel your request</button>
                         </template>
                         </div class="layout vertical  borders" style="width: 45%;">
-                            <p>Message</p>
-                            <template is="dom-if" if="[[ messaging ]]">
+                            <p style="margin-right:10px;">Message</p>
+                            <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
                                 <input id="message" type="text"  required>
                             </template>
                             <template is="dom-if" if="[[ !messaging ]]">
@@ -173,15 +173,15 @@ export class LeepsQueue extends PolymerElement {
                     
                 </div>
 
-                <div class="layout horizontal" style="height: 450px; width: 100%;">
+                <div class="layout horizontal" style="height: 500px; width: 100%;">
                     <div class="layout vertical borders" style="width: 50%;">
-                        <div class="borders" style="width: 100%;">
-                            <p>Exchange Requests:</p>
+                        <div class="borders" style="width: 100%;text-align: center;">
+                            <p style="font-size:150%;">Exchange Requests:</p>
                         </div>
                         <div style="overflow: auto;">
                             <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
-                                <div class="layout horizontal" >
-                                    <div class="layout vertical">
+                                <div class="layout horizontal borders" style=" padding-right:5px;padding-left:15px;">
+                                    <div class="layout vertical" >
                                         <div class="layout horizontal" style="
                                                                             padding-top:0px;">
                                             <p style="margin-right:10px;">Position: [[_list(requestsVector, "position")]]  </p>
@@ -190,8 +190,11 @@ export class LeepsQueue extends PolymerElement {
                                             </template>
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
-                                            <div style="overflow: auto;">
-                                                Message: [[_list(requestsVector, "message")]]
+                                            <div>
+                                                Message:
+                                                <p style="width:250px;overflow: auto;">
+                                                 [[_list(requestsVector, "message")]]
+                                                </p>
                                             </div>
                                         </template>
                                         
@@ -208,9 +211,9 @@ export class LeepsQueue extends PolymerElement {
 
                     <div class="layout vertical" style="width: 50%;">
                         <div class="layout vertical borders">
-                            <div class="borders">Your current payoff: [[payoff]]</div>
-                            <div class="borders">Exchange History</div>
-                            <div class="borders" style="height:380px;overflow: auto;">
+                            <div class="borders" style="height:40px;font-size:150%;">Your current payoff: [[payoff]]</div>
+                            <div class="borders" style="height:40px;font-size:150%;">Exchange History</div>
+                            <div class="borders" style="height:400px;overflow: auto;">
                                 <table>
                                     <tr> 
                                         <th>Original Position </th>
