@@ -178,7 +178,7 @@ export class LeepsQueue extends PolymerElement {
                         <div class="borders" style="width: 100%;">
                             <p>Exchange Requests:</p>
                         </div>
-                        <div style="overflow: scroll;">
+                        <div style="overflow: auto;">
                             <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
                                 <div class="layout horizontal" >
                                     <div class="layout vertical">
@@ -190,7 +190,7 @@ export class LeepsQueue extends PolymerElement {
                                             </template>
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
-                                            <div style="overflow: scroll;">
+                                            <div style="overflow: auto;">
                                                 Message: [[_list(requestsVector, "message")]]
                                             </div>
                                         </template>
@@ -210,7 +210,7 @@ export class LeepsQueue extends PolymerElement {
                         <div class="layout vertical borders">
                             <div class="borders">Your current payoff: [[payoff]]</div>
                             <div class="borders">Exchange History</div>
-                            <div class="borders" style="height:380px;overflow: scroll;">
+                            <div class="borders" style="height:380px;overflow: auto;">
                                 <table>
                                     <tr> 
                                         <th>Original Position </th>
@@ -523,7 +523,7 @@ export class LeepsQueue extends PolymerElement {
             'receiverPosition': exchangePlayerIndex,
             
         };
-        if(this.messaging){
+        if(this.messaging && (this.shadowRoot.querySelector('#message').value != "" || this.shadowRoot.querySelector('#message').value != " ")){
             newRequest['message'] = this.shadowRoot.querySelector('#message').value;
         }else{
             newRequest['message'] = "No Message";

@@ -82,6 +82,7 @@ class Subsession(BaseSubsession):
             random.shuffle(positions)
             for i in range(len(positions)):
                 players[i]._initial_position = positions[i]
+                players[i]._final_position = positions[i]
                 players[i]._initial_decision = 0
     
     def set_initial_decisions(self):
@@ -163,9 +164,13 @@ class Player(BasePlayer):
     silo_num = models.IntegerField()
     _initial_position = models.IntegerField()
     _initial_decision = models.IntegerField()
+    _final_position = models.IntegerField()
 
     def initial_position(self):
         return self._initial_position
+
+    def final_position(self):
+        return self._final_position
     
     def initial_decision(self):
         return self._initial_decision
@@ -194,6 +199,6 @@ class Player(BasePlayer):
                         payoff -= event.value['offer']
         
         payoff += ((7 - (final_position + 1)) * self.group.value())
-        self._initial_position = final_position
+        self._final_position = final_position
         self.payoff += payoff
         print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((6 + 1 - (final_position + 1)) * self.group.value()))
