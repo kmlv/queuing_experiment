@@ -36,7 +36,7 @@ def parse_config(config_file):
             'players_per_group': int(row['players_per_group']),
             'swap_method': str(row['swap_method']),
             'messaging': True if row['messaging'] == 'TRUE' else False,
-            'value': int(row['value']),
+            'value': str(row['value']),
             'endowment': int(row['endowment']),
             'practice': True if row['practice'] == 'TRUE' else False,
         })
@@ -122,9 +122,14 @@ class Group(RedwoodGroup):
     
     def swap_method(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['swap_method']
-    
+
     def value(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['value']
+    
+    def value_list(self):
+        valueList = [int(i) for i in parse_config(self.session.config['config_file'])[self.round_number-1]['value'].strip('][').split(',')]
+        print("valueList: ",valueList)
+        return valueList
 
     def endowment(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['endowment']
@@ -199,8 +204,9 @@ class Player(BasePlayer):
                     final_position = event.value['senderPosition']
                     if self.group.swap_method() != 'swap':
                         payoff -= event.value['offer']
-        
-        payoff += ((7 - (final_position + 1)) * self.group.value())
+
+        val_list = self.group.value_list()
+        payoff += ((7 - (final_position + 1)) * val_list[self._initial_position])
         self._final_position = final_position
         self.payoff += payoff
 

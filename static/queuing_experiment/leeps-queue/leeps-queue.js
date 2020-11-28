@@ -272,6 +272,9 @@ export class LeepsQueue extends PolymerElement {
             queueList: {
                 type: Array,
             },
+            valueList: {
+                type: Array,
+            },
             swapMethod: {
                 type: String
             },
@@ -332,6 +335,9 @@ export class LeepsQueue extends PolymerElement {
         this.set('myPosition', this.initialPosition);
         this.set('payoff', this.endowment);
         this.set('exchangeText', "None");
+        console.log(this.valueList)
+        this.set('value', this.valueList[this.myPosition]);
+        console.log(this.value);
         
     }
 
