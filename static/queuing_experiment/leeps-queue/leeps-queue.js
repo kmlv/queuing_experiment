@@ -489,6 +489,18 @@ export class LeepsQueue extends PolymerElement {
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
+
+                let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED' ];
+                this.push('history', historyVector);
+            }
+            if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+
+                let sIndex = this.queueList.indexOf(playerDecision['senderID']);
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED' ];
+                this.push('history', historyVector);
             }
         }
     }
