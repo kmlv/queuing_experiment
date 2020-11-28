@@ -39,7 +39,7 @@ class ResultsWaitPage(WaitPage):
 
 class Results(Page):
 
-    timeout_seconds = 20
+    timeout_seconds = 45
 
     def is_displayed(self):
         return self.subsession.config is not None
@@ -52,11 +52,40 @@ class Results(Page):
             return {
                 
             }
-
+        events = list(self.group.events.filter(channel='swap'))
+        transactions = []
+        for event in events:
+            if event.value['type'] == 'accept' and event.value['channel'] == 'incoming':
+                if self.player.id_in_group == event.value['senderID']:
+                    transactions.append({
+                        'original_position': event.value['senderPosition'] + 1,
+                        'new_position': event.value['receiverPosition'] + 1,
+                        'transfer': event.value['offer'],
+                    })
+                elif self.player.id_in_group == event.value['receiverID']:
+                    transactions.append({
+                        'original_position': event.value['receiverPosition'] + 1,
+                        'new_position': event.value['senderPosition'] + 1,
+                        'transfer': -1 * event.value['offer'],
+                    })
+            if event.value['type'] == 'reject' and event.value['channel'] == 'incoming':
+                if self.player.id_in_group == event.value['senderID']:
+                    transactions.append({
+                        'original_position': event.value['senderPosition'] + 1,
+                        'new_position': event.value['senderPosition'] + 1,
+                        'transfer': "REJECTED",
+                    })
+                elif self.player.id_in_group == event.value['receiverID']:
+                    transactions.append({
+                        'original_position': event.value['receiverPosition'] + 1,
+                        'new_position': event.value['receiverPosition'] + 1,
+                        'transfer': "REJECTED",
+                    })
 
         return {
             'final_position': self.player.final_position() + 1,
             'initial_position': self.player.initial_position() + 1,
+            'transactions': transactions,
         }
 
 class Payment(Page):

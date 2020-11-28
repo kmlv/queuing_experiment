@@ -6,6 +6,23 @@
 {% endblock %}
 
 {% block content %}
+    <style>
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 
     <div>Your payoff in this round: {{ player.payoff }} </div>
 
@@ -13,6 +30,22 @@
 
     <div>Your final position: {{ final_position }} </div>
 
+    <table class="table" style="margin-top:20px; margin-bottom:10px">
+        <th>
+            <td>Original Position</td>
+            <td>New Position</td>
+            <td>Transfer</td>
+        </th>
+        {% for transaction in transactions %}
+            <tr>
+                <td></td>
+                <td>{{ transaction.original_position }}</td>
+                <td>{{ transaction.new_position }}</td>
+                <td>{{ transaction.transfer }}</td>
+            </tr>
+        {% endfor %}
+                
+    </table>
 
     <div>{% if subsession.config.practice %} This was a practice round so your payoff in this round does not count
          {% endif %}</div>
