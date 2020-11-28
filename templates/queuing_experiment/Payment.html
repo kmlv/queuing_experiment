@@ -8,8 +8,13 @@
 {% block content %}
 
 <p>
-Congratulations! You have completed the experiment. The total points you earn in this experiment is {{ payoff }}.
-Please press next to end the experiment.
+Congratulations! You have completed the experiment.</p>
+<p>
+The rounds which determines your payment were randomly decided as round {{ payoff_round1 }} and round {{ payoff_round2 }}.    
+</p>
+<p>
+ Your payment is {{payoff}}.
+    Please press next to end the experiment.
 </p>
 
     {% next_button %}

@@ -14,12 +14,10 @@ def get_config_columns(group):
         config['shuffle_role'],
         config['players_per_group'],
         config['swap_method'],
-        config['pay_method'],
-        config['discrete'],
         config['messaging'],
         config['value'],
         config['endowment'],
-        config['service_time'],
+        config['practice'],
     ]
 
 def get_output_table_header(groups):
@@ -33,12 +31,10 @@ def get_output_table_header(groups):
         'shuffle_role',
         'players_per_group',
         'swap_method',
-        'pay_method',
-        'discrete',
         'messaging',
         'value',
         'endowment',
-        'service_time',
+        'practice'
     ]
 
     header += [

@@ -51,6 +51,24 @@ class Subsession(BaseSubsession):
         if not config:
             return
 
+        #Random rounds picked for payment
+        self.session.vars['payment_round1'] = 0
+        self.session.vars['payment_round2'] = 0
+
+        while self.session.vars['payment_round1'] == 0:
+            rnd = random.randint(1, self.num_rounds())
+            if parse_config(self.session.config['config_file'])[rnd-1]['practice']:
+                pass
+            else:
+                self.session.vars['payment_round1'] = rnd
+        
+        while self.session.vars['payment_round2'] == 0:
+            rnd = random.randint(1, self.num_rounds())
+            if parse_config(self.session.config['config_file'])[rnd-1]['practice'] or rnd == self.session.vars['payment_round1']:
+                pass
+            else:
+                self.session.vars['payment_round2'] = rnd
+
         num_silos = self.session.config['num_silos']
         fixed_id_in_group = not config['shuffle_role']
 
@@ -151,6 +169,7 @@ class Player(BasePlayer):
     _initial_position = models.IntegerField()
     _initial_decision = models.IntegerField()
     _final_position = models.IntegerField()
+    final_payoff = models.CurrencyField()
 
     def initial_position(self):
         return self._initial_position
@@ -172,22 +191,24 @@ class Player(BasePlayer):
         for event in events:
             
             if event.value['type'] == 'accept' and event.value['channel'] == 'incoming':
-                print(event.value)
                 if self.id_in_group == event.value['senderID']:
                     final_position = event.value['receiverPosition']
                     if self.group.swap_method() != 'swap':
-                        print(self.id_in_group,"gain " , event.value['offer'])
                         payoff += event.value['offer']
                 elif self.id_in_group == event.value['receiverID']:
                     final_position = event.value['senderPosition']
                     if self.group.swap_method() != 'swap':
-                        print(self.id_in_group,"lose " , event.value['offer'])
                         payoff -= event.value['offer']
         
         payoff += ((7 - (final_position + 1)) * self.group.value())
         self._final_position = final_position
         self.payoff += payoff
-        
+
+        print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((6 + 1 - (final_position + 1)) * self.group.value()))
+
         #practice round does not count
-        if self.group.subsession.practice():
+        if self.group.practice():
             self.participant.payoff -= self.payoff
+        
+        if self.round_number == self.subsession.num_rounds():
+            self.final_payoff = self.in_round(self.session.vars['payment_round1']).payoff + self.in_round(self.session.vars['payment_round2']).payoff
