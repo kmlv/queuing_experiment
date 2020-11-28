@@ -9,9 +9,13 @@
 
     <div>Your payoff in this round: {{ player.payoff }} </div>
 
+    <div>Your starting position: {{ initial_position }} </div>
+
     <div>Your final position: {{ final_position }} </div>
 
-    <div>Your total payoff so far: {{ player.participant.payoff }} </div>
+
+    <div>{% if subsession.config.practice %} This was a practice round so your payoff in this round does not count
+         {% endif %}</div>
 
     {% next_button %}
 

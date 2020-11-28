@@ -30,18 +30,15 @@ def parse_config(config_file):
     for row in rows:
         rounds.append({
             'round_number': int(row['round_number']),
-            'num_period': int(row['num_period']),
             'group_id': int(row['group_id']),
             'duration': int(row['duration']),
             'shuffle_role': True if row['shuffle_role'] == 'TRUE' else False,
             'players_per_group': int(row['players_per_group']),
             'swap_method': str(row['swap_method']),
-            'pay_method': str(row['pay_method']),
-            'discrete': True if row['discrete'] == 'TRUE' else False,
             'messaging': True if row['messaging'] == 'TRUE' else False,
             'value': int(row['value']),
             'endowment': int(row['endowment']),
-            'service_time': int(row['service_time']),
+            'practice': True if row['practice'] == 'TRUE' else False,
         })
     return rounds
 
@@ -102,19 +99,11 @@ class Subsession(BaseSubsession):
 
 class Group(RedwoodGroup):
 
-    
-
-    def num_subperiods(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['num_period']
-
     def period_length(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['duration']
     
     def swap_method(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['swap_method']
-    
-    def pay_method(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['pay_method']
     
     def value(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['value']
@@ -122,14 +111,11 @@ class Group(RedwoodGroup):
     def endowment(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['endowment']
     
-    def service_time(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['service_time']
-    
     def messaging(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['messaging']
-    
-    def discrete(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['discrete']
+
+    def practice(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['practice']
     
     # returns a list of the queue where index is position and value is player id
     def queue_list(self):
@@ -201,4 +187,7 @@ class Player(BasePlayer):
         payoff += ((7 - (final_position + 1)) * self.group.value())
         self._final_position = final_position
         self.payoff += payoff
-        print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((6 + 1 - (final_position + 1)) * self.group.value()))
+        
+        #practice round does not count
+        if self.group.subsession.practice():
+            self.participant.payoff -= self.payoff
