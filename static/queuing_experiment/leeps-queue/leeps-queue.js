@@ -528,9 +528,15 @@ export class LeepsQueue extends PolymerElement {
             alert("This Player is you!");
             return;
         }
-        if(this._showOffer()) if(this.shadowRoot.querySelector('#offer').value == ""){
-            alert("Input an offer");
-            return;
+        if(this._showOffer()) {
+            if(this.shadowRoot.querySelector('#offer').value == ""){
+                alert("Input an offer");
+                return;
+            }
+            if(parseInt(this.shadowRoot.querySelector('#offer').value) > this.payoff){
+                alert("You don't have enough points");
+                return;
+            }
         }
         
         this.set("requestSent", true);
