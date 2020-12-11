@@ -49,7 +49,7 @@ def get_output_table_header(groups):
 
     header += [
         'event_type',
-        'sender_code'
+        'sender_code',
         'senderID',
         'sender_position',
         'receiver_code',
