@@ -51,12 +51,15 @@ def get_output_table_header(groups):
 
     header += [
         'event_type',
+        'sender_code'
         'senderID',
         'sender_position',
+        'receiver_code',
         'receiverID',
         'receiver_position',
         'offer',
-        'message'
+        'message',
+        'request_id',
     ]
     
     return header
@@ -80,15 +83,23 @@ def get_output_game(events):
     
     tick = 0
 
+    request_ids = {}
+    request_counter = 0
 
     positions = {p.participant.code: p.initial_position() for p in players}
     for event in events:
         if event.channel == 'swap' and event.value['channel'] == 'incoming':
+            sender = group.get_player_by_id(event.value['senderID']).participant.code
+            receiver = group.get_player_by_id(event.value['receiverID']).participant.code
+
+            #this swaps positions
             if event.value['type'] == 'accept':
-                sender = group.get_player_by_id(event.value['senderID']).participant.code
-                receiver = group.get_player_by_id(event.value['receiverID']).participant.code
                 positions[sender] = event.value['receiverPosition']
                 positions[receiver] = event.value['senderPosition']
+
+            if event.value['type'] == 'request':
+                request_ids[sender] = request_counter
+                request_counter += 1
 
             row = []
             row += config_columns
@@ -110,8 +121,10 @@ def get_output_game(events):
                     ]
             row += [
                 event.value['type'],
+                sender,
                 event.value['senderID'],
                 event.value['senderPosition'],
+                receiver,
                 event.value['receiverID'],
                 event.value['receiverPosition'],
                 event.value['offer'],
@@ -126,6 +139,22 @@ def get_output_game(events):
                     'N/A'
                 ]
             
+            if event.value['type'] == 'request':
+                row += [
+                    request_ids[sender]
+                ]
+            elif event.value['type'] == 'accept':
+                row += [
+                    request_ids[receiver]
+                ]
+            elif event.value['type'] == 'reject':
+                row += [
+                    request_ids[receiver]
+                ]
+            elif event.value['type'] == 'cancel':
+                row += [
+                    request_ids[sender]
+                ]
             rows.append(row)
             tick += 1
     return rows
