@@ -365,6 +365,10 @@ export class LeepsQueue extends PolymerElement {
     }
 
     _pick(e){
+        if (this.requestSent == true) {
+            alert("To start a new request, you need to cancel the current one.");
+            return;
+        }
         var index = e.model.index;
         index = 6 - parseInt(index);
         this.set("exchangeText", index.toString() );
