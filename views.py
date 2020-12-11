@@ -9,7 +9,6 @@ def get_config_columns(group):
 
     return [
         config['round_number'],
-        config['group_id'],
         config['duration'],
         config['shuffle_role'],
         config['players_per_group'],
@@ -26,7 +25,6 @@ def get_output_table_header(groups):
 
     header = [
         'round_number',
-        'group_id',
         'duration',
         'shuffle_role',
         'players_per_group',
@@ -78,7 +76,7 @@ def get_output_game(events):
 
     players = events[0].group.get_players()
     group = events[0].group
-    max_num_players = math.ceil(group.session.num_participants / group.session.config['num_silos'])
+    max_num_players = math.ceil(group.session.num_participants / len(players))
     config_columns = get_config_columns(group)
     
     tick = 0
