@@ -22,9 +22,14 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
+
+        mark { 
+            background-color: yellow;
+            color: black;
+            }
     </style>
 
-    <div>Your payoff in this round: {{ player.payoff }} </div>
+    <div><mark>Your payoff in this round: {{ player.payoff }}</mark></div>
 
     <div>Your starting position: {{ initial_position }} </div>
 
