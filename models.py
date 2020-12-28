@@ -162,11 +162,16 @@ class Group(RedwoodGroup):
         # method call
         print(event.value)
         event.value['channel'] = 'outgoing'
-        if event.value['type'] == 'accept':
+        if event.value['type'] == 'request':
             if 'message' in event.value:
+                pf.censor(event.value['message'])
                 event.value['message'] = pf.censor(event.value['message'])
         # broadcast the updated data out to all subjects
         self.send('swap', event.value)
+        self.save()
+    
+    def _on_report_event(self, event=None, **kwargs):
+        print(event.value['message'])
         self.save()
 
 

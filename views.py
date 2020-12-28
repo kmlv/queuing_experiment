@@ -3,6 +3,8 @@ from operator import concat
 from functools import reduce
 from .models import parse_config
 import math
+from profanity_filter import ProfanityFilter
+pf = ProfanityFilter()
 
 def get_config_columns(group):
     config = parse_config(group.session.config['config_file'])[group.round_number - 1]
@@ -59,6 +61,7 @@ def get_output_table_header(groups):
         'offer',
         'message',
         'request_id',
+        'report'
     ]
     
     return header
@@ -88,6 +91,12 @@ def get_output_game(events):
     request_counter = 0
 
     positions = {p.participant.code: p.initial_position() for p in players}
+    reported_messages = []
+    for event in events:
+        if event.channel == 'report':
+            print("Reported: ", event.value['message'])
+            reported_messages.append(event.value['message'].strip())
+
     for event in events:
         if event.channel == 'swap' and event.value['channel'] == 'incoming':
             sender = group.get_player_by_id(event.value['senderID']).participant.code
@@ -145,17 +154,29 @@ def get_output_game(events):
                 row += [
                     request_ids[sender]
                 ]
+                if pf.censor(event.value['message'].strip()) in reported_messages:
+                    print("Connected: ", event.value['message'])
+                    row += [
+                        1
+                    ]
+                else:
+                    row += [
+                        0
+                    ]
             elif event.value['type'] == 'accept':
                 row += [
-                    request_ids[receiver]
+                    request_ids[receiver],
+                    0
                 ]
             elif event.value['type'] == 'reject':
                 row += [
-                    request_ids[receiver]
+                    request_ids[receiver],
+                    0
                 ]
             elif event.value['type'] == 'cancel':
                 row += [
-                    request_ids[sender]
+                    request_ids[sender],
+                    0
                 ]
             rows.append(row)
             tick += 1
