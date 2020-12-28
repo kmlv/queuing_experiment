@@ -115,7 +115,7 @@ export class LeepsQueue extends PolymerElement {
                         </div>
                     </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
-                        <div class="layout vertical center">
+                        <div class="layout vertical center" style="margin-top:5px;">
                             <template is="dom-if" if="{{!_button(index,queueList)}}">
                                 <div class="circle" style="background-color:{{_shadeCircle(queueListItems, queueList)}};">
                                     <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">{{_reverseIndex(index)}}</p>
@@ -150,7 +150,7 @@ export class LeepsQueue extends PolymerElement {
                                         <span id='offerText'> </span>
             -->
                                 </p>
-                                    <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 10%;" required>
+                                    <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 10%;height: 70%;" required>
                                 
                             </template>
                         </div>
@@ -163,7 +163,7 @@ export class LeepsQueue extends PolymerElement {
                         </div class="layout vertical  borders" style="width: 45%;">
                             <p style="margin-right:10px;">Message</p>
                             <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
-                                <input id="message" type="text"  required>
+                                <input id="message" type="text" style="height: 70%;"  required>
                             </template>
                             <template is="dom-if" if="[[ !messaging ]]">
                                 <p style="margin-left:10px;">Disabled</p>
@@ -203,6 +203,9 @@ export class LeepsQueue extends PolymerElement {
                                                 margin-left:auto;">
                                         <button type="button" on-click="_handleaccept" style="background-color:#ADD8E6;">Accept</button>
                                         <button type="button" on-click="_handlereject" style="background-color:#FF6961;">Reject</button>
+                                        <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
+                                            <button type="button" on-click="_handlereport" style="background-color:#FF6961;">Report</button>
+                                        </template>
                                     </div>
                                 </div>
                             </template>
@@ -218,6 +221,7 @@ export class LeepsQueue extends PolymerElement {
                                     <tr> 
                                         <th>Original Position </th>
                                         <th>New Position </th>
+                                        <th>Status </th>
                                         <th>Transfer </th>
                                     </tr>
                                     <template is="dom-repeat" index-as="index" items="{{history}}" as="historyVector">
@@ -225,6 +229,7 @@ export class LeepsQueue extends PolymerElement {
                                             <td>[[_array(historyVector, 0)]] </td>
                                             <td>[[_array(historyVector, 1)]] </td>
                                             <td>[[_array(historyVector, 2)]] </td>
+                                            <td>[[_array(historyVector, 3)]] </td>
                                         </tr>
                                     </template>
                                 </table>
@@ -425,21 +430,43 @@ export class LeepsQueue extends PolymerElement {
             this.push('requests', request);
             console.log(this.requests);
         }
-        if(playerDecision['type'] == 'cancel' && playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup)){
+        if(playerDecision['type'] == 'cancel'){
             console.log("Cancel Event");
-            let newRequests = [];
-            for(let i = 0; i < this.requests.length; i++){
-                console.log(this.requests[i]['position'])
-                console.log(playerDecision['senderPosition']+ 1)
-                if ((this.requests[i]['position']) != (playerDecision['senderPosition']+ 1)){
-                    newRequests.push(this.requests[i]);
-                }
+            if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
+                let newRequests = [];
+                for(let i = 0; i < this.requests.length; i++){
+                    console.log(this.requests[i]['position'])
+                    console.log(playerDecision['senderPosition']+ 1)
+                    if ((this.requests[i]['position']) != (playerDecision['senderPosition']+ 1)){
+                        newRequests.push(this.requests[i]);
+                    }
 
+                }
+                console.log(newRequests);
+                this.set('requests', newRequests);
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+
+                
+                let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'CANCELLED', -1 *playerDecision['offer'] ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
+                this.push('history', historyVector);
             }
-            console.log(newRequests);
-            this.set('requests', newRequests);
+            if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+
+                console.log("cancelled");
+                let sIndex = this.queueList.indexOf(playerDecision['senderID']);
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'CANCELLED', playerDecision['offer'] ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
+                this.push('history', historyVector);
+                console.log(this.history);
+            }
         }
         if(playerDecision['type'] == 'accept'){
+            console.log("accept");
             console.log(this.requests);
             let newRequests = [];
             if(playerDecision['senderID'] != parseInt(this.$.constants.idInGroup) && playerDecision['receiverID'] != parseInt(this.$.constants.idInGroup)){
@@ -485,12 +512,14 @@ export class LeepsQueue extends PolymerElement {
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ rIndex + 1, sIndex + 1, -1 *playerDecision['offer'] ];
+                let historyVector =[ rIndex + 1, sIndex + 1, 'ACCEPTED', -1 *playerDecision['offer'] ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
 
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ sIndex + 1, rIndex+ 1,  playerDecision['offer'] ];
+                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACCEPTED', playerDecision['offer'] ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             
@@ -501,7 +530,8 @@ export class LeepsQueue extends PolymerElement {
                 this.set('currentRequestPartner', 0);
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED' ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', -1 *playerDecision['offer'] ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
@@ -509,16 +539,22 @@ export class LeepsQueue extends PolymerElement {
                 this.set('currentRequestPartner', 0);
 
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED' ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', playerDecision['offer'] ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
         }
     }
     
     _handlerequest(){
+        if(this.requestSent){
+            return;
+        }
         console.log("request");
+        this.set("requestSent", true);
         if(this.$.exchangeText.textContent == "None"){
             alert("Select a player!");
+            this.set("requestSent", false);
             return;
         }
         let exchangePlayerIndex = parseInt(this.$.exchangeText.textContent) - 1;
@@ -526,24 +562,27 @@ export class LeepsQueue extends PolymerElement {
         
         if(exchangePlayerIndex > this.myPosition){
             alert("This Player is behind you!");
+            this.set("requestSent", false);
             return;
         }
         if(exchangePlayer == parseInt(this.$.constants.idInGroup)){
             alert("This Player is you!");
+            this.set("requestSent", false);
             return;
         }
         if(this._showOffer()) {
             if(this.shadowRoot.querySelector('#offer').value == ""){
                 alert("Input an offer");
+                this.set("requestSent", false);
                 return;
             }
             if(parseInt(this.shadowRoot.querySelector('#offer').value) > this.payoff){
                 alert("You don't have enough points");
+                this.set("requestSent", false);
                 return;
             }
         }
         
-        this.set("requestSent", true);
         this.set('currentRequestPartner', exchangePlayer);
         let newRequest = {
             'channel': 'incoming',
@@ -642,6 +681,13 @@ export class LeepsQueue extends PolymerElement {
             'offer': 0,
         };
         console.log(newRequest);
+        this.$.channel.send(newRequest);
+    }
+    _handlereport(e) {
+        console.log("report");
+        var requestsVector = e.model.requestsVector;
+
+
         this.$.channel.send(newRequest);
     }
 }

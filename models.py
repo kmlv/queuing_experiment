@@ -10,6 +10,9 @@ import csv
 import random
 import math
 import otree.common
+from profanity_filter import ProfanityFilter
+pf = ProfanityFilter()
+
 
 doc = """
 This is a Lines Queueing project
@@ -159,7 +162,8 @@ class Group(RedwoodGroup):
         # method call
         print(event.value)
         event.value['channel'] = 'outgoing'
-
+        if event.value['type'] == 'accept':
+            event.value['message'] = pf.censor(event.value['message'])
         # broadcast the updated data out to all subjects
         self.send('swap', event.value)
         # cache state of queue so that client pages will not reset on reload
