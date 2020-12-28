@@ -46,6 +46,7 @@ def get_output_table_header(groups):
         header.append('p{}_code'.format(player_num))
         header.append('p{}_ID'.format(player_num))
         header.append('p{}_position'.format(player_num))
+        header.append('p{}_value'.format(player_num))
 
     header += [
         'event_type',
@@ -78,6 +79,8 @@ def get_output_game(events):
     group = events[0].group
     max_num_players =  len(players)
     config_columns = get_config_columns(group)
+
+    values = [int(i) for i in parse_config(group.session.config['config_file'])[group.round_number-1]['value'].strip('][').split(',')]
     
     tick = 0
 
@@ -116,15 +119,16 @@ def get_output_game(events):
                         pcode,
                         players[player_num].id_in_group,
                         positions[pcode],
+                        values[group.get_player_by_id(players[player_num].id_in_group).initial_position()]
                     ]
             row += [
                 event.value['type'],
                 sender,
                 event.value['senderID'],
-                event.value['senderPosition'],
+                positions[sender],
                 receiver,
                 event.value['receiverID'],
-                event.value['receiverPosition'],
+                positions[receiver],
                 event.value['offer'],
                 
             ]
