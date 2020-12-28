@@ -88,6 +88,11 @@ export class LeepsQueue extends PolymerElement {
                 on-event="_handleSwapEvent">
             </redwood-channel>
 
+            <redwood-channel
+                id="report"
+                channel="report">
+            </redwood-channel>
+
             <div class="layout horizontal center" style="width: 100%;">
                 <div class="borders" style="width: 20%;">
                     Round: [[roundNumber]]
@@ -106,7 +111,7 @@ export class LeepsQueue extends PolymerElement {
             
 
             <div class="layout vertical center">
-                <div class="layout horizontal borders" style="height: 160px; width: 100%;">
+                <div class="layout horizontal borders" style="height: 160px; width: 100%;padding-top:10px;">
                     <div>
                         <div class="layout vertical center" style="text-align: center;">
                             <p style="height: 65px;
@@ -115,7 +120,7 @@ export class LeepsQueue extends PolymerElement {
                         </div>
                     </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
-                        <div class="layout vertical center" style="margin-top:5px;">
+                        <div class="layout vertical center" style="padding-top:5px;">
                             <template is="dom-if" if="{{!_button(index,queueList)}}">
                                 <div class="circle" style="background-color:{{_shadeCircle(queueListItems, queueList)}};">
                                     <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">{{_reverseIndex(index)}}</p>
@@ -150,7 +155,7 @@ export class LeepsQueue extends PolymerElement {
                                         <span id='offerText'> </span>
             -->
                                 </p>
-                                    <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 10%;height: 70%;" required>
+                                    <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                                 
                             </template>
                         </div>
@@ -161,12 +166,12 @@ export class LeepsQueue extends PolymerElement {
                             <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancel your request</button>
                         </template>
                         </div class="layout vertical  borders" style="width: 45%;">
-                            <p style="margin-right:10px;">Message</p>
-                            <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
-                                <input id="message" type="text" style="height: 70%;"  required>
+                            <p style="margin-right:10px;margin-top:50px;">Message</p>
+                            <template is="dom-if" if="[[ messaging ]]" >
+                                <input id="message" type="text" style="height: 70%;padding-top:10px;padding-bottom:10px;margin-top:50px;margin-bottom:10px;"  required>
                             </template>
                             <template is="dom-if" if="[[ !messaging ]]">
-                                <p style="margin-left:10px;">Disabled</p>
+                                <p style="margin-left:10px;margin-top:50px;">Disabled</p>
                             </template>
                     </div>
                     </div>
@@ -175,8 +180,20 @@ export class LeepsQueue extends PolymerElement {
 
                 <div class="layout horizontal" style="height: 500px; width: 100%;">
                     <div class="layout vertical borders" style="width: 50%;">
-                        <div class="borders" style="width: 100%;text-align: center;">
-                            <p style="font-size:150%;">Exchange Requests:</p>
+                        <div class="layout horizontal borders" style="width: 100%;">
+                            <div class="borders" style="width: 50%;">
+                                <p style="font-size:150%;">Exchange Requests:</p>
+                            </div>
+                            <div class="layout vertical borders" style="width: 50%;">
+                                <p style="margin-top:2px;margin-bottom:2px;">Current Sent Request:</p>
+                                <p style="margin-top:2px;margin-bottom:2px;">To Position: [[_list(currentRequest, "position")]]</p>
+                                <template is="dom-if" if="[[ _showOffer() ]]">
+                                    <p style="margin-top:2px;margin-bottom:2px;">Offer: [[_list(currentRequest, "offer")]]</p>
+                                </template>
+                                <template is="dom-if" if="[[ messaging ]]">
+                                    <p style="margin-top:2px;margin-bottom:2px;overflow: auto;">Message: [[_list(currentRequest, "message")]]</p>
+                                </template>
+                            </div>
                         </div>
                         <div style="overflow: auto;">
                             <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
@@ -184,15 +201,15 @@ export class LeepsQueue extends PolymerElement {
                                     <div class="layout vertical" >
                                         <div class="layout horizontal" style="
                                                                             padding-top:0px;">
-                                            <p style="margin-right:10px;">Position: [[_list(requestsVector, "position")]]  </p>
+                                            <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Position: [[_list(requestsVector, "position")]]  </p>
                                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                                <p>Amount: [[_list(requestsVector, "offer")]]</p>
+                                                <p style="margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
                                             </template>
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
                                             <div>
                                                 Message:
-                                                <p style="width:250px;overflow: auto;">
+                                                <p style="margin-top:2px;margin-bottom:2px;width:250px;overflow: auto;">
                                                  [[_list(requestsVector, "message")]]
                                                 </p>
                                             </div>
@@ -263,6 +280,9 @@ export class LeepsQueue extends PolymerElement {
             currentRequestPartner:{
                 type: Number,
                 value: 0
+            },
+            currentRequest: {
+                type: Object,
             },
             messaging:{
                 type: Boolean,
@@ -343,6 +363,7 @@ export class LeepsQueue extends PolymerElement {
         console.log(this.valueList)
         this.set('value', this.valueList[this.myPosition]);
         console.log(this.value);
+        this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
         
     }
 
@@ -430,6 +451,16 @@ export class LeepsQueue extends PolymerElement {
             this.push('requests', request);
             console.log(this.requests);
         }
+        if(playerDecision['type'] == 'request' && playerDecision['senderID'] == parseInt(this.$.constants.idInGroup)){
+            let curReq = {'position': playerDecision['receiverPosition'] + 1};
+            curReq['message'] = playerDecision['message'];
+            if(this._showOffer()){
+                curReq['offer'] = playerDecision['offer'];
+            } else{
+                curReq['offer'] = 'N/A';
+            }
+            this.set("currentRequest", curReq);
+        }
         if(playerDecision['type'] == 'cancel'){
             console.log("Cancel Event");
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
@@ -446,6 +477,7 @@ export class LeepsQueue extends PolymerElement {
                 this.set('requests', newRequests);
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
                 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
@@ -456,6 +488,7 @@ export class LeepsQueue extends PolymerElement {
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
                 console.log("cancelled");
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
@@ -503,10 +536,12 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 this.set("exchangeText", "None" );
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
             }
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
                 let newPayoff = this.payoff - playerDecision['offer'];
                 this.set("payoff", newPayoff);
             }
@@ -528,6 +563,7 @@ export class LeepsQueue extends PolymerElement {
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
                 let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', -1 *playerDecision['offer'] ];
@@ -535,8 +571,8 @@ export class LeepsQueue extends PolymerElement {
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
-                this.set("requestSent", false);
-                this.set('currentRequestPartner', 0);
+                //this.set("requestSent", false);
+                //this.set('currentRequestPartner', 0);
 
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
                 let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', playerDecision['offer'] ];
@@ -584,6 +620,8 @@ export class LeepsQueue extends PolymerElement {
         }
         
         this.set('currentRequestPartner', exchangePlayer);
+        
+
         let newRequest = {
             'channel': 'incoming',
             'type': 'request',
@@ -593,18 +631,24 @@ export class LeepsQueue extends PolymerElement {
             'receiverPosition': exchangePlayerIndex,
             
         };
+
+        let curReq = {'position': exchangePlayerIndex + 1};
         if(this.messaging && (this.shadowRoot.querySelector('#message').value != "" || this.shadowRoot.querySelector('#message').value != " ")){
             newRequest['message'] = this.shadowRoot.querySelector('#message').value;
+            curReq['message'] = this.shadowRoot.querySelector('#message').value;
         }else{
-            newRequest['message'] = "No Message";
+            newRequest['message'] = "N/A";
         }
         if(this._showOffer()){
             let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
             //this.shadowRoot.querySelector('#offerText').textContent = this.shadowRoot.querySelector('#offer').value;
             newRequest['offer'] = offer;
+            curReq['offer'] = offer;
         } else{
             newRequest['offer'] = 0;
+            curReq['offer'] = 'N/A';
         }
+        this.set("currentRequest", curReq);
         this.$.channel.send(newRequest);
     }
     _handlecancel(){
@@ -627,6 +671,7 @@ export class LeepsQueue extends PolymerElement {
             'receiverPosition': this.queueList.indexOf(exchangePlayer),
             'offer': 0,
         };
+        this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
         
         this.$.channel.send(newRequest);
     }
@@ -644,6 +689,7 @@ export class LeepsQueue extends PolymerElement {
         };
         this.set("requestSent", false);
         this.set("exchangeText", "None" );
+        this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
         
         if(this._showOffer()){
@@ -686,9 +732,11 @@ export class LeepsQueue extends PolymerElement {
     _handlereport(e) {
         console.log("report");
         var requestsVector = e.model.requestsVector;
+        var data = {
+            'message': requestsVector['message']
+        };
 
-
-        this.$.channel.send(newRequest);
+        this.$.report.send(data);
     }
 }
 
