@@ -60,12 +60,14 @@ class Results(Page):
                     transactions.append({
                         'original_position': event.value['senderPosition'] + 1,
                         'new_position': event.value['receiverPosition'] + 1,
+                        'status': "ACCEPTED",
                         'transfer': event.value['offer'],
                     })
                 elif self.player.id_in_group == event.value['receiverID']:
                     transactions.append({
                         'original_position': event.value['receiverPosition'] + 1,
                         'new_position': event.value['senderPosition'] + 1,
+                        'status': "ACCEPTED",
                         'transfer': -1 * event.value['offer'],
                     })
             if event.value['type'] == 'reject' and event.value['channel'] == 'incoming':
@@ -73,13 +75,30 @@ class Results(Page):
                     transactions.append({
                         'original_position': event.value['senderPosition'] + 1,
                         'new_position': event.value['senderPosition'] + 1,
-                        'transfer': "REJECTED",
+                        'status': "REJECTED",
+                        'transfer': 1 * event.value['offer'],
                     })
                 elif self.player.id_in_group == event.value['receiverID']:
                     transactions.append({
                         'original_position': event.value['receiverPosition'] + 1,
                         'new_position': event.value['receiverPosition'] + 1,
-                        'transfer': "REJECTED",
+                        'status': "REJECTED",
+                        'transfer': -1 * event.value['offer'],
+                    })
+            if event.value['type'] == 'cancel' and event.value['channel'] == 'incoming':
+                if self.player.id_in_group == event.value['senderID']:
+                    transactions.append({
+                        'original_position': event.value['senderPosition'] + 1,
+                        'new_position': event.value['senderPosition'] + 1,
+                        'status': "CANCELLED",
+                        'transfer': 1 * event.value['offer'],
+                    })
+                elif self.player.id_in_group == event.value['receiverID']:
+                    transactions.append({
+                        'original_position': event.value['receiverPosition'] + 1,
+                        'new_position': event.value['receiverPosition'] + 1,
+                        'status': "CANCELLED",
+                        'transfer': -1 * event.value['offer'],
                     })
 
         return {

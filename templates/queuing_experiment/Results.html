@@ -40,6 +40,7 @@
         <th>
             <td>Original Position</td>
             <td>New Position</td>
+            <td>Status</td>
             <td>Transfer</td>
         </th>
         {% for transaction in transactions %}
@@ -47,6 +48,7 @@
                 <td></td>
                 <td>{{ transaction.original_position }}</td>
                 <td>{{ transaction.new_position }}</td>
+                <td>{{ transaction.status }}</td>
                 <td>{{ transaction.transfer }}</td>
             </tr>
         {% endfor %}
