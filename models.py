@@ -163,12 +163,10 @@ class Group(RedwoodGroup):
         print(event.value)
         event.value['channel'] = 'outgoing'
         if event.value['type'] == 'accept':
-            event.value['message'] = pf.censor(event.value['message'])
+            if 'message' in event.value:
+                event.value['message'] = pf.censor(event.value['message'])
         # broadcast the updated data out to all subjects
         self.send('swap', event.value)
-        # cache state of queue so that client pages will not reset on reload
-        #self.cache = event.value
-        # manually save all updated fields to db. otree redwood thing
         self.save()
 
 
