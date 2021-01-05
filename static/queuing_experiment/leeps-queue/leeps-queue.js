@@ -221,7 +221,7 @@ export class LeepsQueue extends PolymerElement {
                                         <button type="button" on-click="_handleaccept" style="background-color:#ADD8E6;">Accept</button>
                                         <button type="button" on-click="_handlereject" style="background-color:#FF6961;">Reject</button>
                                         <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
-                                            <button type="button" on-click="_handlereport" style="background-color:#FF6961;">Report</button>
+                                            <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Report</button>
                                         </template>
                                     </div>
                                 </div>
