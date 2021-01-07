@@ -168,7 +168,7 @@ export class LeepsQueue extends PolymerElement {
                         </div class="layout vertical  borders" style="width: 45%;">
                             <p style="margin-right:10px;margin-top:50px;">Message</p>
                             <template is="dom-if" if="[[ messaging ]]" >
-                                <input id="message" type="text" style="height: 70%;padding-top:10px;padding-bottom:10px;margin-top:50px;margin-bottom:10px;"  required>
+                                <input id="message" type="text" style="height: 70px;padding-top:10px;padding-bottom:10px;margin-top:35px;margin-bottom:10px;"  required>
                             </template>
                             <template is="dom-if" if="[[ !messaging ]]">
                                 <p style="margin-left:10px;margin-top:50px;">Disabled</p>
@@ -191,7 +191,9 @@ export class LeepsQueue extends PolymerElement {
                                     <p style="margin-top:2px;margin-bottom:2px;">Offer: [[_list(currentRequest, "offer")]]</p>
                                 </template>
                                 <template is="dom-if" if="[[ messaging ]]">
-                                    <p style="margin-top:2px;margin-bottom:2px;overflow: auto;">Message: [[_list(currentRequest, "message")]]</p>
+                                    <p style="margin-top:2px;margin-bottom:2px;overflow: auto; white-space:nowrap;">
+                                        <span style="display:inline-block;">Message: [[_list(currentRequest, "message")]]</span>
+                                    </p>
                                 </template>
                             </div>
                         </div>
@@ -203,14 +205,14 @@ export class LeepsQueue extends PolymerElement {
                                                                             padding-top:0px;">
                                             <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Position: [[_list(requestsVector, "position")]]  </p>
                                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                                <p style="margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
+                                                <p style="display:inline;margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
                                             </template>
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
                                             <div>
                                                 Message:
-                                                <p style="margin-top:2px;margin-bottom:2px;width:250px;overflow: auto;">
-                                                 [[_list(requestsVector, "message")]]
+                                                <p style="margin-top:2px;margin-bottom:2px;width:250px;overflow: auto;white-space:nowrap;">
+                                                 <span style="display:inline-block;">[[_list(requestsVector, "message")]]</span>
                                                 </p>
                                             </div>
                                         </template>
