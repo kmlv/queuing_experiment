@@ -23,7 +23,7 @@ def get_config_columns(group):
 
 def get_output_table_header(groups):
     num_silos = groups[0].session.config['num_silos']
-    max_num_players = len(groups[0].get_players())
+    max_num_players = parse_config(group.session.config['config_file'])[group.round_number - 1]['players_per_group']
 
     header = [
         'round_number',
