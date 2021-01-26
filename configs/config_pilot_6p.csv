@@ -1,9 +1,5 @@
 round_number,group_id,duration,shuffle_role,players_per_group,swap_method,messaging,value,practice,endowment
-1,1,120,TRUE,6,swap,FALSE,"[5,6,7,8,9,10]",TRUE,60
-2,1,120,TRUE,6,swap,FALSE,"[5,6,7,8,9,10]",FALSE,60
-3,1,120,TRUE,6,swap,TRUE,"[5,6,7,8,9,10]",FALSE,60
-4,1,120,TRUE,6,swap,TRUE,"[5,6,7,8,9,10]",FALSE,60
-5,1,120,TRUE,6,TL,FALSE,"[5,6,7,8,9,10]",FALSE,60
-6,1,120,TRUE,6,TL,FALSE,"[5,6,7,8,9,10]",FALSE,60
-7,1,120,TRUE,6,TL,TRUE,"[5,6,7,8,9,10]",FALSE,60
-8,1,120,TRUE,6,TL,TRUE,"[5,6,7,8,9,10]",FALSE,60
+1,1,180,TRUE,6,swap,FALSE,"[5,6,7,8,9,10]",TRUE,60
+2,1,180,TRUE,6,swap,TRUE,"[5,6,7,8,9,10]",FALSE,60
+3,1,180,TRUE,6,TL,FALSE,"[5,6,7,8,9,10]",FALSE,60
+4,1,180,TRUE,6,TL,TRUE,"[5,6,7,8,9,10]",FALSE,60
