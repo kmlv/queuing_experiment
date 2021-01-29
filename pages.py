@@ -23,6 +23,8 @@ class DecisionWaitPage(WaitPage):
 
 
 class Decision(Page):
+    def get_timeout_seconds(self):
+        return parse_config(self.group.session.config['config_file'])[self.group.round_number - 1]['duration']
 
     def is_displayed(self):
         return self.subsession.config is not None

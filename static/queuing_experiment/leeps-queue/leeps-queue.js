@@ -94,18 +94,20 @@ export class LeepsQueue extends PolymerElement {
             </redwood-channel>
 
             <div class="layout horizontal center" style="width: 100%;">
-                <div class="borders" style="width: 20%;">
+                <div class="borders" style="width: 33%;">
                     Round: [[roundNumber]]
                 </div>
-                <div class="borders" style="width: 30%;">
+                <div class="borders" style="width: 33%;">
                     Exchange Rule: [[swapMethod]]
                 </div>
-                <div class="borders" style="width: 30%;">
+                <div class="borders" style="width: 33%;">
                     Messaging: [[messaging]]
                 </div>
+                <!--
                 <div class="borders" style="width: 30%;">
                     Time Remaining: [[ _subperiodProgress ]]
                 </div>
+                -->
             </div>
 
             
@@ -423,8 +425,7 @@ export class LeepsQueue extends PolymerElement {
     }
     _updateSubperiodProgress(t) {
         const deltaT = (t - this.lastT);
-        const secondsPerSubperiod = this.periodLength / 1;
-        this._subperiodProgress = this.periodLength - Math.round(100 * ((deltaT / 1000) / secondsPerSubperiod));
+        this._subperiodProgress = this.periodLength - Math.round(100 * ((deltaT / 1000) ));
         this._animID = window.requestAnimationFrame(
             this._updateSubperiodProgress.bind(this));
     }
@@ -616,6 +617,11 @@ export class LeepsQueue extends PolymerElement {
             }
             if(parseInt(this.shadowRoot.querySelector('#offer').value) > this.payoff){
                 alert("You don't have enough points");
+                this.set("requestSent", false);
+                return;
+            }
+            if(parseInt(this.shadowRoot.querySelector('#offer').value) < 0){
+                alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
             }
