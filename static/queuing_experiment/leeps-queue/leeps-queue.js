@@ -235,7 +235,21 @@ export class LeepsQueue extends PolymerElement {
 
                     <div class="layout vertical" style="width: 50%;">
                         <div class="layout vertical borders">
-                            <div class="borders" style="height:40px;font-size:150%;">Your current payoff: [[payoff]]</div>
+                            <div class="borders layout horizontal" style="height:40px;font-size:120%;">
+                                <div style="width: 50%;">
+                                    Endowment: [[endowment]]
+                                </div>
+                                <template is="dom-if" if="[[ _showOffer() ]]">
+                                    <div style="width: 50%;">
+                                        Total Transfer: [[payoff]]
+                                    </div>
+                                </template>
+                                <template is="dom-if" if="[[ !_showOffer() ]]">
+                                    <div style="width: 50%;">
+                                        Total Transfer: N/A
+                                    </div>
+                                </template>
+                            </div>
                             <div class="borders" style="height:40px;font-size:150%;">Exchange History</div>
                             <div class="borders" style="height:400px;overflow: auto;">
                                 <table>
