@@ -96,7 +96,7 @@ class Subsession(BaseSubsession):
     def set_initial_positions(self):
         for g in self.get_groups():
             players = g.get_players()
-            positions = [1, 2, 3, 4, 5, 0]
+            positions = [i for i in range(len(players))]
             random.shuffle(positions)
             for i in range(len(positions)):
                 players[i]._initial_position = positions[i]
@@ -145,7 +145,8 @@ class Group(RedwoodGroup):
     
     # returns a list of the queue where index is position and value is player id
     def queue_list(self):
-        queue_list = [0, 0, 0, 0, 0, 0]
+        ppg = parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
+        queue_list = [0 for i in range(ppg)]
         for p in self.get_players():
             queue_list[p._initial_position] =  p.id_in_group
         print("queue_list: ", queue_list)
@@ -213,11 +214,11 @@ class Player(BasePlayer):
                         payoff -= event.value['offer']
 
         val_list = self.group.value_list()
-        payoff += ((7 - (final_position + 1)) * val_list[self._initial_position])
+        payoff += ((self.num_players() + 1 - (final_position + 1)) * val_list[self._initial_position])
         self._final_position = final_position
         self.payoff += payoff
 
-        print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((6 + 1 - (final_position + 1)) * self.group.value()))
+        print('Final Position of', self.id_in_group, ': ', final_position, ' Service Value: ', ((self.num_players() + 1 - (final_position + 1)) * self.group.value()))
 
         #practice round does not count
         if self.group.practice():

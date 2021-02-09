@@ -29,6 +29,7 @@ export class LeepsQueue extends PolymerElement {
                     margin-left:0px;
                 }
 
+
                 .circle{
                     border-radius:50%;
                     text-align: center;
@@ -122,7 +123,7 @@ export class LeepsQueue extends PolymerElement {
                         </div>
                     </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
-                        <div class="layout vertical center" style="padding-top:5px;">
+                        <div class="layout vertical center" style="padding-top:5px;margin-right:{{_spacing(index)}};">
                             <template is="dom-if" if="{{!_button(index,queueList)}}">
                                 <div class="circle" style="background-color:{{_shadeCircle(queueListItems, queueList)}};">
                                     <p style="font-size:150%;font-weight:bold;height: 50%;text-align: center;vertical-align:middle;">{{_reverseIndex(index)}}</p>
@@ -134,7 +135,7 @@ export class LeepsQueue extends PolymerElement {
                                 </button>
                             </template>
                             
-                            <div>
+                            <div >
                                 [[_computeValue(index)]]
                             </div>
                         </div>
@@ -295,6 +296,9 @@ export class LeepsQueue extends PolymerElement {
             myPosition:{
                 type: Number,
             },
+            numPlayers:{
+                type: Number,
+            },
             currentRequestPartner:{
                 type: Number,
                 value: 0
@@ -370,12 +374,21 @@ export class LeepsQueue extends PolymerElement {
     }
 
     _reverseIndex(index){
-        return 6 - parseInt(index);
+        return this.numPlayers - parseInt(index);
+    }
+
+    _spacing(index){
+        console.log(index);
+        if(this.numPlayers == 5){
+            return '25px';
+        } else{
+            return '10px';
+        }
     }
 
     ready() {
         super.ready()
-        console.log(this.queueList);
+        console.log(this.numPlayers);
         this.set('transfer', 0);
         this.set('requests', []);
         this.set('history', []);
@@ -402,7 +415,7 @@ export class LeepsQueue extends PolymerElement {
     }
 
     _button(index,queueList){
-        index = 5 - parseInt(index) ;
+        index = this.numPlayers - 1 - parseInt(index) ;
         if (index < queueList.indexOf(parseInt(this.$.constants.idInGroup))){
             return true;
         }
@@ -418,7 +431,7 @@ export class LeepsQueue extends PolymerElement {
             return;
         }
         var index = e.model.index;
-        index = 6 - parseInt(index);
+        index = this.numPlayers - parseInt(index);
         this.set("exchangeText", index.toString() );
     }
 
@@ -427,8 +440,8 @@ export class LeepsQueue extends PolymerElement {
     }
 
     _computeValue(spot){
-        spot = 5 - spot;
-        return (6 - spot) * this.value;
+        spot = this.numPlayers - 1 - spot;
+        return (this.numPlayers - spot) * this.value;
     }
 
     _onPeriodStart() {
