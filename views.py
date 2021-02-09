@@ -1,7 +1,9 @@
 from datetime import timedelta
 from operator import concat
 from functools import reduce
-from models import parse_config
+
+from .models import parse_config
+
 import math
 from profanity_filter import ProfanityFilter
 pf = ProfanityFilter()
@@ -23,7 +25,8 @@ def get_config_columns(group):
 
 def get_output_table_header(groups):
     #num_silos = groups[0].session.config['num_silos']
-    max_num_players = parse_config(groups[0].session.config['config_file'])[groups[0].round_number - 1]['players_per_group']
+    #max_num_players = parse_config(groups[0].session.config['config_file'])[groups[0].round_number - 1]['players_per_group']
+    max_num_players = 6
 
     header = [
         'round_number',
