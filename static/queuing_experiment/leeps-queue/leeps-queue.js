@@ -241,7 +241,7 @@ export class LeepsQueue extends PolymerElement {
                                 </div>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
                                     <div style="width: 50%;">
-                                        Total Transfer: [[payoff]]
+                                        Total Transfer: [[transfer]]
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[ !_showOffer() ]]">
@@ -309,6 +309,9 @@ export class LeepsQueue extends PolymerElement {
             payoff: {
                 type: Number,
             },
+            transfer: {
+                type: Number,
+            },
             endowment:{
                 type: Number,
             },
@@ -373,6 +376,7 @@ export class LeepsQueue extends PolymerElement {
     ready() {
         super.ready()
         console.log(this.queueList);
+        this.set('transfer', 0);
         this.set('requests', []);
         this.set('history', []);
         this.set('myPosition', this.initialPosition);
@@ -560,7 +564,9 @@ export class LeepsQueue extends PolymerElement {
                 this.set('currentRequestPartner', 0);
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
                 let newPayoff = this.payoff - playerDecision['offer'];
+                let newTransfer = this.transfer - playerDecision['offer'];
                 this.set("payoff", newPayoff);
+                this.set("transfer", newTransfer);
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
@@ -719,7 +725,9 @@ export class LeepsQueue extends PolymerElement {
             newRequest['offer'] = offer;
             //this.shadowRoot.querySelector('#offerText').textContent = ' ';
             let newPayoff = this.payoff + offer;
+            let newTransfer = this.transfer + offer;
             this.set("payoff", newPayoff);
+            this.set("transfer", newTransfer);
         } else{
             newRequest['offer'] = 0;
         }
