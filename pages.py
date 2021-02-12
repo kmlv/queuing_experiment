@@ -41,7 +41,7 @@ class ResultsWaitPage(WaitPage):
 
 class Results(Page):
 
-    timeout_seconds = 45
+    timeout_seconds = 20
 
     def is_displayed(self):
         return self.subsession.config is not None
