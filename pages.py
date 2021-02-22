@@ -50,9 +50,11 @@ class Results(Page):
         period_start = self.group.get_start_time()
         period_end = self.group.get_end_time()
         if None in (period_start, period_end):
-            # I really don't like having to repeat these keys twice but I can't think of any clean way to avoid it
+            # If issue in group
             return {
-                
+                'final_position': 'Error in Group',
+                'initial_position': 'Error in Group',
+                'transactions': [],
             }
         events = list(self.group.events.filter(channel='swap'))
         transactions = []
