@@ -47,9 +47,7 @@ class Results(Page):
         return self.subsession.config is not None
 
     def vars_for_template(self):
-        period_start = self.group.get_start_time()
-        period_end = self.group.get_end_time()
-        if None in (period_start, period_end):
+        if not self.group:
             # If issue in group
             return {
                 'final_position': 'Error in Group',
