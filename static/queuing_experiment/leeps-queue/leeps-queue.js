@@ -800,8 +800,10 @@ export class LeepsQueue extends PolymerElement {
                 let ourBid = parseFloat(this.shadowRoot.querySelector(idString).value);
                 newRequest['offer'] = ourBid;
                 let newTransfer = 0;
+                newRequest['transfer'] = 0;
                 if(offer >= ourBid){ //SWAP
                     newTransfer = (ourBid + offer) / 2;
+                    newRequest['transfer'] = newTransfer;
                     let newPayoff = this.payoff + newTransfer;
                     newTransfer = this.transfer + newTransfer;
                     this.set("payoff", newPayoff);
@@ -816,7 +818,6 @@ export class LeepsQueue extends PolymerElement {
                     }
                     this.set('requests', newRequests);
                 }
-                newRequest['transfer'] = newTransfer;
             }else{
                 newRequest['offer'] = offer;
                 let newPayoff = this.payoff + offer;
