@@ -204,17 +204,20 @@ class Player(BasePlayer):
         for event in events:
             
             if event.value['type'] == 'accept' and event.value['channel'] == 'incoming':
+                amount = event.value['offer']
                 if self.group.swap_method() == 'Double' and event.value['transfer'] == 0:
                     pass
+                elif self.group.swap_method() == 'Double':
+                    amount = event.value['transfer']
                 else:
                     if self.id_in_group == event.value['senderID']:
                         final_position = event.value['receiverPosition']
                         if self.group.swap_method() != 'swap':
-                            payoff += event.value['offer']
+                            payoff += amount
                     elif self.id_in_group == event.value['receiverID']:
                         final_position = event.value['senderPosition']
                         if self.group.swap_method() != 'swap':
-                            payoff -= event.value['offer']
+                            payoff -= amount
 
         val_list = self.group.value_list()
         payoff += ((self.num_players() + 1 - (final_position + 1)) * val_list[self._initial_position])
