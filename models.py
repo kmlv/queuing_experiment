@@ -207,9 +207,9 @@ class Player(BasePlayer):
                 amount = event.value['offer']
                 if self.group.swap_method() == 'Double' and event.value['transfer'] == 0:
                     pass
-                elif self.group.swap_method() == 'Double':
-                    amount = event.value['transfer']
                 else:
+                    if self.group.swap_method() == 'Double':
+                        amount = event.value['transfer']
                     if self.id_in_group == event.value['senderID']:
                         final_position = event.value['receiverPosition']
                         if self.group.swap_method() != 'swap':
