@@ -1,0 +1,5 @@
+round_number,group_id,duration,shuffle_role,players_per_group,swap_method,messaging,value,practice,endowment
+1,1,140,TRUE,6,Double,TRUE,"[10, 10, 10, 10, 10, 10]",TRUE,30
+2,1,140,TRUE,6,Double,TRUE,"[8, 8, 9, 9, 10, 10]",FALSE,30
+3,1,140,TRUE,6,TL,TRUE,"[10, 10, 10, 10, 10, 10]",FALSE,30
+4,1,140,TRUE,6,TL,TRUE,"[10, 10, 10, 10, 10, 10]",FALSE,30
