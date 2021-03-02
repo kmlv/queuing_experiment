@@ -58,19 +58,25 @@ class Results(Page):
         transactions = []
         for event in events:
             if event.value['type'] == 'accept' and event.value['channel'] == 'incoming':
+                status = 'ACCEPTED'
+                transfer = event.value['offer']
+                if self.group.swap_method() == 'Double':
+                    if event.value['transfer'] == 0:
+                        status = 'ASK TOO HIGH'
+                    transfer = event.value['transfer']
                 if self.player.id_in_group == event.value['senderID']:
                     transactions.append({
                         'original_position': event.value['senderPosition'] + 1,
                         'new_position': event.value['receiverPosition'] + 1,
-                        'status': "ACCEPTED",
-                        'transfer': event.value['offer'],
+                        'status': status,
+                        'transfer': transfer,
                     })
                 elif self.player.id_in_group == event.value['receiverID']:
                     transactions.append({
                         'original_position': event.value['receiverPosition'] + 1,
                         'new_position': event.value['senderPosition'] + 1,
-                        'status': "ACCEPTED",
-                        'transfer': -1 * event.value['offer'],
+                        'status': status,
+                        'transfer': -1 * transfer,
                     })
             if event.value['type'] == 'reject' and event.value['channel'] == 'incoming':
                 if self.player.id_in_group == event.value['senderID']:
