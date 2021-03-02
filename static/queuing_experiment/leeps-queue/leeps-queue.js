@@ -153,13 +153,8 @@ export class LeepsQueue extends PolymerElement {
                         </div>
                         <div class="layout horizontal">
                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                <p>Your offer: 
-                                    <!--
-                                        <span id='offerText'> </span>
-            -->
-                                </p>
-                                    <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
-                                
+                                <p>Your offer: </p>
+                                <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                             </template>
                         </div>
                         <template is="dom-if" if="[[ !requestSent ]]">
@@ -207,7 +202,7 @@ export class LeepsQueue extends PolymerElement {
                                         <div class="layout horizontal" style="
                                                                             padding-top:0px;">
                                             <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Position: [[_list(requestsVector, "position")]]  </p>
-                                            <template is="dom-if" if="[[ _showOffer() ]]">
+                                            <template is="dom-if" if="[[ _showOfferButNotBid() ]]">
                                                 <p style="display:inline;margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
                                             </template>
                                         </div>
@@ -221,14 +216,26 @@ export class LeepsQueue extends PolymerElement {
                                         </template>
                                         
                                     </div>
-                                    <div style="margin-top:9px;
-                                                margin-left:auto;">
-                                        <button type="button" on-click="_handleaccept" style="background-color:#ADD8E6;">Accept</button>
-                                        <button type="button" on-click="_handlereject" style="background-color:#FF6961;">Reject</button>
-                                        <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
-                                            <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Report</button>
+                                    <div style="margin-top:9px;margin-left:13%;">
+                                        <template is="dom-if" if="[[ _isDouble() ]]" >
+                                            <input id={{_idString(requestsVector)}} name="bid" type="number" min="1" max="[[payoff]]" style="width: 45px;height: 60%;" required>
                                         </template>
+                                    
                                     </div>
+                                    <div class="layout vertical" style="margin-top:9px;margin-left:auto;">
+                                            <button id="accept" type="button" on-click="_handleaccept" style="background-color:#ADD8E6;margin-bottom:5px;">
+                                                <template is="dom-if" if="[[ _isDouble() ]]" >
+                                                    Ask
+                                                </template>
+                                                <template is="dom-if" if="[[ !_isDouble() ]]" >
+                                                    Accept
+                                                </template>
+                                            </button>
+                                            <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Reject</button>
+                                            <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
+                                                <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Report</button>
+                                            </template>
+                                        </div>
                                 </div>
                             </template>
                         </div>
@@ -386,6 +393,10 @@ export class LeepsQueue extends PolymerElement {
         }
     }
 
+    _showOfferButNotBid(){
+        return this.swapMethod == 'TL' || this.swapMethod != 'Double';
+    }
+
     ready() {
         super.ready()
         console.log(this.numPlayers);
@@ -469,8 +480,12 @@ export class LeepsQueue extends PolymerElement {
             return 0;
         }
     }
+    _isDouble(){
+        return this.swapMethod == 'Double';
+    }
+
     _showOffer(){
-        return this.swapMethod == 'TL';
+        return this.swapMethod == 'TL' || this.swapMethod == 'Double';
     }
     _handleSwapEvent(event){
         console.log(event.detail.payload);
@@ -532,7 +547,26 @@ export class LeepsQueue extends PolymerElement {
                 console.log(this.history);
             }
         }
-        if(playerDecision['type'] == 'accept'){
+        if(playerDecision['type'] == 'accept' && (this._isDouble() && playerDecision['transfer'] == 0)){
+            // Case where ask was too high
+            if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
+                this.set("requestSent", false);
+                this.set('currentRequestPartner', 0);
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
+
+                let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'ASK TOO HIGH', 0 ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
+                this.push('history', historyVector);
+            }
+            if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
+                let sIndex = this.queueList.indexOf(playerDecision['senderID']);
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'ASK TOO HIGH', 0 ];
+                if(!this._showOffer()) historyVector[3] = 'N/A';
+                this.push('history', historyVector);
+            }
+        }
+        else if(playerDecision['type'] == 'accept'){
             console.log("accept");
             console.log(this.requests);
             let newRequests = [];
@@ -566,6 +600,11 @@ export class LeepsQueue extends PolymerElement {
             
             this.set('queueList', newQueueList);
             console.log(this.queueList);
+            let amount;
+            if(this._isDouble())
+                amount = playerDecision['transfer'];
+            else
+                amount = playerDecision['offer'];
             if(playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) || this.currentRequestPartner == playerDecision['senderID']){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
@@ -576,20 +615,20 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
-                let newPayoff = this.payoff - playerDecision['offer'];
-                let newTransfer = this.transfer - playerDecision['offer'];
+                let newPayoff = this.payoff - amount;
+                let newTransfer = this.transfer - amount;
                 this.set("payoff", newPayoff);
                 this.set("transfer", newTransfer);
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ rIndex + 1, sIndex + 1, 'ACCEPTED', -1 *playerDecision['offer'] ];
+                let historyVector =[ rIndex + 1, sIndex + 1, 'ACCEPTED', -1 *amount ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
 
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACCEPTED', playerDecision['offer'] ];
+                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACCEPTED', amount ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
@@ -607,9 +646,6 @@ export class LeepsQueue extends PolymerElement {
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
-                //this.set("requestSent", false);
-                //this.set('currentRequestPartner', 0);
-
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
                 let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', playerDecision['offer'] ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
@@ -648,12 +684,12 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 return;
             }
-            if(parseInt(this.shadowRoot.querySelector('#offer').value) > this.payoff){
+            if(parseFloat(this.shadowRoot.querySelector('#offer').value) > this.payoff){
                 alert("You don't have enough points");
                 this.set("requestSent", false);
                 return;
             }
-            if(parseInt(this.shadowRoot.querySelector('#offer').value) < 0){
+            if(parseFloat(this.shadowRoot.querySelector('#offer').value) < 0){
                 alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
@@ -681,7 +717,7 @@ export class LeepsQueue extends PolymerElement {
             newRequest['message'] = "N/A";
         }
         if(this._showOffer()){
-            let offer = parseInt(this.shadowRoot.querySelector('#offer').value);
+            let offer = parseFloat(this.shadowRoot.querySelector('#offer').value);
             //this.shadowRoot.querySelector('#offerText').textContent = this.shadowRoot.querySelector('#offer').value;
             newRequest['offer'] = offer;
             curReq['offer'] = offer;
@@ -716,10 +752,34 @@ export class LeepsQueue extends PolymerElement {
         
         this.$.channel.send(newRequest);
     }
+
+    _idString(requestsVector){
+        return 'bid' + this._list(requestsVector, "position").toString();
+    }
+
     _handleaccept(e) {
         console.log("accept");
         var requestsVector = e.model.requestsVector;
-        
+        if(this._isDouble()) {
+            let idString = '#' + this._idString(requestsVector);
+            let ourBid = (this.shadowRoot.querySelector(idString).value);
+            if(ourBid == ""){
+                alert("Input an offer");
+                this.set("requestSent", false);
+                return;
+            }
+            if(parseFloat(ourBid) > this.payoff){
+                alert("You don't have enough points");
+                this.set("requestSent", false);
+                return;
+            }
+            if(parseFloat(ourBid) < 0){
+                alert("You can't have a negative offer");
+                this.set("requestSent", false);
+                return;
+            }
+        }
+
         let newRequest = {
             'channel': 'incoming',
             'type': 'accept',
@@ -734,13 +794,36 @@ export class LeepsQueue extends PolymerElement {
 
         
         if(this._showOffer()){
-            let offer = parseInt(requestsVector['offer']);
-            newRequest['offer'] = offer;
-            //this.shadowRoot.querySelector('#offerText').textContent = ' ';
-            let newPayoff = this.payoff + offer;
-            let newTransfer = this.transfer + offer;
-            this.set("payoff", newPayoff);
-            this.set("transfer", newTransfer);
+            let offer = parseFloat(requestsVector['offer']);
+            if(this._isDouble()){
+                let idString = '#' + this._idString(requestsVector);
+                let ourBid = parseFloat(this.shadowRoot.querySelector(idString).value);
+                newRequest['offer'] = ourBid;
+                let newTransfer = 0;
+                if(offer >= ourBid){ //SWAP
+                    newTransfer = (ourBid + offer) / 2;
+                    let newPayoff = this.payoff + newTransfer;
+                    newTransfer = this.transfer + newTransfer;
+                    this.set("payoff", newPayoff);
+                    this.set("transfer", newTransfer);
+                } else{
+                    let newRequests = [];
+                    for(let i = 0; i < this.requests.length; i++){
+                        console.log(this.requests[i])
+                        if (this.requests[i]['position']  != requestsVector['position']){
+                            newRequests.push(this.requests[i]);
+                        }
+                    }
+                    this.set('requests', newRequests);
+                }
+                newRequest['transfer'] = newTransfer;
+            }else{
+                newRequest['offer'] = offer;
+                let newPayoff = this.payoff + offer;
+                let newTransfer = this.transfer + offer;
+                this.set("payoff", newPayoff);
+                this.set("transfer", newTransfer);
+            }
         } else{
             newRequest['offer'] = 0;
         }
