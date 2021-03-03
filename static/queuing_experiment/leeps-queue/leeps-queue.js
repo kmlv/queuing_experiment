@@ -231,7 +231,9 @@ export class LeepsQueue extends PolymerElement {
                                                     Accept
                                                 </template>
                                             </button>
-                                            <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Reject</button>
+                                            <template is="dom-if" if="[[ !_isDouble() ]]">
+                                                <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Reject</button>
+                                            </template>
                                             <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
                                                 <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Report</button>
                                             </template>
