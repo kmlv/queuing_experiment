@@ -83,7 +83,7 @@ def get_output_game(events):
 
     players = events[0].group.get_players()
     group = events[0].group
-    max_num_players =  len(players)
+    max_num_players =  6
     config_columns = get_config_columns(group)
 
     values = [int(i) for i in parse_config(group.session.config['config_file'])[group.round_number-1]['value'].strip('][').split(',')]
@@ -124,7 +124,7 @@ def get_output_game(events):
             ]
             for player_num in range(max_num_players):
                 if player_num >= len(players):
-                    row += ['', '']
+                    row += ['', '', '', '']
                 else:
                     pcode = players[player_num].participant.code
                     row += [
@@ -133,8 +133,22 @@ def get_output_game(events):
                         positions[pcode],
                         values[group.get_player_by_id(players[player_num].id_in_group).initial_position()]
                     ]
+            if event.value['type'] == 'accept':
+                print(group.swap_method())
+                print(event.value)
+                if group.swap_method() == 'Double' and 'transfer' in event.value.keys() and event.value['transfer'] == 0:
+                    row += [
+                        'ask too high'
+                    ]
+                else:
+                    row += [
+                        event.value['type']
+                    ]
+            else:
+                row += [
+                    event.value['type']
+                ]
             row += [
-                event.value['type'],
                 sender,
                 event.value['senderID'],
                 positions[sender],
