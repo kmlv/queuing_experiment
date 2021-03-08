@@ -138,7 +138,7 @@ def get_output_game(events):
                 print(event.value)
                 if group.swap_method() == 'Double' and 'transfer' in event.value.keys() and event.value['transfer'] == 0:
                     row += [
-                        'ask too high'
+                        'reject'
                     ]
                 else:
                     row += [
