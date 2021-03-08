@@ -62,7 +62,7 @@ class Results(Page):
                 transfer = event.value['offer']
                 if self.group.swap_method() == 'Double':
                     if event.value['transfer'] == 0:
-                        status = 'ASK TOO HIGH'
+                        status = 'REJECTED'
                     transfer = event.value['transfer']
                 if self.player.id_in_group == event.value['senderID']:
                     transactions.append({
