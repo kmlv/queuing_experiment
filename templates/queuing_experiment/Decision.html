@@ -2,7 +2,9 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
+{% blocktrans trimmed %} 
     Your Choice
+{% endblocktrans %}
 {% endblock %}
 
 {% block scripts %}
@@ -27,4 +29,6 @@
         ></leeps-queue>
     {% endwith %}
 
+    {% include Constants.contact_template %}
+    
 {% endblock %}

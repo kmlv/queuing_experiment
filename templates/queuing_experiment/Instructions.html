@@ -1,0 +1,147 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+Instrucciones del Experimento
+{% endblock %}
+
+{% block content %}
+<p>
+¡Bienvenido y gracias por participar! 
+<br><br>
+Desde ahora hasta el final del experimento, por favor manténgase concentrado en la tarea que esté realizando, 
+ya que su pago depende en gran medida de su rendimiento en el experimento. Para respetar a los demás participantes, 
+por favor no coma, juegue, converse ni salga de la habitación durante el experimento. Si necesita beber agua o usar su teléfono, 
+por favor hágalo solo cuando sea absolutamente necesario. Si tiene alguna pregunta, por favor envíe un mensaje privado al anfitrión. 
+Por favor recuerde también abrir el enlace de sesión con Chrome porque otros navegadores pueden causar problemas.
+Durante el experimento, ganarás puntos en cada ronda. Al final del experimento, se elegirá una ronda al azar, de la 
+cual sus puntos se convertirán a dólares estadounidenses a la tasa especificada en el chat de Zoom. Se le garantiza 
+una pago por solo presentarse de 5.00 soles, pero puede ganar considerablemente más. 
+<b>En este experimento, cada n puntos serán iguales a m soles.</b>
+</p>
+
+<h3>Información General del Juego</h3>
+<p>
+    En este experimento, usted interactuará con otros participantes en múltiples rondas. En cada ronda, usted será agrupado de 
+    forma aleatoria y anónima con varios otros participantes. Todos ustedes serán colocados aleatoriamente en una fila
+    esperando un “servicio”, donde el valor del servicio está determinado por su posición en la fila. Naturalmente, cuanto 
+    más cerca esté al frente de la línea, mayor será el valor que recibirá al final de la ronda. El valor del servicio 
+    difiere entre participantes. Durante cada ronda, usted también puede intercambiar sus posiciones con otros participantes 
+    en la línea de acuerdo a algunas reglas de intercambio específicas. Su pago total está determinado por el valor del servicio 
+    que recibe y las transferencias potenciales que puede obtener de la regla de intercambio.
+    <br><br>
+    En particular, su recompensa en cada ronda estará dada por:
+</p>
+
+<p>
+    <b>Dotación + Valor de la Posición Final + Transferencias que recibe - Transferencias que envías</b>
+    <ul>
+        <li>Dotación es la recompensa que posee al comienzo de cada ronda.</li>
+        <li>Valor es el valor del servicio basado en su posición final en la línea.</li>
+        <li>Transferencias que recibe es una acumulación de las transferencias 
+            recibidas de otros jugadores cuando acepta retroceder en la línea.</li>
+        <li>Transferencias que envías es la cantidad total que has enviado a 
+            otros jugadores mientras avanzas en la línea.</li>
+    </ul>
+    Su pago final en este experimento = pago por presentarse + pago en dos rondas aleatorias.
+</p>
+
+<h3>Interfaz del Usuario</h3>
+
+<img src="{{ static 'queuing_experiment/interface.png' }}"/>
+
+<p>
+    Al comienzo de cada ronda, la línea aleatoria se coloca en la parte superior de la pantalla. 
+    La línea de círculos muestra el estado actual de la línea. El número de círculos muestra el 
+    número de participantes en su grupo. La posición es el número dentro de cada círculo, con tu 
+    círculo sombreado en rojo (como se muestra arriba). Los círculos morados son las personas que
+    están delante de ti en la fila y con las que puedes iniciar una interacción. Los círculos 
+    grises representan a las personas que están detrás de ti en la fila. En el ejemplo anterior, 
+    usted es la cuarta persona en la fila y puede iniciar interacciones con las personas del primer 
+    al tercer lugar.
+</p>
+<p>
+    Debajo de cada posición, usted puede ver el valor asociado con ella si mantiene esa posición 
+    al final de la ronda. Cuanto más cerca esté su posición final al frente, mayor será el valor 
+    asociado. La información sobre la línea de círculos en la interfaz de usuario muestra el número 
+    de ronda actual, la regla de intercambio actual, si se permiten mensajes y el tiempo restante
+    de la ronda actual.
+</p>
+
+<img src="{{ static 'queuing_experiment/interface2.png' }}"/>
+
+<p>
+    Debajo de la línea, usted puede ver el panel de decisiones. Dependiendo de las reglas de intercambio, 
+    diferentes botones estarán visibles en el panel de decisión. Para interactuar con alguien en la fila, 
+    simplemente haga clic en el círculo correspondiente. Por ejemplo, para interactuar con la persona en la 
+    tercera posición en la línea, haga clic en el círculo con el 3 dentro, luego complete el resto de los 
+    elementos en el cuadro (oferta/mensaje) y presione “Enviar su solicitud”. Después de hacerlo, el botón se 
+    volverá rojo y ofrecerá la oportunidad de "Cancelar su solicitud". Es posible que el otro participante 
+    simplemente ignore su solicitud, pero usted puede cancelar su solicitud en cualquier momento. Si la mensajería 
+    está habilitada, también puede adjuntar un mensaje con su solicitud usando el lado derecho del panel.
+</p>
+
+<img src="{{ static 'queuing_experiment/interface3.png' }}"/>
+
+<p>
+    Debajo del panel de decisión, usted puede ver el panel de solicitud y el panel de historial. 
+    A la izquierda está el panel de solicitud. Puede ver su propia solicitud de intercambio actual en la 
+    parte superior del panel, y las solicitudes de otras personas debajo. Solo puede enviar una solicitud 
+    para avanzar cada vez. Sin embargo, puede recibir solicitudes de varios otros al mismo tiempo. Cuando
+    acepta una solicitud, otras solicitudes (incluida su propia solicitud) se cancelarán automáticamente. 
+    Por ejemplo, en el panel de solicitud anterior, puede ver que usted no ha enviado ninguna solicitud 
+    todavía, y que hay dos solicitudes de intercambio de los participantes en las posiciones 5 y 6 con 
+    ofertas y mensajes.
+</p>
+<p>
+    A la derecha, puede observar su dotación, la transferencia total actual y su propio historial de 
+    intercambio en la ronda actual. Una vez que se haya respondido a una solicitud, aparecerá una nueva 
+    fila en el cuadro "Historial de intercambio". Se reportarán cuatro datos: su posición original, su
+    nueva posición, el estado de la respuesta y la transferencia realizada (si la hubiera). Por ejemplo, 
+    la figura siguiente muestra algunas respuestas para este jugador. La primera fila muestra que la solicitud 
+    de este jugador fue rechazada, lo que significa que permaneció en la misma posición (como informa la fila). 
+    La segunda fila indica que el jugador en la posición 4 aceptó la solicitud de este jugador y la transferencia 
+    es de 8 puntos de este jugador al jugador en la posición 4.
+</p>
+
+<h3>Reglas de Intercambio</h3>
+
+<p>
+    Precio para tomar/dejar (TL):
+</p>
+
+<img src="{{ static 'queuing_experiment/interface4.png' }}"/>
+
+<p>
+    En este experimento, usted puede enviar una oferta de intercambio a otros participantes con un precio. Si tu oferta es aceptada e intercambias posiciones, pagarás el monto aceptado al otro participante y el valor de tu servicio aumentará dado que estás avanzando en la línea. Si intercambias posiciones y retrocedes, tu valor disminuirá pero obtendrás una transferencia igual a la oferta aceptada. Los otros participantes también pueden enviarle sus solicitudes con ofertas. Técnicamente hablando, usted debe encontrar la oportunidad de obtener una recompensa solicitando seguir adelante o aceptando la solicitud de alguien.
+</p>
+
+<img src="{{ static 'queuing_experiment/interface5.png' }}"/>
+
+<p>
+    Por ejemplo, suponga que usted es la cuarta persona de la fila. Si desea cambiar con el participante en la posición 2, ganarás 45-27=18 más valor de servicio si el intercambio es exitoso. Por lo tanto, su oferta debe estar por debajo de 18. De lo contrario, perderá dinero incluso si pasa a la posición 2. Si el participante en la posición 5 le ofrece una solicitud, no debe aceptarla cuando la oferta sea inferior a 9, ya que perderá 27-18=9 puntos si intercambias posiciones. 
+</p>
+
+<h3>Mensajería</h3>
+
+<p>
+    En algunas rondas, usted puede adjuntar un mensaje a su solicitud de intercambio. El otro participante puede ver su mensaje con la solicitud de intercambio. También puede ver los mensajes de otros participantes cuando ellos le envían su solicitud de intercambio. La opción de mensaje se encuentra en el lado derecho del panel de decisiones.
+</p>
+
+<img src="{{ static 'queuing_experiment/msg.png' }}"/>
+
+<p>
+    Por favor, siga las dos reglas cuando envíe mensajes a otras personas:
+
+    <ol>
+        <li>La discriminación y los mensajes maliciosos NO están permitidos.</li>
+        <li>NO revele directa o indirectamente su identidad.</li>
+    </ol>
+    Los participantes que envíen este tipo de mensajes no recibirán su pago y serán eliminados del grupo de participantes del laboratorio. Si encuentra algunos mensajes incómodos, también puede informar el mensaje utilizando el botón de reporte en el panel de solicitud.
+</p>
+
+{% next_button %}
+
+{% include Constants.contact_template %}
+
+{% endblock %}

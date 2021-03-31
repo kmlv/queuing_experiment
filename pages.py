@@ -7,9 +7,15 @@ from functools import reduce
 from .models import parse_config
 
 class Introduction(Page):
-
+    
     def is_displayed(self):
         return self.round_number == 1
+
+
+class Instructions(Page):
+    
+    def is_displayed(self):
+        return self.LANGUAGE_CODE == "es"
 
 
 class DecisionWaitPage(WaitPage):
@@ -129,6 +135,7 @@ class Payment(Page):
 
 page_sequence = [
     Introduction,
+    Instructions,
     DecisionWaitPage,
     Decision,
     ResultsWaitPage,

@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-30 13:35-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\queuing_experiment\Decision.html:5
+msgid "Your Choice"
+msgstr ""
+
+#: .\templates\queuing_experiment\Introduction.html:5
+msgid "Welcome"
+msgstr ""
+
+#: .\templates\queuing_experiment\Introduction.html:13
+msgid "Welcome, and thank you for participating!"
+msgstr ""
+
+#: .\templates\queuing_experiment\Introduction.html:19
+msgid ""
+"From now until the end of the experiment, please turn off your phone and do "
+"not communicate with other participants. If you have any questions, please "
+"message us in the chat (or use your microphone) and we will respond as soon "
+"possible. Please pay careful attention to the instructions as real money is "
+"at stake."
+msgstr ""
+
+#: .\templates\queuing_experiment\Introduction.html:28
+msgid ""
+"During the experiment you will earn points, and at the end of the experiment "
+"all your earnings will be converted to USD dollars at the rate specified by "
+"the experimenter. You are guaranteed a show up fee of $4.00 USD if you show "
+"up and complete the session, but you can earn more depending on your "
+"decisions throughout the game."
+msgstr ""
+
+#: .\templates\queuing_experiment\Introduction.html:36
+msgid "If you finished reading, please press next."
+msgstr ""
+
+#: .\templates\queuing_experiment\Payment.html:11
+msgid "Congratulations! You have completed the experiment.</p>"
+msgstr ""
+
+#: .\templates\queuing_experiment\Payment.html:15
+msgid "The rounds which determines your payment were randomly decided as round"
+msgstr ""
+
+#: .\templates\queuing_experiment\Payment.html:16
+msgid "and round"
+msgstr ""
+
+#: .\templates\queuing_experiment\Payment.html:20
+msgid "Your payment is"
+msgstr ""
+
+#: .\templates\queuing_experiment\Payment.html:21
+msgid "Please press next to end the experiment."
+msgstr ""
+
+#: .\templates\queuing_experiment\Results.html:5
+msgid "Results"
+msgstr ""
+
+#: .\templates\queuing_experiment\Results.html:34
+msgid "Your payoff in this round:"
+msgstr ""
+
+#: .\templates\queuing_experiment\Results.html:36
+msgid "Your starting position:"
+msgstr ""
+
+#: .\templates\queuing_experiment\Results.html:38
+msgid "Your final position:"
+msgstr ""
+
+#: .\templates\queuing_experiment\Results.html:42
+msgid ""
+"<th> <td>Original Position</td> <td>New Position</td> <td>Status</td> "
+"<td>Transfer</td> </th>"
+msgstr ""
+
+#: .\templates\queuing_experiment\Results.html:63
+msgid "This was a practice round so your payoff in this round does not count"
+msgstr ""

@@ -20,6 +20,7 @@ This is a Lines Queueing project
 
 class Constants(BaseConstants):
     name_in_url = 'queuing_experiment'
+    contact_template = 'queuing_experiment/Contactenos.html'
     players_per_group = None
     num_rounds = 50
     base_points = 0
