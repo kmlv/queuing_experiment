@@ -49,7 +49,7 @@ una pago por solo presentarse de 5.00 soles, pero puede ganar considerablemente 
 
 <h3>Interfaz del Usuario</h3>
 
-<img src="{{ static 'queuing_experiment/interface.png' }}"/>
+<img src="{% static 'interface.png' %}"/> 
 
 <p>
     Al comienzo de cada ronda, la línea aleatoria se coloca en la parte superior de la pantalla. 
@@ -69,7 +69,7 @@ una pago por solo presentarse de 5.00 soles, pero puede ganar considerablemente 
     de la ronda actual.
 </p>
 
-<img src="{{ static 'queuing_experiment/interface2.png' }}"/>
+<img src="{% static 'interface2.png' %}"/>
 
 <p>
     Debajo de la línea, usted puede ver el panel de decisiones. Dependiendo de las reglas de intercambio, 
@@ -82,7 +82,7 @@ una pago por solo presentarse de 5.00 soles, pero puede ganar considerablemente 
     está habilitada, también puede adjuntar un mensaje con su solicitud usando el lado derecho del panel.
 </p>
 
-<img src="{{ static 'queuing_experiment/interface3.png' }}"/>
+<img src="{% static 'interface3.png' %}"/>
 
 <p>
     Debajo del panel de decisión, usted puede ver el panel de solicitud y el panel de historial. 
@@ -111,13 +111,13 @@ una pago por solo presentarse de 5.00 soles, pero puede ganar considerablemente 
     Precio para tomar/dejar (TL):
 </p>
 
-<img src="{{ static 'queuing_experiment/interface4.png' }}"/>
+<img src="{% static 'interface4.png' %}"/>
 
 <p>
     En este experimento, usted puede enviar una oferta de intercambio a otros participantes con un precio. Si tu oferta es aceptada e intercambias posiciones, pagarás el monto aceptado al otro participante y el valor de tu servicio aumentará dado que estás avanzando en la línea. Si intercambias posiciones y retrocedes, tu valor disminuirá pero obtendrás una transferencia igual a la oferta aceptada. Los otros participantes también pueden enviarle sus solicitudes con ofertas. Técnicamente hablando, usted debe encontrar la oportunidad de obtener una recompensa solicitando seguir adelante o aceptando la solicitud de alguien.
 </p>
 
-<img src="{{ static 'queuing_experiment/interface5.png' }}"/>
+<img src="{% static 'interface5.png' %}"/>
 
 <p>
     Por ejemplo, suponga que usted es la cuarta persona de la fila. Si desea cambiar con el participante en la posición 2, ganarás 45-27=18 más valor de servicio si el intercambio es exitoso. Por lo tanto, su oferta debe estar por debajo de 18. De lo contrario, perderá dinero incluso si pasa a la posición 2. Si el participante en la posición 5 le ofrece una solicitud, no debe aceptarla cuando la oferta sea inferior a 9, ya que perderá 27-18=9 puntos si intercambias posiciones. 
@@ -129,7 +129,7 @@ una pago por solo presentarse de 5.00 soles, pero puede ganar considerablemente 
     En algunas rondas, usted puede adjuntar un mensaje a su solicitud de intercambio. El otro participante puede ver su mensaje con la solicitud de intercambio. También puede ver los mensajes de otros participantes cuando ellos le envían su solicitud de intercambio. La opción de mensaje se encuentra en el lado derecho del panel de decisiones.
 </p>
 
-<img src="{{ static 'queuing_experiment/msg.png' }}"/>
+<img src="{% static 'msg.png' %}"/>
 
 <p>
     Por favor, siga las dos reglas cuando envíe mensajes a otras personas:
