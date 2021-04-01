@@ -13,9 +13,7 @@ class Introduction(Page):
 
 
 class Instructions(Page):
-    
-    def is_displayed(self):
-        return self.LANGUAGE_CODE == "es"
+    pass
 
 
 class DecisionWaitPage(WaitPage):
