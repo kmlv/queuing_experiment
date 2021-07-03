@@ -96,7 +96,7 @@ export class LeepsQueue extends PolymerElement {
 
             <div class="layout horizontal center" style="width: 100%;">
                 <div class="borders" style="width: 33%;">
-                    Round: [[roundNumber]]
+                    Ronda: [[roundNumber]]
                 </div>
                 <div class="borders" style="width: 33%;">
                     Exchange Rule: [[swapMethod]]

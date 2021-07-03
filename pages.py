@@ -18,7 +18,7 @@ class Instructions(Page):
 
 class DecisionWaitPage(WaitPage):
 
-    body_text = 'Waiting for all players to be ready'
+    body_text = 'Por favor, espere al resto de jugadores.'
     wait_for_all_groups = True
     after_all_players_arrive = 'set_initial_positions'
 
@@ -35,8 +35,9 @@ class Decision(Page):
 
 
 class ResultsWaitPage(WaitPage):
-    wait_for_all_groups = True
+    body_text = 'Por favor, espere al resto de jugadores.'
 
+    wait_for_all_groups = True
     after_all_players_arrive = 'set_payoffs'
 
     def is_displayed(self):
