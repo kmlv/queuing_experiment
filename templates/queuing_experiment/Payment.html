@@ -9,17 +9,17 @@
 {% block content %}
 
 <p>
-{% blocktrans trimmed %} 
+
 Congratulations! You have completed the experiment.</p>
-{% endblocktrans %}
 <p>
-{% blocktrans trimmed %}The rounds which determines your payment were randomly decided as round {% endblocktrans %} 
-{{ payoff_round1 }} {% blocktrans trimmed %}and round{% endblocktrans %} {{ payoff_round2 }}.    
+The rounds which determines your payment were randomly 
+decided as round 
+{{ payoff_round1 }} and round {{ payoff_round2 }}.    
 
 </p>
 <p>
-{% blocktrans trimmed %}Your payment is{% endblocktrans %} {{payoff}}.
-{% blocktrans trimmed %} Please press next to end the experiment.{% endblocktrans %}
+Your payment is {{payoff}}.
+ Please press next to end the experiment.
 </p>
 
     {% next_button %}

@@ -6,14 +6,35 @@ from operator import concat
 from functools import reduce
 from .models import parse_config
 
+class Pagina_inicial(Page):
+    def is_displayed(self):
+        return self.round_number == 1
 class Introduction(Page):
     
     def is_displayed(self):
         return self.round_number == 1
 
-
 class Instructions(Page):
-    pass
+
+    def is_displayed(self):
+
+       
+        #try:
+        #    swap_method_1=parse_config(self.session.config['config_file'])[self.round_number-1]['swap_method']
+
+        #    swap_method_2= parse_config(self.session.config['config_file'])[self.round_number-2]['swap_method']
+
+        #    return swap_method_1 != swap_method_2 
+
+        #except IndexError:
+        #    return None
+        
+        return self.round_number == 1 or self.round_number == 3
+
+    def vars_for_template(self):
+        swap_method=self.group.swap_method()
+        return dict(swap_method=swap_method)
+
 
 
 class DecisionWaitPage(WaitPage):
@@ -132,12 +153,18 @@ class Payment(Page):
             'payoff_round2': self.session.vars['payment_round2'],
         }
 
-page_sequence = [
+class Pago_final(Page):
+    def is_displayed(self):
+        return self.round_number == self.subsession.num_rounds()
+
+
+page_sequence = [Pagina_inicial,
     Introduction,
     Instructions,
     DecisionWaitPage,
     Decision,
     ResultsWaitPage,
     Results,
-    Payment
+    Payment,
+    Pago_final
 ]

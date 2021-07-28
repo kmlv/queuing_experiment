@@ -1,0 +1,33 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+Página de bienvenida
+{% endblock %}
+
+{% block content %}
+</p>
+Bienvenido al Laboratorio de Economía Experimental de la Universidad del Pacífico.
+</p>
+</p>
+Gracias por participar en este estudio.
+</p>
+</p>
+El experimento que verá a continuación se está realizando con el apoyo oficial del E2LabUP y cuenta con la aprobación ética de la universidad.
+</p>
+</p>
+Está prohibido el uso de este logo sin autorización del laboratorio.
+</p>
+
+<img src="{% static '108907630-54c92000-75f0-11eb-8990-1c2be21d14a0.png' %}" alt="Logo up" width="25%" height="20%">
+
+{% next_button %}   
+
+<b>Contáctenos:</b>
+<br>
+<img height="2%" width="2%" src="{% static 'whatsapp.png'%}"/> <a href="https://wa.me/0051985730063" target="_blank">+51 985730063</a>
+<br>
+<img height="2%" width="2%" src="{% static 'gmail.png'%}"/> e2lab@up.edu.pe
+
+
+{% endblock %}
