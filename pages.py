@@ -9,10 +9,14 @@ from .models import parse_config
 class Pagina_inicial(Page):
     def is_displayed(self):
         return self.round_number == 1
-class Introduction(Page):
-    
+
+class Introduction(Page): 
     def is_displayed(self):
         return self.round_number == 1
+    
+class StartPaidRound(Page): 
+    def is_displayed(self):
+        return self.round_number == 3
 
 class Instructions(Page):
 
@@ -29,7 +33,7 @@ class Instructions(Page):
         #except IndexError:
         #    return None
         
-        return self.round_number == 1 or self.round_number == 3
+        return self.round_number == 1
 
     def vars_for_template(self):
         swap_method=self.group.swap_method()
@@ -160,6 +164,7 @@ class Pago_final(Page):
 
 page_sequence = [Pagina_inicial,
     Introduction,
+    StartPaidRound,
     Instructions,
     DecisionWaitPage,
     Decision,
