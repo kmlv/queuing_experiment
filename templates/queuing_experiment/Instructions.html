@@ -14,11 +14,11 @@ Experiment Instructions
     payment highly depends on your performance in the experiment. To respect other participants,
     please do not eat, play, chat, or leave the room during the experiment. If you need to drink 
     water or use your cellphone, please only do so when absolutely necessary. If you have any
-    questions, please send the host a private message. Please also remember to open the session 
+    questions, please send the experimenter a private message. Please also remember to open the session 
     link with Chrome because other browsers may cause problems.
     During the experiment, you will earn points in each round. At the end of the 
     experiment, two rounds will be randomly chosen, from which your points will be 
-    converted to PEN at the rate specified in the Zoom chat. You are guaranteed a show-up 
+    converted to PEN (200 lab points = 10 PEN). You are guaranteed a show-up 
     fee of 5.00 PEN but can earn considerably more. 
 </p>
 
@@ -26,8 +26,8 @@ Experiment Instructions
 <p>
     In this experiment, you will interact with other participants in multiple rounds. In 
     each round, you will be grouped randomly and anonymously with several other participants. 
-    All of you will be placed randomly in a line waiting for a “service”, where the value 
-    of the service is determined by your position in the line. Naturally, the closer to 
+    All of you will be placed randomly in a line waiting for a “service”, where your position 
+    in the line determines the value of the service. Naturally, the closer to 
     the front of the line you are, the higher value you can receive at the end of the 
     round. The value of the service differs between participants. During each round, you 
     can also exchange your positions with other participants in the line under some 
@@ -68,7 +68,8 @@ Experiment Instructions
 </p>
 <p>
     Below each position, you can see the value associated with it if you hold that 
-    position at the end of the round. The closer is your final position to the front,  
+    position at the end of the round (note that the values differ between participants). 
+    The closer is your final position to the front,  
     the higher the value associated with it. The information above the line of circles 
     in the user interface shows the current round number, the current exchange rule, 
     whether messaging is allowed, and the remaining time of the current round.
@@ -100,6 +101,7 @@ Experiment Instructions
     own request) will be automatically canceled. For example, in the request panel 
     above, you can see that you haven’t sent any request yet, and there are two exchange 
     requests from the participants at position 5 and 6 with offers and messages.
+    The informaiton of the request may differ between exchange rules.
 </p>
 <p>
     On the right, you can observe your endowment, current total transfer, and your own 
@@ -160,6 +162,49 @@ Experiment Instructions
 
     </p>
 
+{% elif swap_method == "Double" %}
+
+    <p>
+        DA:
+    </p>
+
+    <img src="{% static 'interface_double1.png' %}"/>
+
+    <p>
+        In this experiment, participants can send exchange offers to other participants with a Bid. 
+        Instead of accepting/declining the bid, the other participant’s exchange request looks as follows.
+    </p>
+
+    <img src="{% static 'interface_double2.png' %}"/>
+
+    <p>
+        The other participant needs to offer an Ask price by filling in the blank and pressing the Ask button. 
+        If the Ask is NOT higher than the Bid, the exchange request will be accepted. Both participants switch 
+        positions and the average of the Ask and the Bid is transferred from the requester to the requestee. 
+        On one hand, the requester will pay the transfer to the requestee but her value from the position will 
+        increase since she is moving forward in the line. On the other hand, the requestee’s value will decrease 
+        but she will gain the transfer. Technically speaking, you need to find the opportunity to earn payoff by 
+        requesting to move forward or placing the right Ask for someone’s request. If the Ask is higher than the Bid, 
+        the request will be rejected. The requestee cannot observe the Bid when choosing the Ask.
+    </p>
+    <p>
+        For example, let us say that the requester sends an exchange request with a bid of 10. 
+        If the requestee chooses an Ask of 9, they will exchange positions with a transfer of 9.5. 
+        If the requestee chooses 11 instead, the exchange request will be automatically rejected.
+    </p>
+
+    <img src="{% static 'interface_double3.png' %}"/>
+
+    <p>
+        The participants can request the exchange with any other participants in the line and 
+        the “value” of the exchange may vary. For example, suppose you are the 4th person in the line. 
+        If you want to switch with the participant at position 2, you will earn 50-30=20 more service 
+        value if the exchange succeeds. If the final transfer is more than 20, 
+        you will lose money even if you move to position 2. If the participant at position 5 
+        offers you a request, the final transfer should not be lower than 10, as you will 
+        lose 30-20=10 points if you exchange positions.
+    </p>
+
 {% endif %}
 
 <h3>Messaging</h3>
@@ -169,6 +214,7 @@ Experiment Instructions
     The other participant can see your message with the exchange request. You can also 
     see other participants’ messages when they send you their exchange request. The 
     message option is on the right side of the decision panel.
+    You can use either English or Spanish during the messaging.
 </p>
 
 <img src="{% static 'msg.png' %}"/>
