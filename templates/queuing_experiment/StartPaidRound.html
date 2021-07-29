@@ -1,0 +1,27 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+{% load i18n %}
+
+{% block title %}
+
+    Welcome
+
+{% endblock %}
+
+{% block content %}
+
+<p>
+Now you have completed the two practice rounds.
+If you have any question, it is a good time to ask the experimenters through Whatsapp.
+</p>
+
+<p>
+If you are ready for the paid rounds, please press next.
+</p>
+
+    {% next_button %}
+
+    {% include Constants.contact_template %}
+
+{% endblock %}
+© 2021 GitHub, Inc.
