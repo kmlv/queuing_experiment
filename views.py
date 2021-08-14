@@ -168,9 +168,14 @@ def get_output_game(events):
                 ]
             
             if event.value['type'] == 'request':
-                row += [
-                    request_ids[sender]
-                ]
+                if sender in request_ids.keys():
+                    row += [
+                        request_ids[sender]
+                    ]
+                else:
+                    row += [
+                        "null"
+                    ]
                 if pf.censor(event.value['message'].strip()) in reported_messages:
                     print("Connected: ", event.value['message'])
                     row += [
@@ -181,20 +186,38 @@ def get_output_game(events):
                         0
                     ]
             elif event.value['type'] == 'accept':
-                row += [
-                    request_ids[receiver],
-                    0
-                ]
+                if receiver in request_ids.keys():
+                    row += [
+                        request_ids[receiver],
+                        0
+                    ]
+                else:
+                    row += [
+                        "Null",
+                        0
+                    ]
             elif event.value['type'] == 'reject':
-                row += [
-                    request_ids[receiver],
-                    0
-                ]
+                if receiver in request_ids.keys():
+                    row += [
+                        request_ids[receiver],
+                        0
+                    ]
+                else:
+                    row += [
+                        "null",
+                        0
+                    ]
             elif event.value['type'] == 'cancel':
-                row += [
-                    request_ids[sender],
-                    0
-                ]
+                if sender in request_ids.keys():
+                    row += [
+                        request_ids[sender],
+                        0
+                    ]
+                else:
+                    row += [
+                        "null",
+                        0
+                    ]
             rows.append(row)
             tick += 1
     return rows
