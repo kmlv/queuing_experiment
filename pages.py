@@ -88,11 +88,11 @@ class Results(Page):
         transactions = []
         for event in events:
             if event.value['type'] == 'accept' and event.value['channel'] == 'incoming':
-                status = 'ACCEPTED'
+                status = 'ACEPTADO'
                 transfer = event.value['offer']
                 if self.group.swap_method() == 'Double':
                     if event.value['transfer'] == 0:
-                        status = 'REJECTED'
+                        status = 'RECHAZADO'
                     transfer = event.value['transfer']
                 if self.player.id_in_group == event.value['senderID']:
                     transactions.append({
@@ -113,14 +113,14 @@ class Results(Page):
                     transactions.append({
                         'original_position': event.value['senderPosition'] + 1,
                         'new_position': event.value['senderPosition'] + 1,
-                        'status': "REJECTED",
+                        'status': "RECHAZADO",
                         'transfer': 1 * event.value['offer'],
                     })
                 elif self.player.id_in_group == event.value['receiverID']:
                     transactions.append({
                         'original_position': event.value['receiverPosition'] + 1,
                         'new_position': event.value['receiverPosition'] + 1,
-                        'status': "REJECTED",
+                        'status': "RECHAZADO",
                         'transfer': -1 * event.value['offer'],
                     })
             if event.value['type'] == 'cancel' and event.value['channel'] == 'incoming':
@@ -128,14 +128,14 @@ class Results(Page):
                     transactions.append({
                         'original_position': event.value['senderPosition'] + 1,
                         'new_position': event.value['senderPosition'] + 1,
-                        'status': "CANCELLED",
+                        'status': "CANCELADO",
                         'transfer': 1 * event.value['offer'],
                     })
                 elif self.player.id_in_group == event.value['receiverID']:
                     transactions.append({
                         'original_position': event.value['receiverPosition'] + 1,
                         'new_position': event.value['receiverPosition'] + 1,
-                        'status': "CANCELLED",
+                        'status': "CANCELADO",
                         'transfer': -1 * event.value['offer'],
                     })
 
