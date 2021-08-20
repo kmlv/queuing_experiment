@@ -96,17 +96,17 @@ export class LeepsQueue extends PolymerElement {
 
             <div class="layout horizontal center" style="width: 100%;">
                 <div class="borders" style="width: 33%;">
-                    Round: [[roundNumber]]
+                    Ronda: [[roundNumber]]
                 </div>
                 <div class="borders" style="width: 33%;">
-                    Exchange Rule: [[swapMethod]]
+                    Regla de Intercambio: [[swapMethod]]
                 </div>
                 <div class="borders" style="width: 33%;">
-                    Messaging: [[messaging]]
+                    Mensajes: [[messaging]]
                 </div>
                 <!--
                 <div class="borders" style="width: 30%;">
-                    Time Remaining: [[ _subperiodProgress ]]
+                    Tiempo Restante: [[ _subperiodProgress ]]
                 </div>
                 -->
             </div>
@@ -118,8 +118,8 @@ export class LeepsQueue extends PolymerElement {
                     <div>
                         <div class="layout vertical center" style="text-align: center;">
                             <p style="height: 65px;
-                                        width: 110px;">Position</p>
-                            <p style="width: 110px;">Value</p>
+                                        width: 110px;">Posicion</p>
+                            <p style="width: 110px;">Valor</p>
                         </div>
                     </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
@@ -144,32 +144,32 @@ export class LeepsQueue extends PolymerElement {
                 </div>
 
                 <div class="layout horizontal borders" style="height: 25%; width: 100%;">
-                    <div style="height: 25%; width: 10%;text-align: center;"> Your Decision</div>
+                    <div style="height: 25%; width: 10%;text-align: center;"> Tu Decision</div>
                     <div class="layout vertical borders" style="width: 45%;">
                         <div class="layout horizontal">
-                            <p>Player you want to exchange position: 
+                            <p>Jugador con quien quieres intercambiar posicion: 
                                     <span id='exchangeText'>[[exchangeText]]</span>
                             </p>
                         </div>
                         <div class="layout horizontal">
                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                <p>Your offer: </p>
+                                <p>Tu Oferta: </p>
                                 <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                             </template>
                         </div>
                         <template is="dom-if" if="[[ !requestSent ]]">
-                            <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Send your request</button>
+                            <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Enviar tu Solicitud</button>
                         </template>
                         <template is="dom-if" if="[[ requestSent ]]">
-                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancel your request</button>
+                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancelear tu Solicitud </button>
                         </template>
                         </div class="layout vertical  borders" style="width: 45%;">
-                            <p style="margin-right:10px;margin-top:50px;">Message</p>
+                            <p style="margin-right:10px;margin-top:50px;">Mensaje</p>
                             <template is="dom-if" if="[[ messaging ]]" >
                                 <input id="message" type="text" style="height: 70px;padding-top:10px;padding-bottom:10px;margin-top:35px;margin-bottom:10px;"  required>
                             </template>
                             <template is="dom-if" if="[[ !messaging ]]">
-                                <p style="margin-left:10px;margin-top:50px;">Disabled</p>
+                                <p style="margin-left:10px;margin-top:50px;">Deshabilitado</p>
                             </template>
                     </div>
                     </div>
@@ -180,17 +180,17 @@ export class LeepsQueue extends PolymerElement {
                     <div class="layout vertical borders" style="width: 50%;">
                         <div class="layout horizontal borders" style="width: 100%;">
                             <div class="borders" style="width: 50%;">
-                                <p style="font-size:150%;">Exchange Requests:</p>
+                                <p style="font-size:150%;">Solicitud de Cambio:</p>
                             </div>
                             <div class="layout vertical borders" style="width: 50%;">
-                                <p style="margin-top:2px;margin-bottom:2px;">Current Sent Request:</p>
-                                <p style="margin-top:2px;margin-bottom:2px;">To Position: [[_list(currentRequest, "position")]]</p>
+                                <p style="margin-top:2px;margin-bottom:2px;">Solicitud Actual a Enviar:</p>
+                                <p style="margin-top:2px;margin-bottom:2px;">A la posicion: [[_list(currentRequest, "position")]]</p>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
-                                    <p style="margin-top:2px;margin-bottom:2px;">Offer: [[_list(currentRequest, "offer")]]</p>
+                                    <p style="margin-top:2px;margin-bottom:2px;">Oferta: [[_list(currentRequest, "offer")]]</p>
                                 </template>
                                 <template is="dom-if" if="[[ messaging ]]">
                                     <p style="margin-top:2px;margin-bottom:2px;overflow: auto; white-space:nowrap;">
-                                        <span style="display:inline-block;">Message: [[_list(currentRequest, "message")]]</span>
+                                        <span style="display:inline-block;">Mensaje: [[_list(currentRequest, "message")]]</span>
                                     </p>
                                 </template>
                             </div>
@@ -201,14 +201,14 @@ export class LeepsQueue extends PolymerElement {
                                     <div class="layout vertical" >
                                         <div class="layout horizontal" style="
                                                                             padding-top:0px;">
-                                            <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Position: [[_list(requestsVector, "position")]]  </p>
+                                            <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Posicion: [[_list(requestsVector, "position")]]  </p>
                                             <template is="dom-if" if="[[ _showOfferButNotBid() ]]">
-                                                <p style="display:inline;margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
+                                                <p style="display:inline;margin-top:2px;margin-bottom:2px;">Monto: [[_list(requestsVector, "offer")]]</p>
                                             </template>
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
                                             <div>
-                                                Message:
+                                                Mensaje:
                                                 <p style="margin-top:2px;margin-bottom:2px;width:250px;overflow: auto;white-space:nowrap;">
                                                  <span style="display:inline-block;">[[_list(requestsVector, "message")]]</span>
                                                 </p>
@@ -225,17 +225,17 @@ export class LeepsQueue extends PolymerElement {
                                     <div class="layout vertical" style="margin-top:9px;margin-left:auto;">
                                             <button id="accept" type="button" on-click="_handleaccept" style="background-color:#ADD8E6;margin-bottom:5px;">
                                                 <template is="dom-if" if="[[ _isDouble() ]]" >
-                                                    Ask
+                                                    Solicitar
                                                 </template>
                                                 <template is="dom-if" if="[[ !_isDouble() ]]" >
-                                                    Accept
+                                                    Aceptar
                                                 </template>
                                             </button>
                                             <template is="dom-if" if="[[ !_isDouble() ]]">
-                                                <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Reject</button>
+                                                <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Rechazar</button>
                                             </template>
                                             <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
-                                                <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Report</button>
+                                                <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Reportar</button>
                                             </template>
                                         </div>
                                 </div>
@@ -247,27 +247,27 @@ export class LeepsQueue extends PolymerElement {
                         <div class="layout vertical borders">
                             <div class="borders layout horizontal" style="height:40px;font-size:120%;">
                                 <div style="width: 50%;">
-                                    Endowment: [[endowment]]
+                                    Presupuesto: [[endowment]]
                                 </div>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
                                     <div style="width: 50%;">
-                                        Total Transfer: [[transfer]]
+                                        Transferencia Total: [[transfer]]
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[ !_showOffer() ]]">
                                     <div style="width: 50%;">
-                                        Total Transfer: N/A
+                                        Transferencia Total: N/A
                                     </div>
                                 </template>
                             </div>
-                            <div class="borders" style="height:40px;font-size:150%;">Exchange History</div>
+                            <div class="borders" style="height:40px;font-size:150%;">Historial de Transferencias</div>
                             <div class="borders" style="height:400px;overflow: auto;">
                                 <table>
                                     <tr> 
-                                        <th>Original Position </th>
-                                        <th>New Position </th>
-                                        <th>Status </th>
-                                        <th>Transfer </th>
+                                        <th>Posicion Inicial </th>
+                                        <th>Nueva Posicion </th>
+                                        <th>Estado </th>
+                                        <th>Transferencia </th>
                                     </tr>
                                     <template is="dom-repeat" index-as="index" items="{{history}}" as="historyVector">
                                         <tr> 
