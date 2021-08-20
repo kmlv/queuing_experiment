@@ -440,7 +440,8 @@ export class LeepsQueue extends PolymerElement {
 
     _pick(e){
         if (this.requestSent == true) {
-            alert("To start a new request, you need to cancel the current one.");
+            alert("Para empezar una nueva solicitud ,tienes que cancelar el actual.");
+                  //To start a new request, you need to cancel the current one.
             return;
         }
         var index = e.model.index;
@@ -663,7 +664,8 @@ export class LeepsQueue extends PolymerElement {
         console.log("request");
         this.set("requestSent", true);
         if(this.$.exchangeText.textContent == "None"){
-            alert("Select a player!");
+            //alert("Select a player!");
+            alert("¡Selecciona un jugador primero!");
             this.set("requestSent", false);
             return;
         }
@@ -671,28 +673,33 @@ export class LeepsQueue extends PolymerElement {
         let exchangePlayer = this.queueList[exchangePlayerIndex];
         
         if(exchangePlayerIndex > this.myPosition){
-            alert("This Player is behind you!");
+            //alert("This Player is behind you!");
+            alert("¡Este jugador está detrás tuyo!");
             this.set("requestSent", false);
             return;
         }
         if(exchangePlayer == parseInt(this.$.constants.idInGroup)){
-            alert("This Player is you!");
+            //alert("This Player is you!");
+            alert("Este jugador eres tú.");
             this.set("requestSent", false);
             return;
         }
         if(this._showOffer()) {
             if(this.shadowRoot.querySelector('#offer').value == ""){
-                alert("Input an offer");
+                //alert("Input an offer");
+                alert("Ingresa una oferta");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(this.shadowRoot.querySelector('#offer').value) > this.payoff){
-                alert("You don't have enough points");
+                //alert("You don't have enough points");
+                alert("No tienes suficientes puntos.");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(this.shadowRoot.querySelector('#offer').value) < 0){
-                alert("You can't have a negative offer");
+                //alert("You can't have a negative offer");
+                alert("No puedes tener una oferta negativa.");
                 this.set("requestSent", false);
                 return;
             }
@@ -766,17 +773,20 @@ export class LeepsQueue extends PolymerElement {
             let idString = '#' + this._idString(requestsVector);
             let ourBid = (this.shadowRoot.querySelector(idString).value);
             if(ourBid == ""){
-                alert("Input an offer");
+                //alert("Input an offer");
+                alert("Ingresa una oferta");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(ourBid) > this.payoff){
-                alert("You don't have enough points");
+                //alert("You don't have enough points");
+                alert("No tienes suficientes puntos.");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(ourBid) < 0){
-                alert("You can't have a negative offer");
+                //alert("You can't have a negative offer");
+                 alert("No puedes tener una oferta negativa.");
                 this.set("requestSent", false);
                 return;
             }
