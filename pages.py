@@ -6,15 +6,44 @@ from operator import concat
 from functools import reduce
 from .models import parse_config
 
-class Introduction(Page):
-
+class Pagina_inicial(Page):
     def is_displayed(self):
         return self.round_number == 1
+
+class Introduction(Page): 
+    def is_displayed(self):
+        return self.round_number == 1
+    
+class StartPaidRound(Page): 
+    def is_displayed(self):
+        return self.round_number == 3
+
+class Instructions(Page):
+
+    def is_displayed(self):
+
+       
+        #try:
+        #    swap_method_1=parse_config(self.session.config['config_file'])[self.round_number-1]['swap_method']
+
+        #    swap_method_2= parse_config(self.session.config['config_file'])[self.round_number-2]['swap_method']
+
+        #    return swap_method_1 != swap_method_2 
+
+        #except IndexError:
+        #    return None
+        
+        return self.round_number == 1
+
+    def vars_for_template(self):
+        swap_method=self.group.swap_method()
+        return dict(swap_method=swap_method)
+
 
 
 class DecisionWaitPage(WaitPage):
 
-    body_text = 'Waiting for all players to be ready'
+    body_text = 'Por favor, espere al resto de jugadores.'
     wait_for_all_groups = True
     after_all_players_arrive = 'set_initial_positions'
 
@@ -31,8 +60,9 @@ class Decision(Page):
 
 
 class ResultsWaitPage(WaitPage):
-    wait_for_all_groups = True
+    body_text = 'Por favor, espere al resto de jugadores.'
 
+    wait_for_all_groups = True
     after_all_players_arrive = 'set_payoffs'
 
     def is_displayed(self):
@@ -127,11 +157,19 @@ class Payment(Page):
             'payoff_round2': self.session.vars['payment_round2'],
         }
 
-page_sequence = [
+class Pago_final(Page):
+    def is_displayed(self):
+        return self.round_number == self.subsession.num_rounds()
+
+
+page_sequence = [Pagina_inicial,
     Introduction,
+    StartPaidRound,
+    Instructions,
     DecisionWaitPage,
     Decision,
     ResultsWaitPage,
     Results,
-    Payment
+    Payment,
+    Pago_final
 ]

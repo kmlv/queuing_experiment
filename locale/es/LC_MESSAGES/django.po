@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-30 13:35-0500\n"
+"PO-Revision-Date: 2021-03-31 20:31-0500\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.4\n"
+
+#: .\templates\queuing_experiment\Decision.html:5
+msgid "Your Choice"
+msgstr "Tu Decisión"
+
+#: .\templates\queuing_experiment\Introduction.html:5
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: .\templates\queuing_experiment\Introduction.html:13
+msgid "Welcome, and thank you for participating!"
+msgstr "¡Bienvenido y gracias por participar!"
+
+#: .\templates\queuing_experiment\Introduction.html:19
+msgid ""
+"From now until the end of the experiment, please turn off your phone and do "
+"not communicate with other participants. If you have any questions, please "
+"message us in the chat (or use your microphone) and we will respond as soon "
+"possible. Please pay careful attention to the instructions as real money is "
+"at stake."
+msgstr ""
+"Desde ahora hasta el final del experimento, por favor, apague su celular y "
+"no se comunique con otros participantes. Si tiene alguna pregunta, por "
+"favor, mándenos un mensaje por WhatsApp y responderemos lo más pronto "
+"posible. Por favor, preste atención a las instrucciones pues dinero real "
+"está en juego."
+
+#: .\templates\queuing_experiment\Introduction.html:28
+msgid ""
+"During the experiment you will earn points, and at the end of the experiment "
+"all your earnings will be converted to USD dollars at the rate specified by "
+"the experimenter. You are guaranteed a show up fee of $4.00 USD if you show "
+"up and complete the session, but you can earn more depending on your "
+"decisions throughout the game."
+msgstr ""
+"Durante el experimento, ganarás puntos y, al final, todas tus ganancias "
+"serán convertidas a soles a la tasa especificada en las siguientes "
+"instrucciones. Tienes garantizado 5 soles por presentarte y completar la "
+"sesión, pero puedes ganar más dependiendo de tus decisiones en el juego."
+
+#: .\templates\queuing_experiment\Introduction.html:36
+msgid "If you finished reading, please press next."
+msgstr "Si terminó de leer, presione \"Siguiente\", por favor."
+
+#: .\templates\queuing_experiment\Payment.html:11
+msgid "Congratulations! You have completed the experiment.</p>"
+msgstr "¡Felicidades! Has completado el experimento.</p>"
+
+#: .\templates\queuing_experiment\Payment.html:15
+msgid "The rounds which determines your payment were randomly decided as round"
+msgstr "La ronda que determinará tu pago de manera aleatoria será la ronda"
+
+#: .\templates\queuing_experiment\Payment.html:16
+msgid "and round"
+msgstr "y la ronda"
+
+#: .\templates\queuing_experiment\Payment.html:20
+msgid "Your payment is"
+msgstr "Tu pago es"
+
+#: .\templates\queuing_experiment\Payment.html:21
+msgid "Please press next to end the experiment."
+msgstr "Por favor, presione \"Siguiente\" para terminar el experimento."
+
+#: .\templates\queuing_experiment\Results.html:5
+msgid "Results"
+msgstr "Resultados"
+
+#: .\templates\queuing_experiment\Results.html:34
+msgid "Your payoff in this round:"
+msgstr "Tu pago en esta ronda: "
+
+#: .\templates\queuing_experiment\Results.html:36
+msgid "Your starting position:"
+msgstr "Tu posición inicial:"
+
+#: .\templates\queuing_experiment\Results.html:38
+msgid "Your final position:"
+msgstr "Tu posición final:"
+
+#: .\templates\queuing_experiment\Results.html:42
+msgid ""
+"<th> <td>Original Position</td> <td>New Position</td> <td>Status</td> "
+"<td>Transfer</td> </th>"
+msgstr ""
+"<th> <td>Posición Original</td> <td>Posición Nueva</td> <td>Estado</td> "
+"<td>Transferencia</td> </th>"
+
+#: .\templates\queuing_experiment\Results.html:63
+msgid "This was a practice round so your payoff in this round does not count"
+msgstr ""
+"Esta fue una ronda de práctica, por lo que tu pago en esta ronda no cuenta"

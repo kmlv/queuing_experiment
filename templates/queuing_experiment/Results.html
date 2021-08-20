@@ -1,8 +1,9 @@
 {% extends "global/Page.html" %}
 {% load staticfiles otree_tags %}
+{% load i18n %}
 
 {% block title %}
-    Results
+Resultados
 {% endblock %}
 
 {% block content %}
@@ -29,20 +30,22 @@
             }
     </style>
 
-    <div><mark>Your payoff in this round: {{ player.payoff }}</mark></div>
+    <div><mark>{% blocktrans trimmed %}Your payoff in this round:{% endblocktrans %} {{ player.payoff }}</mark></div>
 
-    <div>Your starting position: {{ initial_position }} </div>
+    <div>{% blocktrans trimmed %}Your starting position:{% endblocktrans %} {{ initial_position }} </div>
 
-    <div>Your final position: {{ final_position }} </div>
+    <div>{% blocktrans trimmed %}Your final position:{% endblocktrans %} {{ final_position }} </div>
 
     <table class="table" style="margin-top:20px; margin-bottom:10px">
-        <caption style="color:black;font-size:40px;caption-side:top;text-align: center;">Your Exchange History</caption>
+        <caption style="color:black;font-size:40px;caption-side:top;text-align: center;">Tu historial de intercambio</caption>
+        {% blocktrans trimmed %}
         <th>
             <td>Original Position</td>
             <td>New Position</td>
             <td>Status</td>
             <td>Transfer</td>
         </th>
+        {% endblocktrans %}
         {% for transaction in transactions %}
             <tr>
                 <td></td>
@@ -55,9 +58,14 @@
                 
     </table>
 
-    <div>{% if subsession.config.practice %} This was a practice round so your payoff in this round does not count
+    <div>{% if subsession.config.practice %} 
+        {% blocktrans trimmed %}
+        This was a practice round so your payoff in this round does not count
+        {% endblocktrans %}
          {% endif %}</div>
 
     {% next_button %}
+    
+    {% include Constants.contact_template %}
 
 {% endblock %}

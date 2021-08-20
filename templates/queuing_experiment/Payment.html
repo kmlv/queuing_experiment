@@ -1,5 +1,6 @@
 {% extends "global/Page.html" %}
 {% load otree static %}
+{% load i18n %}
 
 {% block title %}
     Final Page
@@ -8,15 +9,21 @@
 {% block content %}
 
 <p>
+
 Congratulations! You have completed the experiment.</p>
 <p>
-The rounds which determines your payment were randomly decided as round {{ payoff_round1 }} and round {{ payoff_round2 }}.    
+The rounds which determines your payment were randomly 
+decided as round 
+{{ payoff_round1 }} and round {{ payoff_round2 }}.    
+
 </p>
 <p>
- Your payment is {{payoff}}.
-    Please press next to end the experiment.
+Your payment is {{payoff}}.
+ Please press next to end the experiment.
 </p>
 
     {% next_button %}
 
+    {% include Constants.contact_template %}
+    
 {% endblock %}

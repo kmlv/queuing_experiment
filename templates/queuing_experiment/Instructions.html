@@ -1,0 +1,239 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+{% load i18n %}
+
+{% block title %}
+Experiment Instructions
+{% endblock %}
+
+{% block content %}
+<p>
+    Welcome, and thank you for participating!
+    <br><br>
+    From now until the end of the experiment, please stay focused on the task at hand, as your
+    payment highly depends on your performance in the experiment. To respect other participants,
+    please do not eat, play, chat, or leave the room during the experiment. If you need to drink 
+    water or use your cellphone, please only do so when absolutely necessary. If you have any
+    questions, please send the experimenter a private message. Please also remember to open the session 
+    link with Chrome because other browsers may cause problems.
+    During the experiment, you will earn points in each round. At the end of the 
+    experiment, two rounds will be randomly chosen, from which your points will be 
+    converted to PEN (200 lab points = 10 PEN). You are guaranteed a show-up 
+    fee of 5.00 PEN but can earn considerably more. 
+</p>
+
+<h3>Game Overview</h3>
+<p>
+    In this experiment, you will interact with other participants in multiple rounds. In 
+    each round, you will be grouped randomly and anonymously with several other participants. 
+    All of you will be placed randomly in a line waiting for a “service”, where your position 
+    in the line determines the value of the service. Naturally, the closer to 
+    the front of the line you are, the higher value you can receive at the end of the 
+    round. The value of the service differs between participants. During each round, you 
+    can also exchange your positions with other participants in the line under some 
+    specific exchange rules. Your round payoff is determined by the service value you 
+    receive and the potential transfers you can get from the exchange rule.
+
+    <br><br>
+    In particular, your payoff in each round will be given by:
+</p>
+
+<p>
+    <b>Endowment + Value of Final Position + Transfers you receive - Transfers you send 
+    </b>
+    <ul>
+        <li>Endowment is the payoff you own at the beginning of each round.</li>
+        <li>Value is the value of the service based on your final position in the line.</li>
+        <li>Transfers you receive is an accumulation of the transfers received from other players 
+            when you agree to move back in line.</li>
+        <li>Transfers you send is the total amount you have sent to other players 
+            while moving forward in the line.</li>
+    </ul>
+    Your final payment in this experiment = your show-up fee + your payoff in two random rounds.
+</p>
+
+<h3>User Interface</h3>
+
+<img src="{% static 'interface.png' %}"/> 
+
+<p>
+    At the beginning of each round, the random line is placed on top of the screen. 
+    The line of circles shows the current status of the line. The number of circles 
+    shows the number of participants in your group. The position is the number inside 
+    each circle, with your circle being shaded red (as shown above). The purple 
+    circles are the people that are ahead of you in the line and with whom you may 
+    initiate an interaction. The gray circles represent the people that are behind 
+    you in the line. In the example above, you are the 4th person in line and may 
+    initiate interactions with the people in the 1st through 3rd spots.
+</p>
+<p>
+    Below each position, you can see the value associated with it if you hold that 
+    position at the end of the round (note that the values differ between participants). 
+    The closer is your final position to the front,  
+    the higher the value associated with it. The information above the line of circles 
+    in the user interface shows the current round number, the current exchange rule, 
+    whether messaging is allowed, and the remaining time of the current round.
+</p>
+
+<img src="{% static 'interface2.png' %}"/>
+
+<p>
+    Below the line, you can see the decision panel. Depending on the exchange rules, 
+    different buttons will be visible in the decision panel. To interact with someone 
+    in line, simply click on the corresponding circle. For example, to interact with 
+    the person in the 3rd position in the line, click on the circle with 3 in it, then 
+    complete the rest of the items in the box (offer/message) and press “Send your 
+    request”. After doing so, the button will turn red and offer the chance to “Cancel 
+    your request”. It is possible that the other participant just ignores your request, 
+    but you can cancel your request at any time. If messaging is enabled, you can also 
+    attach a message with your request using the right side of the panel.
+
+</p>
+
+<img src="{% static 'interface3.png' %}"/>
+
+<p>
+    Below the decision panel, you can see the request panel and the history panel. On 
+    the left is the request panel. You can see your own current exchange request on 
+    top of the panel, and requests from others below it. You can only send out one 
+    request to move forward at a time. However, you may receive requests from multiple 
+    others at the same time. When you accept a request, other requests (including your 
+    own request) will be automatically canceled. For example, in the request panel 
+    above, you can see that you haven’t sent any request yet, and there are two exchange 
+    requests from the participants at position 5 and 6 with offers and messages.
+    The informaiton of the request may differ between exchange rules.
+</p>
+<p>
+    On the right, you can observe your endowment, current total transfer, and your own 
+    exchange history in the current round. Once a request has been responded to, a new 
+    row will appear in the “Exchange History” box. Four pieces of information will be 
+    reported: your original position, your new position, the status of the response, 
+    and the transfer made (if any). For example, the figure below shows a few responses 
+    for this player. The first row shows that this player’s request was rejected, 
+    meaning they stayed in the same position (as the row reports). The second row 
+    indicates that the player in position 4 accepted this player’s request and the 
+    transfer is 8 points from this player to the player in position 4.
+</p>
+
+<h3>Exchange Rules:</h3>
+
+{% if swap_method == "TL"  %}
+    <p>
+        Take/Leave Price (TL):
+    </p>
+
+    <img src="{% static 'interface4.png' %}"/>
+
+    <p>
+        In this experiment, you can send an exchange offer to other participants with a 
+        price. If your offer is accepted and you exchange positions, you will pay the 
+        accepted amount to the other participant and your service value will increase 
+        since you are moving forward in the line. If you exchange positions and move 
+        backward, your value will decrease but you will gain a transfer equal to the 
+        offer you accepted. The other participants can also send you their requests with 
+        offers. Technically speaking, you need to find the opportunity to earn payoff by 
+        requesting to move forward or accepting someone’s request.
+    </p>
+
+    <img src="{% static 'interface5.png' %}"/>
+
+    <p>
+        For example, suppose you are the 4th person in the line. If you want to switch 
+        with the participant at position 2, you will earn 45-27=18 more service value if 
+        the exchange succeeds. So your offer should be below 18. Otherwise, you will lose 
+        money even if you move to position 2. If the participant at position 5 offers you 
+        a request, you shouldn’t accept it when the offer is below 9, as you will lose 
+        27-18=9 points if you exchange positions.
+    </p>
+
+{% elif swap_method == "swap" %}
+    <p>
+        Swap (swap):
+    </p>
+
+    <img src="{% static 'interface6.png' %}" />
+
+    <p>
+        In this experiment, you can exchange positions with other participants by sending 
+        out your request and accepting others’ requests. The exchange of positions will 
+        affect your position in the line, thus affect your service value. However, there 
+        is no monetary transfer between participants during each exchange. You cannot get
+        any transfer from other participants and you cannot send any transfer to others. 
+
+    </p>
+
+{% elif swap_method == "Double" %}
+
+    <p>
+        DA:
+    </p>
+
+    <img src="{% static 'interface_double1.PNG' %}"/>
+
+    <p>
+        In this experiment, participants can send exchange offers to other participants with a Bid. 
+        Instead of accepting/declining the bid, the other participant’s exchange request looks as follows.
+    </p>
+
+    <img src="{% static 'interface_double2.PNG' %}"/>
+
+    <p>
+        The other participant needs to offer an Ask price by filling in the blank and pressing the Ask button. 
+        If the Ask is NOT higher than the Bid, the exchange request will be accepted. Both participants switch 
+        positions and the average of the Ask and the Bid is transferred from the requester to the requestee. 
+        On one hand, the requester will pay the transfer to the requestee but her value from the position will 
+        increase since she is moving forward in the line. On the other hand, the requestee’s value will decrease 
+        but she will gain the transfer. Technically speaking, you need to find the opportunity to earn payoff by 
+        requesting to move forward or placing the right Ask for someone’s request. If the Ask is higher than the Bid, 
+        the request will be rejected. The requestee cannot observe the Bid when choosing the Ask.
+    </p>
+    <p>
+        For example, let us say that the requester sends an exchange request with a bid of 10. 
+        If the requestee chooses an Ask of 9, they will exchange positions with a transfer of 9.5. 
+        If the requestee chooses 11 instead, the exchange request will be automatically rejected.
+    </p>
+
+    <img src="{% static 'interface_double3.png' %}"/>
+
+    <p>
+        The participants can request the exchange with any other participants in the line and 
+        the “value” of the exchange may vary. For example, suppose you are the 4th person in the line. 
+        If you want to switch with the participant at position 2, you will earn 50-30=20 more service 
+        value if the exchange succeeds. If the final transfer is more than 20, 
+        you will lose money even if you move to position 2. If the participant at position 5 
+        offers you a request, the final transfer should not be lower than 10, as you will 
+        lose 30-20=10 points if you exchange positions.
+    </p>
+
+{% endif %}
+
+<h3>Messaging</h3>
+
+<p>
+    In some rounds, you are allowed to attach a message to your exchange request. 
+    The other participant can see your message with the exchange request. You can also 
+    see other participants’ messages when they send you their exchange request. The 
+    message option is on the right side of the decision panel.
+    Please use English to write your message.
+</p>
+
+<img src="{% static 'msg.png' %}"/>
+
+<p>
+    Please follow the two rules when you message others:
+
+    <ol>
+        <li>Discrimination and malicious messages are NOT allowed.</li>
+        <li>Do NOT directly or indirectly disclose your identity.</li>
+    </ol>
+    Participants who send these types of messages will not get their payment and will 
+    be removed from the participant pool of the lab. If you find some messages 
+    uncomfortable, you can also report the message using the report button in the 
+    request panel.
+</p>
+
+
+
+{% include Constants.contact_template %}
+
+{% endblock %}

@@ -1,27 +1,43 @@
 {% extends "global/Page.html" %}
 {% load staticfiles otree_tags %}
+{% load i18n %}
 
 {% block title %}
+
     Welcome
+
 {% endblock %}
 
 {% block content %}
 
 <p>
 Welcome, and thank you for participating!
+
 </p>
 
 <p>
+
 From now until the end of the experiment, 
-please turn off your phone and do not communicate with other participants. 
-If you have any questions, please message us in the chat (or use your microphone) and we will respond as soon possible. 
-Please pay careful attention to the instructions as real money is at stake. 
+please turn off your phone and do not communicate with 
+other participants. 
+If you have any questions, please message us in the chat 
+(or use your microphone) and we will respond as soon possible. 
+Please pay careful attention to the instructions as real 
+money is at stake. 
+
 </p>
 
 <p>
 During the experiment you will earn points, 
-and at the end of the experiment all your earnings will be converted to USD dollars at the rate specified by the experimenter. 
-You are guaranteed a show up fee of $4.00 USD if you show up and complete the session, but you can earn more depending on your decisions throughout the game.
+and at the end of the experiment all your earnings will be 
+converted to soles at the rate (200 lab points = 10 PEN). 
+You are guaranteed a show up fee of 5 PEN if you show up and 
+complete the session, but you can earn more depending on your decisions throughout the game.
+</p>
+
+<p>
+In total, you will play 14 rounds, with 2 practice rounds and 12 paid rounds.
+The experiment is expected to last for an hour.
 </p>
 
 <p>
@@ -29,5 +45,7 @@ If you finished reading, please press next.
 </p>
 
     {% next_button %}
+
+    {% include Constants.contact_template %}
 
 {% endblock %}
