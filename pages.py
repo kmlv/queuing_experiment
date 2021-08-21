@@ -160,6 +160,12 @@ class Payment(Page):
 class Pago_final(Page):
     def is_displayed(self):
         return self.round_number == self.subsession.num_rounds()
+    def vars_for_template(self):
+        return {
+            'payoff': self.player.in_round(self.session.vars['payment_round1']).payoff + self.player.in_round(self.session.vars['payment_round2']).payoff,
+            'payoff_round1': self.session.vars['payment_round1'],
+            'payoff_round2': self.session.vars['payment_round2'],
+        }
 
 
 page_sequence = [Pagina_inicial,
