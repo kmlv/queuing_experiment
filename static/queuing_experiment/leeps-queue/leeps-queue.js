@@ -153,7 +153,7 @@ export class LeepsQueue extends PolymerElement {
                         </div>
                         <div class="layout horizontal">
                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                <p>Tu Oferta: </p>
+                                <p>Tu Bid: </p>
                                 <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                             </template>
                         </div>
@@ -225,7 +225,7 @@ export class LeepsQueue extends PolymerElement {
                                     <div class="layout vertical" style="margin-top:9px;margin-left:auto;">
                                             <button id="accept" type="button" on-click="_handleaccept" style="background-color:#ADD8E6;margin-bottom:5px;">
                                                 <template is="dom-if" if="[[ _isDouble() ]]" >
-                                                    Solicitar
+                                                    Ask
                                                 </template>
                                                 <template is="dom-if" if="[[ !_isDouble() ]]" >
                                                     Aceptar
@@ -625,7 +625,7 @@ export class LeepsQueue extends PolymerElement {
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ rIndex + 1, sIndex + 1, 'ACEPTADD', -1 *amount ];
+                let historyVector =[ rIndex + 1, sIndex + 1, 'ACEPTADO', -1 *amount ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
