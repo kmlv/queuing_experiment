@@ -8,142 +8,132 @@ Experiment Instructions
 
 {% block content %}
 <p>
-    Welcome, and thank you for participating!
+    ¡Bienvenido y gracias por participar! 
     <br><br>
-    From now until the end of the experiment, please stay focused on the task at hand, as your
-    payment highly depends on your performance in the experiment. To respect other participants,
-    please do not eat, play, chat, or leave the room during the experiment. If you need to drink 
-    water or use your cellphone, please only do so when absolutely necessary. If you have any
-    questions, please send the experimenter a private message. Please also remember to open the session 
-    link with Chrome because other browsers may cause problems.
-    During the experiment, you will earn points in each round. At the end of the 
-    experiment, two rounds will be randomly chosen, from which your points will be 
-    converted to PEN (200 lab points = 10 PEN). You are guaranteed a show-up 
-    fee of 5.00 PEN but can earn considerably more. 
+    Desde ahora hasta el final del experimento, por favor manténgase concentrado en la tarea que esté realizando, 
+    ya que su pago depende en gran medida de su rendimiento en el experimento. Para respetar a los demás participantes, 
+    por favor no coma, juegue, converse ni salga de la habitación durante el experimento. Si necesita beber agua o usar su teléfono, 
+    por favor hágalo solo cuando sea absolutamente necesario. Si tiene alguna pregunta, por favor envíe un mensaje privado al anfitrión. 
+    Por favor recuerde también abrir el enlace de sesión con Chrome porque otros navegadores pueden causar problemas.
+    Durante el experimento, ganarás puntos en cada ronda. Al final del experimento 
+    experimento, dos rondas seran elegidas aleatoriamente, de las cuales tus puntos serán convertidos
+    a PEN (200 puntos = 10 PEN). Es garantizado de que obtendrás un pago por participar  
+    de 5.00 PEN pero puede ganar considerablemente más. 
 </p>
 
-<h3>Game Overview</h3>
+<h3>Información General del Juego</h3>
 <p>
-    In this experiment, you will interact with other participants in multiple rounds. In 
-    each round, you will be grouped randomly and anonymously with several other participants. 
-    All of you will be placed randomly in a line waiting for a “service”, where your position 
-    in the line determines the value of the service. Naturally, the closer to 
-    the front of the line you are, the higher value you can receive at the end of the 
-    round. The value of the service differs between participants. During each round, you 
-    can also exchange your positions with other participants in the line under some 
-    specific exchange rules. Your round payoff is determined by the service value you 
-    receive and the potential transfers you can get from the exchange rule.
+    En este experimento, usted interactuará con otros participantes en múltiples rondas. En cada ronda, usted será agrupado de 
+    forma aleatoria y anónima con varios otros participantes. Todos ustedes serán colocados aleatoriamente en una fila
+    esperando un “servicio”, donde el valor del servicio está determinado por su posición en la fila. Naturalmente, cuanto 
+    más cerca esté al frente de la línea, mayor será el valor que recibirá al final de la ronda. El valor del servicio 
+    difiere entre participantes. Durante cada ronda, usted también puede intercambiar sus posiciones con otros participantes 
+    en la línea de acuerdo a algunas reglas de intercambio específicas. Su pago total está determinado por el valor del servicio 
+    que recibe y las transferencias potenciales que puede obtener de la regla de intercambio.
 
     <br><br>
-    In particular, your payoff in each round will be given by:
+    En particular, su recompensa en cada ronda estará dada por:
 </p>
 
 <p>
-    <b>Endowment + Value of Final Position + Transfers you receive - Transfers you send 
+    <b>Dotación + Valor de la Posición Final + Transferencias que recibe - Transferencias que envías 
     </b>
     <ul>
-        <li>Endowment is the payoff you own at the beginning of each round.</li>
-        <li>Value is the value of the service based on your final position in the line.</li>
-        <li>Transfers you receive is an accumulation of the transfers received from other players 
-            when you agree to move back in line.</li>
-        <li>Transfers you send is the total amount you have sent to other players 
-            while moving forward in the line.</li>
+        <li>Dotación es la recompensa que posee al comienzo de cada ronda.</li>
+        <li>Valor es el valor del servicio basado en su posición final en la línea.</li>
+        <li>Transferencias que recibe es una acumulación de las transferencias 
+            recibidas de otros jugadores cuando acepta retroceder en la línea.</li>
+        <li>Transferencias que envías es la cantidad total que has enviado a 
+            otros jugadores mientras avanzas en la línea.</li>
     </ul>
-    Your final payment in this experiment = your show-up fee + your payoff in two random rounds.
+    Su pago final en este experimento = pago por presentarse + pago en dos rondas aleatorias.
 </p>
 
-<h3>User Interface</h3>
+<h3>Interfaz del Usuario</h3>
 
 <img src="{% static 'interface.png' %}"/> 
 
 <p>
-    At the beginning of each round, the random line is placed on top of the screen. 
-    The line of circles shows the current status of the line. The number of circles 
-    shows the number of participants in your group. The position is the number inside 
-    each circle, with your circle being shaded red (as shown above). The purple 
-    circles are the people that are ahead of you in the line and with whom you may 
-    initiate an interaction. The gray circles represent the people that are behind 
-    you in the line. In the example above, you are the 4th person in line and may 
-    initiate interactions with the people in the 1st through 3rd spots.
+    Al comienzo de cada ronda, la línea aleatoria se coloca en la parte superior de la pantalla. 
+    La línea de círculos muestra el estado actual de la línea. El número de círculos muestra el 
+    número de participantes en su grupo. La posición es el número dentro de cada círculo, con tu 
+    círculo sombreado en rojo (como se muestra arriba). Los círculos morados son las personas que
+    están delante de ti en la fila y con las que puedes iniciar una interacción. Los círculos 
+    grises representan a las personas que están detrás de ti en la fila. En el ejemplo anterior, 
+    usted es la cuarta persona en la fila y puede iniciar interacciones con las personas del primer 
+    al tercer lugar.
 </p>
 <p>
-    Below each position, you can see the value associated with it if you hold that 
-    position at the end of the round (note that the values differ between participants). 
-    The closer is your final position to the front,  
-    the higher the value associated with it. The information above the line of circles 
-    in the user interface shows the current round number, the current exchange rule, 
-    whether messaging is allowed, and the remaining time of the current round.
+    Debajo de cada posición, usted puede ver el valor asociado con ella si mantiene esa posición 
+    al final de la ronda. Cuanto más cerca esté su posición final al frente, mayor será el valor 
+    asociado. La información sobre la línea de círculos en la interfaz de usuario muestra el número 
+    de ronda actual, la regla de intercambio actual, si se permiten mensajes y el tiempo restante
+    de la ronda actual.
 </p>
 
 <img src="{% static 'interface2.png' %}"/>
 
 <p>
-    Below the line, you can see the decision panel. Depending on the exchange rules, 
-    different buttons will be visible in the decision panel. To interact with someone 
-    in line, simply click on the corresponding circle. For example, to interact with 
-    the person in the 3rd position in the line, click on the circle with 3 in it, then 
-    complete the rest of the items in the box (offer/message) and press “Send your 
-    request”. After doing so, the button will turn red and offer the chance to “Cancel 
-    your request”. It is possible that the other participant just ignores your request, 
-    but you can cancel your request at any time. If messaging is enabled, you can also 
-    attach a message with your request using the right side of the panel.
+    Debajo de la línea, usted puede ver el panel de decisiones. Dependiendo de las reglas de intercambio, 
+    diferentes botones estarán visibles en el panel de decisión. Para interactuar con alguien en la fila, 
+    simplemente haga clic en el círculo correspondiente. Por ejemplo, para interactuar con la persona en la 
+    tercera posición en la línea, haga clic en el círculo con el 3 dentro, luego complete el resto de los 
+    elementos en el cuadro (oferta/mensaje) y presione “Enviar su solicitud”. Después de hacerlo, el botón se 
+    volverá rojo y ofrecerá la oportunidad de "Cancelar su solicitud". Es posible que el otro participante 
+    simplemente ignore su solicitud, pero usted puede cancelar su solicitud en cualquier momento. Si la mensajería 
+    está habilitada, también puede adjuntar un mensaje con su solicitud usando el lado derecho del panel.
 
 </p>
 
 <img src="{% static 'interface3.png' %}"/>
 
 <p>
-    Below the decision panel, you can see the request panel and the history panel. On 
-    the left is the request panel. You can see your own current exchange request on 
-    top of the panel, and requests from others below it. You can only send out one 
-    request to move forward at a time. However, you may receive requests from multiple 
-    others at the same time. When you accept a request, other requests (including your 
-    own request) will be automatically canceled. For example, in the request panel 
-    above, you can see that you haven’t sent any request yet, and there are two exchange 
-    requests from the participants at position 5 and 6 with offers and messages.
-    The informaiton of the request may differ between exchange rules.
+    Debajo del panel de decisión, usted puede ver el panel de solicitud y el panel de historial. 
+    A la izquierda está el panel de solicitud. Puede ver su propia solicitud de intercambio actual en la 
+    parte superior del panel, y las solicitudes de otras personas debajo. Solo puede enviar una solicitud 
+    para avanzar cada vez. Sin embargo, puede recibir solicitudes de varios otros al mismo tiempo. Cuando
+    acepta una solicitud, otras solicitudes (incluida su propia solicitud) se cancelarán automáticamente. 
+    Por ejemplo, en el panel de solicitud anterior, puede ver que usted no ha enviado ninguna solicitud 
+    todavía, y que hay dos solicitudes de intercambio de los participantes en las posiciones 5 y 6 con 
+    ofertas y mensajes.
 </p>
 <p>
-    On the right, you can observe your endowment, current total transfer, and your own 
-    exchange history in the current round. Once a request has been responded to, a new 
-    row will appear in the “Exchange History” box. Four pieces of information will be 
-    reported: your original position, your new position, the status of the response, 
-    and the transfer made (if any). For example, the figure below shows a few responses 
-    for this player. The first row shows that this player’s request was rejected, 
-    meaning they stayed in the same position (as the row reports). The second row 
-    indicates that the player in position 4 accepted this player’s request and the 
-    transfer is 8 points from this player to the player in position 4.
+    A la derecha, puede observar su dotación, la transferencia total actual y su propio historial de 
+    intercambio en la ronda actual. Una vez que se haya respondido a una solicitud, aparecerá una nueva 
+    fila en el cuadro "Historial de intercambio". Se reportarán cuatro datos: su posición original, su
+    nueva posición, el estado de la respuesta y la transferencia realizada (si la hubiera). Por ejemplo, 
+    la figura siguiente muestra algunas respuestas para este jugador. La primera fila muestra que la solicitud 
+    de este jugador fue rechazada, lo que significa que permaneció en la misma posición (como informa la fila). 
+    La segunda fila indica que el jugador en la posición 4 aceptó la solicitud de este jugador y la transferencia 
+    es de 8 puntos de este jugador al jugador en la posición 4.
 </p>
 
-<h3>Exchange Rules:</h3>
+<h3>Reglas de Intercambio</h3>
 
 {% if swap_method == "TL"  %}
     <p>
-        Take/Leave Price (TL):
+        Precio para tomar/dejar (TL):
     </p>
 
     <img src="{% static 'interface4.png' %}"/>
 
     <p>
-        In this experiment, you can send an exchange offer to other participants with a 
-        price. If your offer is accepted and you exchange positions, you will pay the 
-        accepted amount to the other participant and your service value will increase 
-        since you are moving forward in the line. If you exchange positions and move 
-        backward, your value will decrease but you will gain a transfer equal to the 
-        offer you accepted. The other participants can also send you their requests with 
-        offers. Technically speaking, you need to find the opportunity to earn payoff by 
-        requesting to move forward or accepting someone’s request.
+         En este experimento, usted puede enviar una oferta de intercambio a otros participantes con un precio.
+         Si tu oferta es aceptada e intercambias posiciones, pagarás el monto aceptado al otro participante y 
+         el valor de tu servicio aumentará dado que estás avanzando en la línea. Si intercambias posiciones y retrocedes, tu valor 
+         disminuirá pero obtendrás una transferencia igual a la oferta aceptada. Los otros participantes también pueden enviarle sus solicitudes con ofertas. 
+         Técnicamente hablando, usted debe encontrar la oportunidad de obtener una recompensa solicitando seguir adelante o 
+         aceptando la solicitud de alguien.
     </p>
 
     <img src="{% static 'interface5.png' %}"/>
 
     <p>
-        For example, suppose you are the 4th person in the line. If you want to switch 
-        with the participant at position 2, you will earn 45-27=18 more service value if 
-        the exchange succeeds. So your offer should be below 18. Otherwise, you will lose 
-        money even if you move to position 2. If the participant at position 5 offers you 
-        a request, you shouldn’t accept it when the offer is below 9, as you will lose 
-        27-18=9 points if you exchange positions.
+          Por ejemplo, suponga que usted es la cuarta persona de la fila. 
+          Si desea cambiar con el participante en la posición 2, ganarás 45-27=18 más valor de servicio si el intercambio es exitoso. 
+          Por lo tanto, su oferta debe estar por debajo de 18. De lo contrario, perderá dinero incluso si pasa a la posición 2. Si el participante 
+          en la posición 5 le ofrece una solicitud, no debe aceptarla cuando la oferta sea inferior a 9, ya que perderá 27-18=9 puntos si intercambias posiciones. 
+
     </p>
 
 {% elif swap_method == "swap" %}
@@ -154,12 +144,13 @@ Experiment Instructions
     <img src="{% static 'interface6.png' %}" />
 
     <p>
-        In this experiment, you can exchange positions with other participants by sending 
-        out your request and accepting others’ requests. The exchange of positions will 
-        affect your position in the line, thus affect your service value. However, there 
-        is no monetary transfer between participants during each exchange. You cannot get
-        any transfer from other participants and you cannot send any transfer to others. 
-
+        
+        En este experimento, puede intercambiar posiciones con otros participantes enviando
+        una solicitud y aceptando las solicitudes de otros. El intercambio de posiciones
+        afectará su posición en la línea, por lo tanto afecta el valor de su servicio. Sin embargo,
+        no hay transferencia monetaria entre participantes durante cada intercambio. No puedes conseguir
+        cualquier transferencia de otros participantes y no puedes enviar ninguna transferencia a otros.
+  
     </p>
 
 {% elif swap_method == "Double" %}
@@ -207,29 +198,28 @@ Experiment Instructions
 
 {% endif %}
 
-<h3>Messaging</h3>
+<h3>Mensajería</h3>
 
 <p>
-    In some rounds, you are allowed to attach a message to your exchange request. 
-    The other participant can see your message with the exchange request. You can also 
-    see other participants’ messages when they send you their exchange request. The 
-    message option is on the right side of the decision panel.
-    Please use English to write your message.
+    En algunas rondas, usted puede adjuntar un mensaje a su solicitud de intercambio. 
+    El otro participante puede ver su mensaje con la solicitud de intercambio. También puede 
+    ver los mensajes de otros participantes cuando ellos le envían su solicitud de intercambio. 
+    La opción de mensaje se encuentra en el lado derecho del panel de decisiones.
 </p>
 
 <img src="{% static 'msg.png' %}"/>
 
 <p>
-    Please follow the two rules when you message others:
+    Por favor, siga las dos reglas cuando envíe mensajes a otras personas:
 
     <ol>
-        <li>Discrimination and malicious messages are NOT allowed.</li>
-        <li>Do NOT directly or indirectly disclose your identity.</li>
+        <li>La discriminación y los mensajes maliciosos NO están permitidos.</li>
+        <li>NO revele directa o indirectamente su identidad.</li>
     </ol>
-    Participants who send these types of messages will not get their payment and will 
-    be removed from the participant pool of the lab. If you find some messages 
-    uncomfortable, you can also report the message using the report button in the 
-    request panel.
+    Los participantes que envíen este tipo de mensajes no recibirán su pago y serán 
+    eliminados del grupo de participantes del laboratorio. Si encuentra algunos 
+    mensajes incómodos, también puede informar el mensaje utilizando el botón de reporte 
+    en el panel de solicitud.
 </p>
 
 
