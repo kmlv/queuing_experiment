@@ -162,38 +162,47 @@ Experiment Instructions
     <img src="{% static 'interface_double1.PNG' %}"/>
 
     <p>
-        In this experiment, participants can send exchange offers to other participants with a Bid. 
-        Instead of accepting/declining the bid, the other participant’s exchange request looks as follows.
+        En este experimento, los participantes pueden mandar ofertas a otros participantes con un "Bid".
+        En vez de aceptar/rechazar el "Bid", el intercambio de solicitud del otro participantes se ve como la siguiente imagen:
+
     </p>
 
     <img src="{% static 'interface_double2.PNG' %}"/>
 
     <p>
-        The other participant needs to offer an Ask price by filling in the blank and pressing the Ask button. 
-        If the Ask is NOT higher than the Bid, the exchange request will be accepted. Both participants switch 
-        positions and the average of the Ask and the Bid is transferred from the requester to the requestee. 
-        On one hand, the requester will pay the transfer to the requestee but her value from the position will 
-        increase since she is moving forward in the line. On the other hand, the requestee’s value will decrease 
-        but she will gain the transfer. Technically speaking, you need to find the opportunity to earn payoff by 
-        requesting to move forward or placing the right Ask for someone’s request. If the Ask is higher than the Bid, 
-        the request will be rejected. The requestee cannot observe the Bid when choosing the Ask.
+        El otro participante tiene que ofrecer un precio "Ask" llenando en el espacio en blanco y presionando el
+        botón de "Pedir". Si el "ask" no es mayer que el "bid", la solicitud de intercambio será aceptada.
+        Ambos participantes cambian de posiciones y el promedio del "Ask" y el "Bid" es transferido de la persona 
+        que pidió la solicitud al que recibió la solicitud.
+        Por un lado, la persona que mandó la solicitud tendrá que pagar por la transferencia a aquel que recibió
+        la solicitud pero el valor de su posición aumentará, ya que está avanzando en la cola. Por otro lado,
+        el valor de la posición de la persona que recibió la solicitud disminuirá, pero recibirá la transferencia.
+        Técnicamente, deberías encontrar la oportunidad de obtener una ganancia al solicitar moverse adelante o al
+        colocar el correcto "Ask" para la solicitud de alguien.
+        Si el "Ask" es mayor que el "Bid", la solicitud será rechazada. La persona que recibió la solicitud no puede
+        observar el "Bid" al elegir un "Ask".
+        
+        
     </p>
     <p>
-        For example, let us say that the requester sends an exchange request with a bid of 10. 
-        If the requestee chooses an Ask of 9, they will exchange positions with a transfer of 9.5. 
-        If the requestee chooses 11 instead, the exchange request will be automatically rejected.
+        Por ejemplo, si un participante manda una solicitud de intercambio con un "Bid" de 10.
+        Si el que recibe la solicitud elige un "Ask" de 9, intercambiarán posiciones con una transferencia de 9.5.
+        Si el que recibe la solicitud elige un "Ask" de 11, la solicitud de intercambio será rechazada inmediatamente.
+
     </p>
 
     <img src="{% static 'interface_double3.png' %}"/>
 
     <p>
-        The participants can request the exchange with any other participants in the line and 
-        the “value” of the exchange may vary. For example, suppose you are the 4th person in the line. 
-        If you want to switch with the participant at position 2, you will earn 50-30=20 more service 
-        value if the exchange succeeds. If the final transfer is more than 20, 
-        you will lose money even if you move to position 2. If the participant at position 5 
-        offers you a request, the final transfer should not be lower than 10, as you will 
-        lose 30-20=10 points if you exchange positions.
+        Un participante puede solicitar un intercambio con cualquier otro participante en la cola y 
+        el "valor" del intercambio puede variar.
+        Por ejemplo, suponga que es el cuarto en la cola. Si quiere intercambiar de posición con el participante
+        en la posición 2, usted ganará 50-30=20 más si el intercambio sucede. 
+        Si la transferencia final es mayor a 20, usted perderá dinero si el intercambio sucede, aún si está 
+        avanzando su posición.
+        Si el participante en la posición 5 le ofrece una solicitud, la transferencia final no debería
+        ser menor a 10, ya que usted perdería 30-20=10 puntos si intercambia su posición.
+   
     </p>
 
 {% endif %}
