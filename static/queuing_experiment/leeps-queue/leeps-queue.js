@@ -153,7 +153,7 @@ export class LeepsQueue extends PolymerElement {
                         </div>
                         <div class="layout horizontal">
                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                <p>Tu Bid: </p>
+                                <p>Tu Oferta: </p>
                                 <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                             </template>
                         </div>
@@ -161,7 +161,7 @@ export class LeepsQueue extends PolymerElement {
                             <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Enviar tu Solicitud</button>
                         </template>
                         <template is="dom-if" if="[[ requestSent ]]">
-                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancelear tu Solicitud </button>
+                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancelar tu Solicitud </button>
                         </template>
                         </div class="layout vertical  borders" style="width: 45%;">
                             <p style="margin-right:10px;margin-top:50px;">Mensaje</p>
@@ -183,7 +183,7 @@ export class LeepsQueue extends PolymerElement {
                                 <p style="font-size:150%;">Solicitud de Cambio:</p>
                             </div>
                             <div class="layout vertical borders" style="width: 50%;">
-                                <p style="margin-top:2px;margin-bottom:2px;">Solicitud Actual a Enviar:</p>
+                                <p style="margin-top:2px;margin-bottom:2px;">Solicitud Actual:</p>
                                 <p style="margin-top:2px;margin-bottom:2px;">A la posicion: [[_list(currentRequest, "position")]]</p>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
                                     <p style="margin-top:2px;margin-bottom:2px;">Oferta: [[_list(currentRequest, "offer")]]</p>
