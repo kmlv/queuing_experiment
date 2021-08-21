@@ -533,7 +533,7 @@ export class LeepsQueue extends PolymerElement {
 
                 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'CANCELLED', -1 *playerDecision['offer'] ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'CANCELADO', -1 *playerDecision['offer'] ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
@@ -544,7 +544,7 @@ export class LeepsQueue extends PolymerElement {
 
                 console.log("cancelled");
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'CANCELLED', playerDecision['offer'] ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'CANCELADO', playerDecision['offer'] ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
                 console.log(this.history);
@@ -558,13 +558,13 @@ export class LeepsQueue extends PolymerElement {
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', 0 ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'RECHAZADO', 0 ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', 0 ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'RECHAZADO', 0 ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
@@ -625,13 +625,13 @@ export class LeepsQueue extends PolymerElement {
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ rIndex + 1, sIndex + 1, 'ACCEPTED', -1 *amount ];
+                let historyVector =[ rIndex + 1, sIndex + 1, 'ACEPTADD', -1 *amount ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
 
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
-                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACCEPTED', amount ];
+                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACEPTADO', amount ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
@@ -644,13 +644,13 @@ export class LeepsQueue extends PolymerElement {
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', -1 *playerDecision['offer'] ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'RECHAZADO', -1 *playerDecision['offer'] ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', playerDecision['offer'] ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'RECHAZADO', playerDecision['offer'] ];
                 if(!this._showOffer()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
