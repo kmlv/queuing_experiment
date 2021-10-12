@@ -151,7 +151,8 @@ Experiment Instructions
         una solicitud y aceptando las solicitudes de otros. El intercambio de posiciones
         afectará su posición en la línea, por lo tanto afecta el valor de su servicio. Sin embargo,
         no existen transferencias monetarias entre participantes durante ningún intercambio. No puedes recibir
-        ninguna transferencia de otros participantes y no puedes enviar ninguna transferencia.
+        ninguna transferencia de otros participantes y no puedes enviar ninguna transferencia. Ya que
+        <b> no hay ninguna transferencia entre jugadores </b>, tu pago por ronda es: <b> Endowment + Value of Final Position</b>.
   
     </p>
 
@@ -209,6 +210,8 @@ Experiment Instructions
 
 {% endif %}
 
+{%if messaging %}
+
 <h3>Mensajería</h3>
 
 <p>
@@ -216,6 +219,7 @@ Experiment Instructions
     El otro participante puede ver su mensaje con la solicitud de intercambio. También puede 
     ver los mensajes de otros participantes cuando ellos le envían su solicitud de intercambio. 
     La opción de mensaje se encuentra en el lado derecho del panel de decisiones.
+    Por ejemplo, puedes usar el mensaje para indicar cuánto ganarías por adelantarte una posición.
 </p>
 
 <img src="{% static 'msg.png' %}"/>
@@ -233,6 +237,7 @@ Experiment Instructions
     en el panel de solicitud.
 </p>
 
+{% endif %}
 
 {% next_button %} 
 
