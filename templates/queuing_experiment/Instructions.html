@@ -158,7 +158,8 @@ Experiment Instructions
         out your request and accepting others’ requests. The exchange of positions will 
         affect your position in the line, thus affect your service value. However, there 
         is no monetary transfer between participants during each exchange. You cannot get
-        any transfer from other participants and you cannot send any transfer to others. 
+        any transfer from other participants and you cannot send any transfer to others.
+        Since there is no transfer between players, your round payoff is <b>Endowment + Value of Final Position</b>.
 
     </p>
 
@@ -207,6 +208,8 @@ Experiment Instructions
 
 {% endif %}
 
+{% if messaging %}
+
 <h3>Messaging</h3>
 
 <p>
@@ -214,6 +217,7 @@ Experiment Instructions
     The other participant can see your message with the exchange request. You can also 
     see other participants’ messages when they send you their exchange request. The 
     message option is on the right side of the decision panel.
+    For example, you can use the message to indicate how much value you would earn by moving one position forward.
     Please use English to write your message.
 </p>
 
@@ -232,6 +236,7 @@ Experiment Instructions
     request panel.
 </p>
 
+{% endif %}
 
 
 {% include Constants.contact_template %}
