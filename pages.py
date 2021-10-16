@@ -37,7 +37,8 @@ class Instructions(Page):
 
     def vars_for_template(self):
         swap_method=self.group.swap_method()
-        return dict(swap_method=swap_method)
+        messaging=self.group.messaging()
+        return dict(swap_method=swap_method, messaging=messaging)
 
 
 
