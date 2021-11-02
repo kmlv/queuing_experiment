@@ -138,12 +138,19 @@ Experiment Instructions
     <img src="{% static 'interface5.png' %}"/>
 
     <p>
-        For example, suppose you are the 4th person in the line. If you want to switch 
-        with the participant at position 2, you will earn 45-27=18 more service value if 
-        the exchange succeeds. So your offer should be below 18. Otherwise, you will lose 
-        money even if you move to position 2. If the participant at position 5 offers you 
-        a request, you shouldn’t accept it when the offer is below 9, as you will lose 
-        27-18=9 points if you exchange positions.
+        The participants can request the exchange with any other participants in front of them and 
+        the “value” of the exchange may vary.
+        For example, suppose you are the 4th person in the line (see the example figure). 
+        You will get 54-27=27 more points if you move to position 1,
+        45-27=18 more points if you move to position 2, 36-27=9 more points if you move to position 3.
+        So your offer to position 1 should be below 27,
+        your offer to position 2 should be below 18,
+        and your offer to position 3 should be below 9.
+        Otherwise, you will lose money even if you move to that position.
+        On the other hand, you will lose 27-18=9 points if you move to position 5,
+        and lose 27-9=18 points if you move to position 6.
+        So you shouldn't accept any offer from position 5 if it is below 9,
+        or offer from position 6 if it is below 18.
     </p>
 
 {% elif swap_method == "swap" %}
@@ -197,13 +204,17 @@ Experiment Instructions
     <img src="{% static 'interface_double3.png' %}"/>
 
     <p>
-        The participants can request the exchange with any other participants in the line and 
-        the “value” of the exchange may vary. For example, suppose you are the 4th person in the line. 
-        If you want to switch with the participant at position 2, you will earn 50-30=20 more service 
-        value if the exchange succeeds. If the final transfer is more than 20, 
-        you will lose money even if you move to position 2. If the participant at position 5 
-        offers you a request, the final transfer should not be lower than 10, as you will 
-        lose 30-20=10 points if you exchange positions.
+        The participants can request the exchange with any other participants in front of them and 
+        the “value” of the exchange may vary. 
+        For example, suppose you are the 4th person in the line (see the example figure). 
+        You will get 60-30=30 more points if you move to position 1,
+        50-30=20 more points if you move to position 2, 40-30=10 more points if you move to position 3.
+        So your would earn points if your spend less than 30 points for position 1,
+        20 for position 2, and 10 for position 3.
+        Otherwise, you will lose money even if you move to that position.
+        On the other hand, you will lose 30-20=10 points if you move to position 5,
+        and lose 30-10=20 points if you move to position 6.
+        So you should make sure that you can enough compensation when you exchange positions with players in position 5 and 6.
     </p>
 
 {% endif %}
@@ -218,6 +229,7 @@ Experiment Instructions
     see other participants’ messages when they send you their exchange request. The 
     message option is on the right side of the decision panel.
     For example, you can use the message to indicate how much value you would earn by moving one position forward.
+    (e.g. "My value of moving to your position is XX points.")
     Please use English to write your message.
 </p>
 
