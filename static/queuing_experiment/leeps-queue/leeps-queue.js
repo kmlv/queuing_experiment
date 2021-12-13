@@ -156,6 +156,10 @@ export class LeepsQueue extends PolymerElement {
                                 <p>Tu Oferta: </p>
                                 <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                             </template>
+                            <template is="dom-if" if="[[ _isToken() ]]">
+                                <p>Tu Tokens: </p>
+                                <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
+                            </template>
                         </div>
                         <template is="dom-if" if="[[ !requestSent ]]">
                             <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Enviar tu Solicitud</button>
@@ -186,6 +190,9 @@ export class LeepsQueue extends PolymerElement {
                                 <p style="margin-top:2px;margin-bottom:2px;">Solicitud Actual a Enviar:</p>
                                 <p style="margin-top:2px;margin-bottom:2px;">A la posicion: [[_list(currentRequest, "position")]]</p>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
+                                    <p style="margin-top:2px;margin-bottom:2px;">Oferta: [[_list(currentRequest, "offer")]]</p>
+                                </template>
+                                <template is="dom-if" if="[[ _isToken() ]]">
                                     <p style="margin-top:2px;margin-bottom:2px;">Oferta: [[_list(currentRequest, "offer")]]</p>
                                 </template>
                                 <template is="dom-if" if="[[ messaging ]]">
@@ -259,6 +266,11 @@ export class LeepsQueue extends PolymerElement {
                                         Transferencia Total: N/A
                                     </div>
                                 </template>
+                                <template is="dom-if" if="[[ !_isToken() ]]">
+                                    <div style="width: 50%;">
+                                        Tokens: [[tokens]]
+                                    </div>
+                                </template>
                             </div>
                             <div class="borders" style="height:40px;font-size:150%;">Historial de Transferencias</div>
                             <div class="borders" style="height:400px;overflow: auto;">
@@ -306,6 +318,9 @@ export class LeepsQueue extends PolymerElement {
                 type: Number,
             },
             numPlayers:{
+                type: Number,
+            },
+            tokens:{
                 type: Number,
             },
             currentRequestPartner:{
@@ -482,8 +497,17 @@ export class LeepsQueue extends PolymerElement {
             return 0;
         }
     }
+
+    _isToken(){
+        return this.swapMethod == 'Token';
+    }
+
     _isDouble(){
         return this.swapMethod == 'Double';
+    }
+
+    _isTL(){
+        return this.swapMethod == 'TL';
     }
 
     _showOffer(){
@@ -505,7 +529,7 @@ export class LeepsQueue extends PolymerElement {
         if(playerDecision['type'] == 'request' && playerDecision['senderID'] == parseInt(this.$.constants.idInGroup)){
             let curReq = {'position': playerDecision['receiverPosition'] + 1};
             curReq['message'] = playerDecision['message'];
-            if(this._showOffer()){
+            if(this._showOffer() || this._isToken()){
                 curReq['offer'] = playerDecision['offer'];
             } else{
                 curReq['offer'] = 'N/A';
@@ -617,10 +641,15 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
-                let newPayoff = this.payoff - amount;
-                let newTransfer = this.transfer - amount;
-                this.set("payoff", newPayoff);
-                this.set("transfer", newTransfer);
+                if (!this._isToken()){                
+                    let newPayoff = this.payoff - amount;
+                    let newTransfer = this.transfer - amount;
+                    this.set("payoff", newPayoff);
+                    this.set("transfer", newTransfer);
+                } else {
+                    let newTokens = this.tokens - amount;
+                    this.set("tokens", newTokens);
+                }
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
@@ -696,6 +725,14 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 return;
             }
+            if( this.valueList[this.myPosition] > (this.value[exchangePlayerIndex] - parseFloat(this.shadowRoot.querySelector('#offer').value))){
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                    
+                } else {
+                    this.set("requestSent", false);
+                    return;
+                }
+            }
         }
         
         this.set('currentRequestPartner', exchangePlayer);
@@ -708,6 +745,7 @@ export class LeepsQueue extends PolymerElement {
             'senderPosition': this.myPosition,
             'receiverID': exchangePlayer,
             'receiverPosition': exchangePlayerIndex,
+            'currentTokens': this.tokens
             
         };
 
@@ -749,6 +787,7 @@ export class LeepsQueue extends PolymerElement {
             'receiverID': exchangePlayer,
             'receiverPosition': this.queueList.indexOf(exchangePlayer),
             'offer': 0,
+            'currentTokens': this.tokens
         };
         this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
         
@@ -779,6 +818,24 @@ export class LeepsQueue extends PolymerElement {
                 alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
+            }
+            if( this.valueList[this.myPosition] > (this.value[parseInt(requestsVector['position'])- 1] + parseFloat(ourBid)))){
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                    
+                } else {
+                    this.set("requestSent", false);
+                    return;
+                }
+            }
+        }
+        if(this._isTL()){
+            if( this.valueList[this.myPosition] > (this.value[parseInt(requestsVector['position'])- 1] + parseFloat(requestsVector['offer'])))){
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                    
+                } else {
+                    this.set("requestSent", false);
+                    return;
+                }
             }
         }
 
@@ -827,6 +884,11 @@ export class LeepsQueue extends PolymerElement {
                 this.set("payoff", newPayoff);
                 this.set("transfer", newTransfer);
             }
+        } else if (this._isToken()){
+            let newTokens = this.tokens + parseFloat(requestsVector['offer']);
+            this.set("tokens", newTokens);
+            newRequest['offer'] = 0;
+            newRequest['currentTokens'] = this.tokens;
         } else{
             newRequest['offer'] = 0;
         }
@@ -854,6 +916,7 @@ export class LeepsQueue extends PolymerElement {
             'receiverID': parseInt(this.queueList[requestsVector['position']-1]),
             'receiverPosition': parseInt(requestsVector['position']) - 1,
             'offer': 0,
+            'currentTokens': this.tokens
         };
         console.log(newRequest);
         this.$.channel.send(newRequest);
