@@ -62,6 +62,7 @@ def get_output_table_header(groups):
         'receiverID',
         'receiver_position',
         'offer',
+        'senderTokens', #if accept, it is sender's updated tokens
         'message',
         'request_id',
         'report'
@@ -156,6 +157,7 @@ def get_output_game(events):
                 event.value['receiverID'],
                 positions[receiver],
                 event.value['offer'],
+                event.value['currentTokens'],
                 
             ]
             if event.value['type'] == 'request':

@@ -199,11 +199,13 @@ export class LeepsQueue extends PolymerElement {
                             <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
                                 <div class="layout horizontal borders" style=" padding-right:5px;padding-left:15px;">
                                     <div class="layout vertical" >
-                                        <div class="layout horizontal" style="
-                                                                            padding-top:0px;">
+                                        <div class="layout horizontal" style="padding-top:0px;">
                                             <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Position: [[_list(requestsVector, "position")]]  </p>
                                             <template is="dom-if" if="[[ _showOfferButNotBid() ]]">
                                                 <p style="display:inline;margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
+                                            </template>
+                                            <template is="dom-if" if="[[ _isToken() ]]">
+                                                <p style="display:inline;margin-top:2px;margin-bottom:2px;">Tokens: [[_list(requestsVector, "currentTokens")]]</p>
                                             </template>
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
@@ -254,7 +256,12 @@ export class LeepsQueue extends PolymerElement {
                                         Total Transfer: [[transfer]]
                                     </div>
                                 </template>
-                                <template is="dom-if" if="[[ !_showOffer() ]]">
+                                <template is="dom-if" if="[[ _isToken() ]]">
+                                    <div style="width: 50%;">
+                                        Total Tokens: [[tokens]]
+                                    </div>
+                                </template>
+                                <template is="dom-if" if="[[ _isSwap() ]]">
                                     <div style="width: 50%;">
                                         Total Transfer: N/A
                                     </div>
@@ -323,6 +330,9 @@ export class LeepsQueue extends PolymerElement {
                 type: Number,
             },
             transfer: {
+                type: Number,
+            },
+            tokens:{
                 type: Number,
             },
             endowment:{
@@ -396,7 +406,7 @@ export class LeepsQueue extends PolymerElement {
     }
 
     _showOfferButNotBid(){
-        return this.swapMethod == 'TL' || this.swapMethod != 'Double';
+        return this.swapMethod == 'TL';
     }
 
     ready() {
@@ -457,6 +467,10 @@ export class LeepsQueue extends PolymerElement {
         return (this.numPlayers - spot) * this.value;
     }
 
+    _computeValueForToken(spot){
+        return (this.numPlayers - spot) * this.value;
+    }
+
     _onPeriodStart() {
         this._subperiodProgress = 0;
         this.lastT = performance.now();
@@ -482,8 +496,21 @@ export class LeepsQueue extends PolymerElement {
             return 0;
         }
     }
+
+    _isToken(){
+        return this.swapMethod == 'Token';
+    }
+
+    _isSwap(){
+        return this.swapMethod == 'Swap';
+    }
+
     _isDouble(){
         return this.swapMethod == 'Double';
+    }
+
+    _isTL(){
+        return this.swapMethod == 'TL';
     }
 
     _showOffer(){
@@ -498,7 +525,9 @@ export class LeepsQueue extends PolymerElement {
                 'position': playerDecision['senderPosition'] + 1,
                 'offer': playerDecision['offer'],
                 'message':playerDecision['message'],
+                'currentTokens':'N/A'
             }
+            if(this._isToken()) request['currentTokens'] = playerDecision['currentTokens'];
             this.push('requests', request);
             console.log(this.requests);
         }
@@ -533,7 +562,7 @@ export class LeepsQueue extends PolymerElement {
                 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
                 let historyVector =[ rIndex + 1, rIndex+ 1,  'CANCELLED', -1 *playerDecision['offer'] ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
@@ -544,7 +573,7 @@ export class LeepsQueue extends PolymerElement {
                 console.log("cancelled");
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
                 let historyVector =[ sIndex + 1, sIndex+ 1,  'CANCELLED', playerDecision['offer'] ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
                 console.log(this.history);
             }
@@ -554,17 +583,17 @@ export class LeepsQueue extends PolymerElement {
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
-                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
+                this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A'});
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
                 let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', 0 ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
                 let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', 0 ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
         }
@@ -617,21 +646,28 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 this.set('currentRequestPartner', 0);
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
-                let newPayoff = this.payoff - amount;
-                let newTransfer = this.transfer - amount;
-                this.set("payoff", newPayoff);
-                this.set("transfer", newTransfer);
+                if (!this._isToken()){                
+                    let newPayoff = this.payoff - amount;
+                    let newTransfer = this.transfer - amount;
+                    this.set("payoff", newPayoff);
+                    this.set("transfer", newTransfer);
+                } else {
+                    let newTokens = this.tokens - 1;
+                    this.set("tokens", newTokens);
+                }
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
                 let historyVector =[ rIndex + 1, sIndex + 1, 'ACCEPTED', -1 *amount ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
+                if(this._isToken()) historyVector[3] = -1;
                 this.push('history', historyVector);
             }
 
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let historyVector =[ sIndex + 1, rIndex+ 1, 'ACCEPTED', amount ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
+                if(this._isToken()) historyVector[3] = 1;
                 this.push('history', historyVector);
             }
             
@@ -644,13 +680,13 @@ export class LeepsQueue extends PolymerElement {
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
                 let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', -1 *playerDecision['offer'] ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
                 let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', playerDecision['offer'] ];
-                if(!this._showOffer()) historyVector[3] = 'N/A';
+                if(this._isSwap()) historyVector[3] = 'N/A';
                 this.push('history', historyVector);
             }
         }
@@ -686,7 +722,7 @@ export class LeepsQueue extends PolymerElement {
                 this.set("requestSent", false);
                 return;
             }
-            if(parseFloat(this.shadowRoot.querySelector('#offer').value) > this.payoff){
+            if(this._showOffer() && parseFloat(this.shadowRoot.querySelector('#offer').value) > this.payoff){
                 alert("You don't have enough points");
                 this.set("requestSent", false);
                 return;
@@ -695,6 +731,18 @@ export class LeepsQueue extends PolymerElement {
                 alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
+            }
+            console.log(this.myPosition);
+            console.log(exchangePlayerIndex);
+            console.log(this._computeValueForToken(this.myPosition));
+            console.log(this._computeValueForToken(exchangePlayerIndex));
+            if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(exchangePlayerIndex) - parseFloat(this.shadowRoot.querySelector('#offer').value))){
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+    
+                } else {
+                    this.set("requestSent", false);
+                    return;
+                }
             }
         }
         
@@ -708,6 +756,7 @@ export class LeepsQueue extends PolymerElement {
             'senderPosition': this.myPosition,
             'receiverID': exchangePlayer,
             'receiverPosition': exchangePlayerIndex,
+            'currentTokens': this.tokens
             
         };
 
@@ -723,13 +772,17 @@ export class LeepsQueue extends PolymerElement {
             //this.shadowRoot.querySelector('#offerText').textContent = this.shadowRoot.querySelector('#offer').value;
             newRequest['offer'] = offer;
             curReq['offer'] = offer;
-        } else{
+        } else if (this._isToken()) {
+            newRequest['offer'] = 1;
+            curReq['offer'] = 'N/A';
+        } else {
             newRequest['offer'] = 0;
             curReq['offer'] = 'N/A';
         }
         this.set("currentRequest", curReq);
         this.$.channel.send(newRequest);
     }
+
     _handlecancel(){
         console.log("cancel");
         this.set("requestSent", false);
@@ -749,6 +802,7 @@ export class LeepsQueue extends PolymerElement {
             'receiverID': exchangePlayer,
             'receiverPosition': this.queueList.indexOf(exchangePlayer),
             'offer': 0,
+            'currentTokens': this.tokens
         };
         this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
         
@@ -779,6 +833,24 @@ export class LeepsQueue extends PolymerElement {
                 alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
+            }
+            if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(parseInt(requestsVector['position'])- 1) + parseFloat(ourBid))){
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                    
+                } else {
+                    this.set("requestSent", false);
+                    return;
+                }
+            }
+        }
+        if(this._isTL()){
+            if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(parseInt(requestsVector['position'])- 1) + parseFloat(requestsVector['offer']))){
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                    
+                } else {
+                    this.set("requestSent", false);
+                    return;
+                }
             }
         }
 
@@ -827,12 +899,18 @@ export class LeepsQueue extends PolymerElement {
                 this.set("payoff", newPayoff);
                 this.set("transfer", newTransfer);
             }
+        } else if (this._isToken()){
+            let newTokens = this.tokens + parseFloat(requestsVector['offer']);
+            this.set("tokens", newTokens);
+            newRequest['offer'] = 0;
+            newRequest['currentTokens'] = this.tokens;
         } else{
             newRequest['offer'] = 0;
         }
         console.log(newRequest);
         this.$.channel.send(newRequest);
     }
+
     _handlereject(e) {
         console.log("reject");
         var requestsVector = e.model.requestsVector;
@@ -854,10 +932,12 @@ export class LeepsQueue extends PolymerElement {
             'receiverID': parseInt(this.queueList[requestsVector['position']-1]),
             'receiverPosition': parseInt(requestsVector['position']) - 1,
             'offer': 0,
+            'currentTokens': this.tokens
         };
         console.log(newRequest);
         this.$.channel.send(newRequest);
     }
+
     _handlereport(e) {
         console.log("report");
         var requestsVector = e.model.requestsVector;
