@@ -37,7 +37,7 @@ class Instructions(Page):
 
     def vars_for_template(self):
         swap_method=self.group.swap_method()
-        return dict(swap_method=swap_method)
+        return dict(swap_method=swap_method,messaging=self.group.messaging())
 
 
 
@@ -143,6 +143,7 @@ class Results(Page):
             'final_position': self.player.final_position() + 1,
             'initial_position': self.player.initial_position() + 1,
             'transactions': transactions,
+            'transfertext': "Token" if self.group.swap_method() == 'Token' else "Transfer",
         }
 
 class Payment(Page):

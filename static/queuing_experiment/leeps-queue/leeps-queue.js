@@ -274,7 +274,12 @@ export class LeepsQueue extends PolymerElement {
                                         <th>Original Position </th>
                                         <th>New Position </th>
                                         <th>Status </th>
-                                        <th>Transfer </th>
+                                        <template is="dom-if" if="[[ !_isToken() ]]">
+                                            <th>Transfer </th>
+                                        </template>
+                                        <template is="dom-if" if="[[ _isToken() ]]">
+                                            <th>Token </th>
+                                        </template>
                                     </tr>
                                     <template is="dom-repeat" index-as="index" items="{{history}}" as="historyVector">
                                         <tr> 
@@ -737,11 +742,20 @@ export class LeepsQueue extends PolymerElement {
             console.log(this._computeValueForToken(this.myPosition));
             console.log(this._computeValueForToken(exchangePlayerIndex));
             if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(exchangePlayerIndex) - parseFloat(this.shadowRoot.querySelector('#offer').value))){
-                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                if(this._isDouble()){
+                    if (confirm("Your net gain from this exchange could be negative. Please confirm if you want to send the bid.")) {
     
-                } else {
-                    this.set("requestSent", false);
-                    return;
+                    } else {
+                        this.set("requestSent", false);
+                        return;
+                    }
+                } else{
+                    if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+    
+                    } else {
+                        this.set("requestSent", false);
+                        return;
+                    }
                 }
             }
         }
@@ -835,7 +849,7 @@ export class LeepsQueue extends PolymerElement {
                 return;
             }
             if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(parseInt(requestsVector['position'])- 1) + parseFloat(ourBid))){
-                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                if (confirm("Your net gain from this exchange could be negative. Please confirm if you want to send the ask.")) {
                     
                 } else {
                     this.set("requestSent", false);
@@ -845,7 +859,7 @@ export class LeepsQueue extends PolymerElement {
         }
         if(this._isTL()){
             if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(parseInt(requestsVector['position'])- 1) + parseFloat(requestsVector['offer']))){
-                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to accept the request.")) {
                     
                 } else {
                     this.set("requestSent", false);
@@ -902,7 +916,7 @@ export class LeepsQueue extends PolymerElement {
         } else if (this._isToken()){
             let newTokens = this.tokens + parseFloat(requestsVector['offer']);
             this.set("tokens", newTokens);
-            newRequest['offer'] = 0;
+            newRequest['offer'] = 1;
             newRequest['currentTokens'] = this.tokens;
         } else{
             newRequest['offer'] = 0;
