@@ -155,7 +155,7 @@ Experiment Instructions
 
 {% elif swap_method == "swap" %}
     <p>
-        Swap (swap):
+        Swap:
     </p>
 
     <img src="{% static 'interface6.png' %}" />
@@ -167,7 +167,39 @@ Experiment Instructions
         is no monetary transfer between participants during each exchange. You cannot get
         any transfer from other participants and you cannot send any transfer to others.
         Since there is no transfer between players, your round payoff is <b>Endowment + Value of Final Position</b>.
+    </p>
 
+{% elif swap_method == "Token" %}
+    <p>
+        Token:
+    </p>
+
+    <img src="{% static 'interface6.png' %}" />
+
+    <p>
+        In this experiment, you can exchange positions with other participants by sending 
+        out your request and accepting others’ requests. The exchange of positions will 
+        affect your position in the line, thus affect your service value. However, there 
+        is no monetary transfer between participants during each exchange. You cannot get
+        any transfer from other participants and you cannot send any transfer to others.
+        Since there is no transfer between players, your round payoff is <b>Endowment + Value of Final Position</b>.
+    </p>
+
+    <p>
+        There are a few other features to highlight.
+        Each player will own "Tokens" under this rule. All the players start with 0 token.
+        If you exchange with someone in front of you, you will get -1 token and the other player will get +1 token.
+        If you exchange with someone behind you, you will get +1 token and the other player will get -1 token.
+        The number of token can goes down to negative, but the token itself does not affect your final payoff.
+    </p>
+
+    <p>
+        When you send your request to other players, they can observe the number of tokens you own.
+        When other players send requests to you, you can also observe their number of tokens.
+    </p>
+
+    <p>
+        Furthermore, unlike payoff, your token is inherited between rounds.
     </p>
 
 {% elif swap_method == "Double" %}
