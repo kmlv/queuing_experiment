@@ -190,8 +190,12 @@ Experiment Instructions
         Each player will own "Tokens" under this rule. All the players start with 0 token.
         If you exchange with someone in front of you, you will get -1 token and the other player will get +1 token.
         If you exchange with someone behind you, you will get +1 token and the other player will get -1 token.
-        The number of token can goes down to negative, but the token itself does not affect your final payoff.
+        The number of tokens can goes down to negative, but the token itself does not affect your final payoff.
+        In a word, players' number of tokens shows how many times they move backward - how many times they move forward in the previous rounds.
     </p>
+
+    <img src="{% static 'queuing_experiment/interface_token.png' %}" /> 
+    the screenshot here show the bottom panels of the screen where the receivers can observe the requestor's number of tokens.
 
     <p>
         When you send your request to other players, they can observe the number of tokens you own.
@@ -199,7 +203,9 @@ Experiment Instructions
     </p>
 
     <p>
-        Furthermore, unlike payoff, your token is inherited between rounds.
+        Furthermore, unlike payoff, your token is inherited between rounds. 
+        For example, if your token is 1 by the end of the first round, you will start with 1 token in the second round.
+        The number of tokens will be reset between the practice rounds and the paid rounds.
     </p>
 
 {% elif swap_method == "Double" %}
