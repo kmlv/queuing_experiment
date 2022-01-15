@@ -3,22 +3,23 @@
 {% load i18n %}
 
 {% block title %}
-    Última página
+    Final Page
 {% endblock %}
 
 {% block content %}
 
 <p>
 
-¡Felicidades! Has completado el experimento.</p>
+Congratulations! You have completed the experiment.</p>
 <p>
-Las rondas que determinan tu pago han sido seleccionadas aleatoriamente como la ronda
-{{ payoff_round1 }} y la ronda {{ payoff_round2 }}.    
+The rounds which determines your payment were randomly 
+decided as round 
+{{ payoff_round1 }} and round {{ payoff_round2 }}.    
 
 </p>
 <p>
-Tu pago será el siguiente: {{payoff}}.
- Aprieta el siguiente botón para poder acceder al formulario de pagos.
+Your payment is {{payoff}}.
+ Please press next to end the experiment.
 </p>
 
     {% next_button %}

@@ -99,14 +99,14 @@ export class LeepsQueue extends PolymerElement {
                     Ronda: [[roundNumber]]
                 </div>
                 <div class="borders" style="width: 33%;">
-                    Regla de Intercambio: [[swapMethod]]
+                    Exchange Rule: [[swapMethod]]
                 </div>
                 <div class="borders" style="width: 33%;">
-                    Mensajes: [[messaging]]
+                    Messaging: [[messaging]]
                 </div>
                 <!--
                 <div class="borders" style="width: 30%;">
-                    Tiempo Restante: [[ _subperiodProgress ]]
+                    Time Remaining: [[ _subperiodProgress ]]
                 </div>
                 -->
             </div>
@@ -118,8 +118,8 @@ export class LeepsQueue extends PolymerElement {
                     <div>
                         <div class="layout vertical center" style="text-align: center;">
                             <p style="height: 65px;
-                                        width: 110px;">Posicion</p>
-                            <p style="width: 110px;">Valor</p>
+                                        width: 110px;">Position</p>
+                            <p style="width: 110px;">Value</p>
                         </div>
                     </div>
                     <template is="dom-repeat" index-as="index" items="{{_reverse(queueList)}}" as="queueListItems">
@@ -144,32 +144,32 @@ export class LeepsQueue extends PolymerElement {
                 </div>
 
                 <div class="layout horizontal borders" style="height: 25%; width: 100%;">
-                    <div style="height: 25%; width: 10%;text-align: center;"> Tu Decision</div>
+                    <div style="height: 25%; width: 10%;text-align: center;"> Your Decision</div>
                     <div class="layout vertical borders" style="width: 45%;">
                         <div class="layout horizontal">
-                            <p>Jugador con quien quieres intercambiar posicion: 
+                            <p>Player you want to exchange position: 
                                     <span id='exchangeText'>[[exchangeText]]</span>
                             </p>
                         </div>
                         <div class="layout horizontal">
                             <template is="dom-if" if="[[ _showOffer() ]]">
-                                <p>Tu Oferta: </p>
+                                <p>Your offer: </p>
                                 <input id="offer" name="offer" type="number" min="1" max="[[payoff]]" style="width: 40%;height: 70%;" required>
                             </template>
                         </div>
                         <template is="dom-if" if="[[ !requestSent ]]">
-                            <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Enviar tu Solicitud</button>
+                            <button type="button" on-click="_handlerequest" style="background-color:#ADD8E6;"> Send your request</button>
                         </template>
                         <template is="dom-if" if="[[ requestSent ]]">
-                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancelar tu Solicitud </button>
+                            <button type="button" on-click="_handlecancel" style="background-color:#FF6961;"> Cancel your request</button>
                         </template>
                         </div class="layout vertical  borders" style="width: 45%;">
-                            <p style="margin-right:10px;margin-top:50px;">Mensaje</p>
+                            <p style="margin-right:10px;margin-top:50px;">Message</p>
                             <template is="dom-if" if="[[ messaging ]]" >
                                 <input id="message" type="text" style="height: 70px;padding-top:10px;padding-bottom:10px;margin-top:35px;margin-bottom:10px;"  required>
                             </template>
                             <template is="dom-if" if="[[ !messaging ]]">
-                                <p style="margin-left:10px;margin-top:50px;">Deshabilitado</p>
+                                <p style="margin-left:10px;margin-top:50px;">Disabled</p>
                             </template>
                     </div>
                     </div>
@@ -180,17 +180,17 @@ export class LeepsQueue extends PolymerElement {
                     <div class="layout vertical borders" style="width: 50%;">
                         <div class="layout horizontal borders" style="width: 100%;">
                             <div class="borders" style="width: 50%;">
-                                <p style="font-size:150%;">Solicitud de Cambio:</p>
+                                <p style="font-size:150%;">Exchange Requests:</p>
                             </div>
                             <div class="layout vertical borders" style="width: 50%;">
-                                <p style="margin-top:2px;margin-bottom:2px;">Solicitud Actual:</p>
-                                <p style="margin-top:2px;margin-bottom:2px;">A la posicion: [[_list(currentRequest, "position")]]</p>
+                                <p style="margin-top:2px;margin-bottom:2px;">Current Sent Request:</p>
+                                <p style="margin-top:2px;margin-bottom:2px;">To Position: [[_list(currentRequest, "position")]]</p>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
-                                    <p style="margin-top:2px;margin-bottom:2px;">Oferta: [[_list(currentRequest, "offer")]]</p>
+                                    <p style="margin-top:2px;margin-bottom:2px;">Offer: [[_list(currentRequest, "offer")]]</p>
                                 </template>
                                 <template is="dom-if" if="[[ messaging ]]">
                                     <p style="margin-top:2px;margin-bottom:2px;overflow: auto; white-space:nowrap;">
-                                        <span style="display:inline-block;">Mensaje: [[_list(currentRequest, "message")]]</span>
+                                        <span style="display:inline-block;">Message: [[_list(currentRequest, "message")]]</span>
                                     </p>
                                 </template>
                             </div>
@@ -199,12 +199,10 @@ export class LeepsQueue extends PolymerElement {
                             <template is="dom-repeat" index-as="index" items="{{requests}}" as="requestsVector">
                                 <div class="layout horizontal borders" style=" padding-right:5px;padding-left:15px;">
                                     <div class="layout vertical" >
-
                                         <div class="layout horizontal" style="padding-top:0px;">
-                                            <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Posicion: [[_list(requestsVector, "position")]]  </p>
-
+                                            <p style="margin-right:10px;margin-top:2px;margin-bottom:2px;">Position: [[_list(requestsVector, "position")]]  </p>
                                             <template is="dom-if" if="[[ _showOfferButNotBid() ]]">
-                                                <p style="display:inline;margin-top:2px;margin-bottom:2px;">Monto: [[_list(requestsVector, "offer")]]</p>
+                                                <p style="display:inline;margin-top:2px;margin-bottom:2px;">Amount: [[_list(requestsVector, "offer")]]</p>
                                             </template>
                                             <template is="dom-if" if="[[ _isToken() ]]">
                                                 <p style="display:inline;margin-top:2px;margin-bottom:2px;">Tokens: [[_list(requestsVector, "currentTokens")]]</p>
@@ -212,7 +210,7 @@ export class LeepsQueue extends PolymerElement {
                                         </div>
                                         <template is="dom-if" if="[[ messaging ]]">
                                             <div>
-                                                Mensaje:
+                                                Message:
                                                 <p style="margin-top:2px;margin-bottom:2px;width:250px;overflow: auto;white-space:nowrap;">
                                                  <span style="display:inline-block;">[[_list(requestsVector, "message")]]</span>
                                                 </p>
@@ -232,14 +230,14 @@ export class LeepsQueue extends PolymerElement {
                                                     Ask
                                                 </template>
                                                 <template is="dom-if" if="[[ !_isDouble() ]]" >
-                                                    Aceptar
+                                                    Accept
                                                 </template>
                                             </button>
                                             <template is="dom-if" if="[[ !_isDouble() ]]">
-                                                <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Rechazar</button>
+                                                <button type="button" on-click="_handlereject" style="background-color:#FF6961;margin-bottom:5px;">Reject</button>
                                             </template>
                                             <template is="dom-if" if="[[ messaging ]]" style="padding-top:10px;padding-bottom:10px;">
-                                                <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Reportar</button>
+                                                <button type="button" on-click="_handlereport" style="background-color:#B0B0B0;">Report</button>
                                             </template>
                                         </div>
                                 </div>
@@ -251,11 +249,11 @@ export class LeepsQueue extends PolymerElement {
                         <div class="layout vertical borders">
                             <div class="borders layout horizontal" style="height:40px;font-size:120%;">
                                 <div style="width: 50%;">
-                                    Presupuesto: [[endowment]]
+                                    Endowment: [[endowment]]
                                 </div>
                                 <template is="dom-if" if="[[ _showOffer() ]]">
                                     <div style="width: 50%;">
-                                        Transferencia Total: [[transfer]]
+                                        Total Transfer: [[transfer]]
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[ _isToken() ]]">
@@ -265,26 +263,23 @@ export class LeepsQueue extends PolymerElement {
                                 </template>
                                 <template is="dom-if" if="[[ _isSwap() ]]">
                                     <div style="width: 50%;">
-                                        Transferencia Total: N/A
+                                        Total Transfer: N/A
                                     </div>
                                 </template>
                             </div>
-                            <div class="borders" style="height:40px;font-size:150%;">Historial de Transferencias</div>
+                            <div class="borders" style="height:40px;font-size:150%;">Exchange History</div>
                             <div class="borders" style="height:400px;overflow: auto;">
                                 <table>
                                     <tr> 
-
-                                        <th>Posicion Inicial</th>
-                                        <th>Nueva Posicion </th>
-                                        <th>Estado </th>
+                                        <th>Original Position </th>
+                                        <th>New Position </th>
+                                        <th>Status </th>
                                         <template is="dom-if" if="[[ !_isToken() ]]">
-                                            <th>Transferencia </th>
+                                            <th>Transfer </th>
                                         </template>
                                         <template is="dom-if" if="[[ _isToken() ]]">
                                             <th>Token </th>
                                         </template>
-
-
                                     </tr>
                                     <template is="dom-repeat" index-as="index" items="{{history}}" as="historyVector">
                                         <tr> 
@@ -460,8 +455,7 @@ export class LeepsQueue extends PolymerElement {
 
     _pick(e){
         if (this.requestSent == true) {
-            alert("Para empezar una nueva solicitud ,tienes que cancelar el actual.");
-                  //To start a new request, you need to cancel the current one.
+            alert("To start a new request, you need to cancel the current one.");
             return;
         }
         var index = e.model.index;
@@ -572,10 +566,8 @@ export class LeepsQueue extends PolymerElement {
 
                 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'CANCELADO', -1 *playerDecision['offer'] ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'CANCELLED', -1 *playerDecision['offer'] ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
-
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
@@ -585,10 +577,8 @@ export class LeepsQueue extends PolymerElement {
 
                 console.log("cancelled");
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'CANCELADO', playerDecision['offer'] ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'CANCELLED', playerDecision['offer'] ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
-
                 this.push('history', historyVector);
                 console.log(this.history);
             }
@@ -601,18 +591,14 @@ export class LeepsQueue extends PolymerElement {
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A'});
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'RECHAZADO', 0 ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', 0 ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
-
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'RECHAZADO', 0 ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', 0 ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
-
                 this.push('history', historyVector);
             }
         }
@@ -677,20 +663,16 @@ export class LeepsQueue extends PolymerElement {
             }
             
             if( playerDecision['receiverID'] == parseInt(this.$.constants.idInGroup) ){
-
-                let historyVector =[ rIndex + 1, sIndex + 1, 'ACEPTADO', -1 *amount ];
+                let historyVector =[ rIndex + 1, sIndex + 1, 'ACCEPTED', -1 *amount ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
                 if(this._isToken()) historyVector[3] = -1;
-
                 this.push('history', historyVector);
             }
 
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
-
-                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACEPTADO', amount ];
+                let historyVector =[ sIndex + 1, rIndex+ 1, 'ACCEPTED', amount ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
                 if(this._isToken()) historyVector[3] = 1;
-
                 this.push('history', historyVector);
             }
             
@@ -702,18 +684,14 @@ export class LeepsQueue extends PolymerElement {
                 this.set("currentRequest", {'position': 'N/A', 'offer': 'N/A', 'message': 'N/A'});
 
                 let rIndex = this.queueList.indexOf(playerDecision['receiverID']);
-
-                let historyVector =[ rIndex + 1, rIndex+ 1,  'RECHAZADO', -1 *playerDecision['offer'] ];
+                let historyVector =[ rIndex + 1, rIndex+ 1,  'REJECTED', -1 *playerDecision['offer'] ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
-
                 this.push('history', historyVector);
             }
             if( playerDecision['senderID'] == parseInt(this.$.constants.idInGroup) ){
                 let sIndex = this.queueList.indexOf(playerDecision['senderID']);
-
-                let historyVector =[ sIndex + 1, sIndex+ 1,  'RECHAZADO', playerDecision['offer'] ];
+                let historyVector =[ sIndex + 1, sIndex+ 1,  'REJECTED', playerDecision['offer'] ];
                 if(this._isSwap()) historyVector[3] = 'N/A';
-
                 this.push('history', historyVector);
             }
         }
@@ -726,8 +704,7 @@ export class LeepsQueue extends PolymerElement {
         console.log("request");
         this.set("requestSent", true);
         if(this.$.exchangeText.textContent == "None"){
-            //alert("Select a player!");
-            alert("¡Selecciona un jugador primero!");
+            alert("Select a player!");
             this.set("requestSent", false);
             return;
         }
@@ -735,34 +712,28 @@ export class LeepsQueue extends PolymerElement {
         let exchangePlayer = this.queueList[exchangePlayerIndex];
         
         if(exchangePlayerIndex > this.myPosition){
-            //alert("This Player is behind you!");
-            alert("¡Este jugador está detrás tuyo!");
+            alert("This Player is behind you!");
             this.set("requestSent", false);
             return;
         }
         if(exchangePlayer == parseInt(this.$.constants.idInGroup)){
-            //alert("This Player is you!");
-            alert("Este jugador eres tú.");
+            alert("This Player is you!");
             this.set("requestSent", false);
             return;
         }
         if(this._showOffer()) {
             if(this.shadowRoot.querySelector('#offer').value == ""){
-                //alert("Input an offer");
-                alert("Ingresa una oferta");
+                alert("Input an offer");
                 this.set("requestSent", false);
                 return;
             }
-
             if(this._showOffer() && parseFloat(this.shadowRoot.querySelector('#offer').value) > this.payoff){
-                alert("No tienes suficientes puntos.");
-
+                alert("You don't have enough points");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(this.shadowRoot.querySelector('#offer').value) < 0){
-                //alert("You can't have a negative offer");
-                alert("No puedes tener una oferta negativa.");
+                alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
             }
@@ -863,20 +834,17 @@ export class LeepsQueue extends PolymerElement {
             let idString = '#' + this._idString(requestsVector);
             let ourBid = (this.shadowRoot.querySelector(idString).value);
             if(ourBid == ""){
-                //alert("Input an offer");
-                alert("Ingresa una oferta");
+                alert("Input an offer");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(ourBid) > this.payoff){
-                //alert("You don't have enough points");
-                alert("No tienes suficientes puntos.");
+                alert("You don't have enough points");
                 this.set("requestSent", false);
                 return;
             }
             if(parseFloat(ourBid) < 0){
-                //alert("You can't have a negative offer");
-                 alert("No puedes tener una oferta negativa.");
+                alert("You can't have a negative offer");
                 this.set("requestSent", false);
                 return;
             }
