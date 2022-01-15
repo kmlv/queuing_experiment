@@ -99,10 +99,18 @@ class Subsession(BaseSubsession):
             players = g.get_players()
             positions = [i for i in range(len(players))]
             random.shuffle(positions)
+            print("Tokens----------")
             for i in range(len(positions)):
                 players[i]._initial_position = positions[i]
                 players[i]._final_position = positions[i]
                 players[i]._initial_decision = 0
+                if not self.config['shuffle_role'] and players[i].round_number > 1:
+                    players[i].tokens = players[i].in_round(players[i].round_number - 1).tokens
+                else:
+                    players[i].tokens = 0
+                print(players[i].tokens)
+            print("Tokens----------")
+
     
     def set_initial_decisions(self):
         for player in self.get_players():
@@ -164,7 +172,7 @@ class Group(RedwoodGroup):
         # method call
         print(event.value)
         event.value['channel'] = 'outgoing'
-        if event.value['type'] == 'request':
+        if type == 'request':
             if 'message' in event.value:
                 pf.censor(event.value['message'])
                 event.value['message'] = pf.censor(event.value['message'])
@@ -184,6 +192,10 @@ class Player(BasePlayer):
     _initial_decision = models.IntegerField()
     _final_position = models.IntegerField()
     final_payoff = models.CurrencyField()
+    tokens = models.IntegerField(initial=0)
+
+    def update_token(self, tokens):
+        self.tokens = self.tokens + tokens
 
     def initial_position(self):
         return self._initial_position
@@ -213,12 +225,16 @@ class Player(BasePlayer):
                         amount = event.value['transfer']
                     if self.id_in_group == event.value['senderID']:
                         final_position = event.value['receiverPosition']
-                        if self.group.swap_method() != 'swap':
+                        if self.group.swap_method() != 'swap' and self.group.swap_method() != 'Token':
                             payoff += amount
+                        elif self.group.swap_method() == 'Token':
+                            self.update_token(amount)
                     elif self.id_in_group == event.value['receiverID']:
                         final_position = event.value['senderPosition']
-                        if self.group.swap_method() != 'swap':
+                        if self.group.swap_method() != 'swap' and self.group.swap_method() != 'Token':
                             payoff -= amount
+                        elif self.group.swap_method() == 'Token':
+                            self.update_token(-amount)
 
         val_list = self.group.value_list()
         payoff += ((self.num_players() + 1 - (final_position + 1)) * val_list[self._initial_position])

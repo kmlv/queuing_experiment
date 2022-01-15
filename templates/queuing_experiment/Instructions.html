@@ -51,7 +51,7 @@ Experiment Instructions
 
 <h3>Interfaz del Usuario</h3>
 
-<img src="{% static 'interface.png' %}"/> 
+<img src="{% static 'queuing_experiment/interface.png' %}"/> 
 
 <p>
     Al comienzo de cada ronda, la línea aleatoria se coloca en la parte superior de la pantalla. 
@@ -71,7 +71,7 @@ Experiment Instructions
     de la ronda actual.
 </p>
 
-<img src="{% static 'interface2.png' %}"/>
+<img src="{% static 'queuing_experiment/interface2.png' %}"/>
 
 <p>
     Debajo de la línea de círculos, se puede ver el panel de decisiones. Dependiendo de <b> las reglas de intercambio </b>, 
@@ -86,7 +86,7 @@ Experiment Instructions
 
 </p>
 
-<img src="{% static 'interface3.png' %}"/>
+<img src="{% static 'queuing_experiment/interface3.png' %}"/>
 
 <p>
     Debajo del panel de decisión, usted puede ver el panel de solicitud y el panel de historial. 
@@ -117,7 +117,7 @@ Experiment Instructions
         Precio para tomar/dejar (TL):
     </p>
 
-    <img src="{% static 'interface4.png' %}"/>
+    <img src="{% static 'queuing_experiment/interface4.png' %}"/>
 
     <p>
          En este experimento, usted puede enviar una oferta de intercambio a otros participantes con un precio.
@@ -128,22 +128,27 @@ Experiment Instructions
          aceptando la solicitud de alguien.
     </p>
 
-    <img src="{% static 'interface5.png' %}"/>
+    <img src="{% static 'queuing_experiment/interface5.png' %}"/>
 
     <p>
-          Por ejemplo, suponga que usted es la cuarta persona de la fila. 
-          Si desea cambiar con el participante en la posición 2, ganarás 45-27=18 más valor de servicio si el intercambio es exitoso. 
-          Por lo tanto, su oferta debe estar por debajo de 18. De lo contrario, perderá dinero incluso si pasa a la posición 2. Si el participante 
-          en la posición 5 le ofrece una solicitud, no debe aceptarla cuando la oferta sea inferior a 9, ya que perderá 27-18=9 puntos si intercambias posiciones. 
+          Por ejemplo, suponga que usted es la quinta persona de la fila (mire el ejemplo en la figura). 
+          Si desea cambiar con el participante en la posición 2, ganará 50-20=30 puntos si el intercambio es exitoso. 
+          Por lo tanto, su oferta debe estar por debajo de 30. De lo contrario, perderá dinero incluso si pasa a la posición 2. 
+          Asimismo, si el participante 
+          en la posición 6 le ofrece una solicitud de intercambio, no debe aceptarla cuando la oferta sea inferior a 10, 
+          ya que perderá 20-10=10 puntos si intercambias posiciones. 
+
 
     </p>
 
 {% elif swap_method == "swap" %}
     <p>
+
         Swap (Intercambio):
+
     </p>
 
-    <img src="{% static 'interface6.png' %}" />
+    <img src="{% static 'queuing_experiment/interface6.png' %}" />
 
     <p>
         
@@ -153,7 +158,54 @@ Experiment Instructions
         no existen transferencias monetarias entre participantes durante ningún intercambio. No puedes recibir
         ninguna transferencia de otros participantes y no puedes enviar ninguna transferencia. Ya que
         <b> no hay ninguna transferencia entre jugadores </b>, tu pago por ronda es: <b> Endowment + Value of Final Position</b>.
-  
+        
+    </p>
+
+{% elif swap_method == "Token" %}
+    <p>
+        Token:
+    </p>
+
+    <img src="{% static 'queuing_experiment/interface6.png' %}" />
+
+    <p>
+        En este experimento, puedes intercambiar posiciones con otros participantes
+        mandando solicitudes de intercambio y aceptando solicitudes de intercambio de otros.
+        El intercambio de posiciones afectará tu posición en la línea, por lo que tus puntos igualmente varían.
+        No obstante, no hay transferencia de puntos entre participantes durante el intercambio. <b> No puedes recibir
+        ninguna transferencia de otros participantes y no puedes mandar transferencias a otros.</b>
+        Ya que no hay transferencias entre los participantes, tu pago por ronda es: <b> Endowment + Valor de tu Posición Final </b>.
+       
+    </p>
+
+    <p>
+        Hay otras características que resaltar. Cada jugador tendrá "Tokens" bajo esta regla. Todos
+      los jugadores empiezan con 0 tokens.
+        Si intercambias con alguien en frente tuyo, obtendrás -1 token y el otro jugador obtendrá +1 token.
+        Si intercambias con alguien detrás tuyo, tu obtendrás +1 token y el otro jugador obtendrá -1 token.
+        Los números de tokens pueden ser negativos, pero los tokens en sí no afectan a tu pago final.
+        En un sentido, el número de tokens de un jugador muestra <b> cuántas veces se movió detrás  - cuántas veces se movió
+      adelante en rondas previas </b>
+
+    </p>
+
+    <img src="{% static 'queuing_experiment/interface_token.png' %}" /> 
+    Esta imagen muestra los paneles inferiores de la pantalla donde los jugadores que reciben una solicitud de transacción
+  pueden observar el número de tokens del jugador que inició la solicitud.
+
+
+    <p>
+        Cuando mandas una solicitud de intercambio a otros jugadores, ellos pueden observar el número de tokens que tienes en el momento.
+        Cuando otros jugadores mandan solicitudes de intercambio a ti, también puede observar su cantidad de tokens.
+      
+    </p>
+
+    <p>
+        Adicionalmente, a diferencia de los pagos por rondas, su cantidad de tokens se hereda entre rondas.
+      Por ejemplo, si usted tiene 1 token para el final de la primera ronda, empezará con 1 token en la segunda ronda.
+      El número de tokens se <i> reseteará </i> entre las rondas de práctica y las rondas que reciben pago.
+      Furthermore, unlike payoff, your token is inherited between rounds. 
+
     </p>
 
 {% elif swap_method == "Double" %}
@@ -161,6 +213,7 @@ Experiment Instructions
     <p>
         Double (Doble):
     </p>
+
 
     <img src="{% static 'interface_double1.png' %}"/>
 
@@ -170,7 +223,9 @@ Experiment Instructions
 
     </p>
 
+
     <img src="{% static 'interface_double2.png' %}"/>
+
 
     <p>
         El otro participante tiene que ofrecer un precio "Ask" llenando en el espacio en blanco y presionando el
@@ -194,7 +249,7 @@ Experiment Instructions
 
     </p>
 
-    <img src="{% static 'interface_double3.png' %}"/>
+    <img src="{% static 'queuing_experiment/interface_double3.png' %}"/>
 
     <p>
         Un participante puede solicitar un intercambio con cualquier otro participante en la cola y 
@@ -205,7 +260,7 @@ Experiment Instructions
         avanzando su posición.
         Si el participante en la posición 5 le ofrece una solicitud, la transferencia final no debería
         ser menor a 10, ya que usted perdería 30-20=10 puntos si intercambia su posición.
-   
+
     </p>
 
 {% endif %}
@@ -215,14 +270,17 @@ Experiment Instructions
 <h3>Mensajería</h3>
 
 <p>
-    Usted puede adjuntar un mensaje a su solicitud de intercambio. 
+    En algunas rondas, está permitido adjuntar un mensaje a su solicitud de intercambio. 
     El otro participante puede ver su mensaje con la solicitud de intercambio. También puede 
     ver los mensajes de otros participantes cuando ellos le envían su solicitud de intercambio. 
     La opción de mensaje se encuentra en el lado derecho del panel de decisiones.
-    Por ejemplo, puedes usar el mensaje para indicar cuánto ganarías por adelantarte una posición.
+    Por ejemplo, puedes usar el mensaje para indicar cuánto ganarías por adelantarte una posición. 
+  (e.g. "Mi valor al mover a tu posición es de XX puntos.").
+  Sería mejor si pudiera usar Inglés para escribir el mensaje.
+
 </p>
 
-<img src="{% static 'msg.png' %}"/>
+<img src="{% static 'queuing_experiment/msg.png' %}"/>
 
 <p>
     Por favor, siga las dos reglas cuando envíe mensajes a otras personas:
