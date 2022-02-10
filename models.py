@@ -104,10 +104,10 @@ class Subsession(BaseSubsession):
                 players[i]._initial_position = positions[i]
                 players[i]._final_position = positions[i]
                 players[i]._initial_decision = 0
-                if not self.config['shuffle_role'] and players[i].round_number > 1:
-                    players[i].tokens = players[i].in_round(players[i].round_number - 1).tokens
-                else:
+                if players[i].round_number == 1 or players[i].round_number == 3:
                     players[i].tokens = 0
+                else:
+                    players[i].tokens = players[i].in_round(players[i].round_number - 1).tokens
                 print(players[i].tokens)
             print("Tokens----------")
 
