@@ -772,15 +772,15 @@ export class LeepsQueue extends PolymerElement {
             console.log(this._computeValueForToken(exchangePlayerIndex));
             if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(exchangePlayerIndex) - parseFloat(this.shadowRoot.querySelector('#offer').value))){
                 if(this._isDouble()){
-                    if (confirm("Your net gain from this exchange could be negative. Please confirm if you want to send the bid.")) {
-    
+                    //if (confirm("Your net gain from this exchange could be negative. Please confirm if you want to send the bid.")) {
+                    if (confirm("Tus beneficios netos de este intercambio pueden ser negativos. Por favor, confirme si quiere mandar el bid.")) {
                     } else {
                         this.set("requestSent", false);
                         return;
                     }
                 } else{
-                    if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
-    
+                    //if (confirm("Your net gain from this exchange is negative. Please confirm if you want to send the request.")) {
+                    if (confirm("Tus beneficios netos de este intercambio son negativos. Por favor, confirme si quiere mandar esta solicitud.")) {        
                     } else {
                         this.set("requestSent", false);
                         return;
@@ -881,8 +881,8 @@ export class LeepsQueue extends PolymerElement {
                 return;
             }
             if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(parseInt(requestsVector['position'])- 1) + parseFloat(ourBid))){
-                if (confirm("Your net gain from this exchange could be negative. Please confirm if you want to send the ask.")) {
-                    
+                //if (confirm("Your net gain from this exchange could be negative. Please confirm if you want to send the ask.")) {
+                if (confirm("Sus beneficios netos pueden ser negativos de este intercambio. Por favor, confirme si quiere enviar el ask.")) {    
                 } else {
                     this.set("requestSent", false);
                     return;
@@ -891,8 +891,8 @@ export class LeepsQueue extends PolymerElement {
         }
         if(this._isTL()){
             if( this._computeValueForToken(this.myPosition) > (this._computeValueForToken(parseInt(requestsVector['position'])- 1) + parseFloat(requestsVector['offer']))){
-                if (confirm("Your net gain from this exchange is negative. Please confirm if you want to accept the request.")) {
-                    
+                //if (confirm("Your net gain from this exchange is negative. Please confirm if you want to accept the request.")) {
+                if (confirm("Sus beneficios netos de este intercambio son negativos. Por favor, confirme si quiere aceptar esta solicitud.")) {    
                 } else {
                     this.set("requestSent", false);
                     return;
